@@ -1,0 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Text:wght@600;700&family=Figtree:wght@300;400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+    --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+    --font-heading: "Crimson Text", ui-serif, serif;
+}
