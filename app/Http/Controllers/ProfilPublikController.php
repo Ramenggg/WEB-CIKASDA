@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Berita;
 use App\Models\ProfilItem;
 
 class ProfilPublikController extends Controller
@@ -34,5 +35,19 @@ class ProfilPublikController extends Controller
     {
         $item = ProfilItem::findBySlug('tugas-fungsi');
         return view('pages.profil.tugas-fungsi', compact('item'));
+
+    }
+    public function beritaIndeks()
+    {
+        // Ambil berita yang statusnya 'Publish', bawa relasi 'sampul' (Eager Loading),
+        // urutkan dari yang paling baru, lalu batasi maksimal 9 berita (bisa pakai paginate jika mau)
+        $beritas = Berita::with('sampul')
+            ->where('status', 'Publish')
+            ->latest()
+            ->take(9)
+            ->get();
+
+        // Oper data berita ke file blade milik user
+        return view('user.berita.index', compact('beritas')); // berita
     }
 }

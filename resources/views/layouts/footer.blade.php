@@ -8,26 +8,17 @@
                     class="absolute -top-10 -left-10 w-40 h-40 bg-blue-600/10 rounded-full blur-3xl pointer-events-none">
                 </div>
 
-                <div class="relative flex items-center space-x-5 z-10">
-                    <div class="relative shrink-0 group">
-                        <div
-                            class="absolute inset-0 bg-white/5 blur-md rounded-full transform group-hover:scale-110 transition-transform duration-500">
-                        </div>
-                        <img src="{{ asset('images/logo/logo-cikasda.png') }}" alt="Logo Cikasda"
-                            class="relative h-14 sm:h-14 w-auto drop-shadow-2xl brightness-110 transition-transform duration-500 group-hover:-translate-y-1">
+                <div class="relative flex w-full items-center justify-center z-10">
+                <div class="relative shrink-0 group">
+                    {{-- Efek Glow Putih di Belakang Logo --}}
+                    <div class="absolute inset-0 bg-white/5 blur-md rounded-full transform group-hover:scale-110 transition-transform duration-500">
                     </div>
-
-                    <div class="flex flex-col justify-center">
-                        <h2
-                            class="text-xl sm:text-[22px] font-bold text-white leading-snug tracking-wide drop-shadow-sm">
-                            Dinas Cipta Karya <br>
-                            <span class="font-medium text-slate-300">&</span> Sumber Daya Air
-                        </h2>
-                        <p class="text-[11px] font-bold tracking-widest text-blue-400 uppercase mt-1.5">
-                            Provinsi Sulawesi Tengah
-                        </p>
-                    </div>
+                    
+                    {{-- File Asset Logo Cikasda --}}
+                    <img src="{{ asset('images/logo/logo-cikasda.png') }}" alt="Logo Cikasda"
+                        class="relative h-20 sm:h-22 w-auto drop-shadow-2xl brightness-110 transition-transform duration-500 group-hover:-translate-y-1">
                 </div>
+            </div>
 
                 <div class="relative z-10 pl-4 border-l-2 border-slate-700/50">
                     <p class="text-sm text-slate-400 leading-relaxed font-light">

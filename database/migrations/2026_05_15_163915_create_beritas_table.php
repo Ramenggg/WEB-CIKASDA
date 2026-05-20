@@ -14,9 +14,10 @@ return new class extends Migration
         Schema::create('beritas', function (Blueprint $table) {
             $table->id();
             $table->string('judul');
-            $table->string('slug')->unique();
+            $table->string('slug')->unique(); // Untuk URL ramah SEO (misal: cikasda.com/berita/judul-berita)
             $table->text('konten');
-            $table->string('gambar')->nullable();
+            $table->string('kategori'); // Infrastruktur, Pengumuman, dll
+            $table->string('status')->default('Publish'); // Publish atau Draft
             $table->timestamps();
         });
     }

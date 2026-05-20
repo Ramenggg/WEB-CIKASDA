@@ -24,6 +24,8 @@ Route::prefix('profil')->name('profil.')->group(function () {
     Route::get('/struktur-organisasi', [ProfilPublikController::class, 'struktur'])->name('struktur');
     Route::get('/visi-misi', [ProfilPublikController::class, 'visiMisi'])->name('visi-misi');
     Route::get('/tugas-fungsi', [ProfilPublikController::class, 'tugasFungsi'])->name('tugas-fungsi');
+
+    Route::get('/berita-instansi', [ProfilPublikController::class, 'beritaIndeks'])->name('berita'); // untuk berita
     
     // Tambahkan menu publik lainnya di sini jika diperlukan
 });
@@ -42,6 +44,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Kelola Konten Profil (Dinamis: Struktur, Visi-Misi, Keuangan, dll)
     Route::get('/profil/{halaman}', [ProfilController::class, 'edit'])->name('profil.edit');
     Route::post('/profil/{halaman}', [ProfilController::class, 'update'])->name('profil.update');
+
+    Route::get('/berita', function () {
+        return redirect()->route('admin.berita.tambah');
+    })->name('berita.index');
+
+    Route::get('/berita/tambah', function () {
+        return view('admin.berita.tambah');
+    })->name('berita.tambah');
+
+    Route::post('/berita/simpan', [App\Http\Controllers\Admin\BeritaController::class, 'store'])->name('berita.simpan');
 
     // Tempatkan rute manajemen berita/galeri di sini nanti
 });

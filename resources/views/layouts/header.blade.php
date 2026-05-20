@@ -27,8 +27,8 @@ if (!isHome) {
                         class="absolute -inset-2 bg-blue-400/10 blur-lg rounded-full opacity-0 group-hover:opacity-100 transition duration-500 pointer-events-none">
                     </div>
 
-                    <img src="{{ asset('images/logo/logo-sulteng.png') }}" alt="Logo Sulteng"
-                        class="relative h-10 sm:h-11.5 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-md z-10">
+                    <img src="{{ asset('images/logo/sulteng-cikasda.png') }}" alt="Logo Sulteng"
+                        class="relative h-18 sm:h-20 w-auto object-contain transition-transform duration-300 group-hover:scale-105 drop-shadow-md z-10">
 
                     <div class="h-8 sm:h-10 w-[1.5px] bg-slate-500/50 rounded-full z-10"></div>
 
@@ -39,9 +39,8 @@ if (!isHome) {
                         </h1>
                         <div
                             class="flex items-center mt-1 space-x-1.5 opacity-90 group-hover:opacity-100 transition-opacity duration-300">
-                            <span class="h-[1.5px] w-4 bg-yellow-400 rounded-full"></span>
                             <span
-                                class="text-yellow-400 text-[7px] sm:text-[9px] font-bold uppercase tracking-[0.25em]">Provinsi
+                                class="text-yellow-400 text-[10px] sm:text-[12px] font-bold uppercase tracking-[0.25em]">Provinsi
                                 Sulawesi Tengah</span>
                         </div>
                     </div>
