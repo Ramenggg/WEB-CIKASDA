@@ -6,38 +6,64 @@ use App\Http\Controllers\Admin\ProfilController;
 use App\Http\Controllers\ProfilPublikController;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes - Website CIKASDA
+|--------------------------------------------------------------------------
+*/
+
 // Rute Halaman Utama
 Route::get('/', function () {
     return view('welcome');
 });
 
 // --------------------------------------------------------
-// Rute Halaman Profil Publik (terhubung ke database)
+// Rute Halaman Profil Publik (Akses Pengunjung)
 // --------------------------------------------------------
-Route::prefix('profil')->group(function () {
-    Route::get('/struktur-organisasi', [ProfilPublikController::class, 'struktur'])->name('profil.struktur');
-    Route::get('/visi-misi', [ProfilPublikController::class, 'visiMisi'])->name('profil.visi-misi');
-    Route::get('/tugas-fungsi', [ProfilPublikController::class, 'tugasFungsi'])->name('profil.tugas-fungsi');
+Route::prefix('profil')->name('profil.')->group(function () {
+    Route::get('/struktur-organisasi', [ProfilPublikController::class, 'struktur'])->name('struktur');
+    Route::get('/visi-misi', [ProfilPublikController::class, 'visiMisi'])->name('visi-misi');
+    Route::get('/tugas-fungsi', [ProfilPublikController::class, 'tugasFungsi'])->name('tugas-fungsi');
+
+    Route::get('/berita-instansi', [ProfilPublikController::class, 'beritaIndeks'])->name('berita'); // untuk berita
+    
+    // Tambahkan menu publik lainnya di sini jika diperlukan
 });
 
 // --------------------------------------------------------
-// Rute Panel Admin
+// Rute Panel Admin (Pusat Kendali)
 // --------------------------------------------------------
 Route::prefix('admin')->name('admin.')->group(function () {
 
-    // Dashboard
+    // Dashboard Utama
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Kelola Konten Profil (Edit & Simpan)
+    // Rute Baru: Log Aktivitas (Sesuai permintaan agar tombol bisa diklik)
+    Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');
+
+    // Kelola Konten Profil (Dinamis: Struktur, Visi-Misi, Keuangan, dll)
     Route::get('/profil/{halaman}', [ProfilController::class, 'edit'])->name('profil.edit');
     Route::post('/profil/{halaman}', [ProfilController::class, 'update'])->name('profil.update');
 
+    Route::get('/berita', function () {
+        return redirect()->route('admin.berita.tambah');
+    })->name('berita.index');
+
+    Route::get('/berita/tambah', function () {
+        return view('admin.berita.tambah');
+    })->name('berita.tambah');
+
+    Route::post('/berita/simpan', [App\Http\Controllers\Admin\BeritaController::class, 'store'])->name('berita.simpan');
+
+    // Tempatkan rute manajemen berita/galeri di sini nanti
 });
 
-// Rute Dashboard & Autentikasi (Bawaan Laravel)
+// --------------------------------------------------------
+// Rute Autentikasi & User Profile (Bawaan Laravel)
+// --------------------------------------------------------
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard.user'); // Diubah agar tidak bentrok dengan admin.dashboard
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
