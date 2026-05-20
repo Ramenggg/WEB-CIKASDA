@@ -41,9 +41,9 @@
             class="group relative w-full sm:w-auto inline-flex items-center justify-center gap-2
                    px-8 py-3.5 rounded-2xl overflow-hidden
                    bg-linear-to-br from-blue-600 to-cyan-500
-                   text-white font-sans text-[11px] font-bold tracking-[0.2em] uppercase
+                 text-white font-sans text-[11px] font-bold tracking-[0.2em] uppercase
                    shadow-[0_10px_28px_-6px_rgba(8,145,178,0.5)]
-                   hover:shadow-[0_16px_36px_-6px_rgba(34,211,238,0.55)]
+                   hover:shadow-[0_16px_36px_-6px_rgba(34,211,238,0.55)]s
                    hover:-translate-y-0.5 transition-all duration-300">
             <span
                 class="absolute inset-0 bg-white/15 translate-y-full group-hover:translate-y-0 transition-transform duration-400"></span>
