@@ -2,17 +2,15 @@
 
 @section('content')
     {{-- ==================================================================
-         JUMBOTRON HEADER PREMIUM (SESUAI BACKGROUND GEDUNG DAN NAVIGASI USER)
+         JUMBOTRON HEADER PREMIUM (TEMA GEDUNG KONSISTEN)
          ================================================================== --}}
     <div class="relative w-full bg-slate-900 flex flex-col pt-32 pb-16 lg:pt-36 lg:pb-20 overflow-hidden">
 
         {{-- Background Image & Overlay Gradasi --}}
         <div class="absolute inset-0 z-0">
-            {{-- Menggunakan foto asli gedung CIKASDA sesuai aset sistemmu --}}
             <img src="{{ asset('images/slider/slide1.png') }}" alt="Background CIKASDA"
                 class="w-full h-full object-cover object-center grayscale-20">
 
-            {{-- Overlay Gelap Sinkron --}}
             <div class="absolute inset-0 bg-slate-900/80 mix-blend-multiply"></div>
             <div class="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-900/90 to-slate-950"></div>
         </div>
@@ -22,18 +20,16 @@
             <div class="flex items-center space-x-2 text-[10px] sm:text-xs font-black tracking-widest uppercase">
                 <span class="text-slate-400">PROFIL</span>
                 <span class="text-slate-500 font-medium">›</span>
-                <span class="text-blue-400">VISI & MISI</span>
+                <span class="text-blue-400">SEJARAH SINGKAT</span>
             </div>
 
             <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mt-3 mb-4 drop-shadow-md">
-                Visi dan Misi
+                Sejarah Singkat
             </h1>
 
             <p class="text-slate-300 text-xs sm:text-sm md:text-base font-medium max-w-4xl leading-relaxed opacity-90">
-                Arah kebijakan dan target strategis Dinas Cipta Karya dan Sumber Daya Air Provinsi Sulawesi Tengah dalam
-
-                mewujudkan pengelolaan infrastruktur permukiman dan ketahanan air yang berkelanjutan, responsif, serta
-                akuntabel.
+                Lini masa perjalanan, metamorfosis struktur instansi, dan rekam jejak historis Dinas Cipta Karya dan Sumber
+                Daya Air Provinsi Sulawesi Tengah dari masa ke masa.
             </p>
         </div>
     </div>
@@ -42,10 +38,10 @@
     {{-- ==================================================================
          KONTEN UTAMA DENGAN MAC-STYLE BROWSER WRAPPER KONSISTEN
          ================================================================== --}}
-    <div class="bg-slate-950 min-h-screen py-12 lg:py-20 -mt-1 relative z-10"> {{-- bg-slate-950 disinkronkan agar menyatu dengan potongan gradasi bawah jumbotron --}}
+    <div class="bg-slate-950 min-h-screen py-12 lg:py-20 -mt-1 relative z-10">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            {{-- MAC-STYLE BROWSER CONTAINER (Sesuai Gambar Acuan User) --}}
+            {{-- MAC-STYLE BROWSER CONTAINER --}}
             <div
                 class="w-full bg-white rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] border border-slate-800/20 overflow-hidden">
 
@@ -57,7 +53,7 @@
                         <span class="w-3 h-3 rounded-full bg-green-400 block shadow-xs"></span>
                         <span
                             class="text-[11px] text-slate-400 font-bold uppercase tracking-wider pl-4 border-l border-slate-100 ml-2">
-                            BAGAN RESMI
+                            HISTORALIS RESMI
                         </span>
                     </div>
                     <div
@@ -74,16 +70,16 @@
                 {{-- CORE JUDUL TENGAH --}}
                 <div class="text-center pt-12 pb-4">
                     <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tight inline-block relative">
-                        VISI & MISI INSTANSI
+                        REKAM JEJAK SEJARAH DINAS
                         <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 h-1 w-10 bg-blue-600 rounded-full"></div>
                     </h2>
                 </div>
 
-                {{-- INSIDE CONTAINER DENGAN STRUKTUR ADAPTIF FLUID (TEKS / GAMBAR / PDF / KOMBINASI) --}}
+                {{-- INSIDE CONTAINER DENGAN STRUKTUR ADAPTIF FLUID (HANYA MUNCUL JIKA DIISI ADMIN) --}}
                 <div class="p-8 sm:p-12 lg:p-16 pt-6 space-y-12">
 
                     {{-- ==========================================
-                         KOMPONEN 1: DATA NASKAH TEKS (Jika Ada)
+                         KOMPONEN 1: DATA NASKAH TEKS
                          ========================================== --}}
                     @if (isset($item->konten) && !empty(trim($item->konten)) && $item->konten !== '<p><br></p>')
                         <div class="w-full">
@@ -106,7 +102,7 @@
                     @endif
 
                     {{-- ==========================================
-                         KOMPONEN 2: DATA GAMBAR / INFOGRAFIS (Jika Ada)
+                         KOMPONEN 2: DATA GAMBAR ARSIP LAWAS
                          ========================================== --}}
                     @if ($item->gambar_path && \Storage::disk('public')->exists($item->gambar_path))
                         <div class="w-full">
@@ -114,14 +110,14 @@
                                 <div
                                     class="relative group cursor-zoom-in overflow-hidden rounded-xl border border-white w-full flex justify-center bg-white shadow-xs">
                                     <img src="{{ asset('storage/' . $item->gambar_path) }}"
-                                        alt="Infografis Visi Misi Dinas CIKASDA"
+                                        alt="Dokumentasi Sejarah Dinas CIKASDA"
                                         class="w-full h-auto max-h-[850px] object-contain mx-auto transition-transform duration-1000 group-hover:scale-[1.015]">
 
                                     <div
                                         class="absolute inset-0 bg-blue-950/0 group-hover:bg-blue-950/15 transition-all duration-500 flex items-center justify-center">
                                         <span
                                             class="bg-white/95 backdrop-blur-xs text-blue-900 px-6 py-3 rounded-xl font-black shadow-xl opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-500 text-xs uppercase tracking-[0.2em] border border-blue-100">
-                                            Perbesar Infografis
+                                            Perbesar Gambar
                                         </span>
                                     </div>
                                 </div>
@@ -138,7 +134,7 @@
                     @endif
 
                     {{-- ==========================================
-                         KOMPONEN 3: DATA DOKUMEN PDF SK RESMI (Jika Ada)
+                         KOMPONEN 3: DATA DOKUMEN PDF REGULASI
                          ========================================== --}}
                     @if ($item->pdf_path && \Storage::disk('public')->exists($item->pdf_path))
                         <div class="w-full">
@@ -155,10 +151,10 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <h5 class="text-base font-black text-slate-900 tracking-tight">Keputusan Kepala
-                                            Dinas Cipta Karya & Sumber Daya Air</h5>
+                                        <h5 class="text-base font-black text-slate-900 tracking-tight">Peraturan Daerah /
+                                            Peraturan Gubernur Terkait Pembentukan Dinas</h5>
                                         <p class="text-xs text-slate-500 font-semibold mt-0.5">Unduh berkas PDF regulasi
-                                            untuk melihat lembar salinan hukum asli.</p>
+                                            untuk melihat berkas hukum sejarah pendirian lengkap.</p>
                                     </div>
                                 </div>
 
@@ -185,8 +181,8 @@
                                 </svg>
                             </div>
                             <h5 class="text-base font-black text-slate-800 tracking-tight">Informasi Belum Tersedia</h5>
-                            <p class="text-xs text-slate-400 font-semibold mt-1">Naskah berkas data Visi & Misi saat ini
-                                sedang dalam fase validasi oleh admin dinas.</p>
+                            <p class="text-xs text-slate-400 font-semibold mt-1">Uraian sejarah singkat saat ini sedang
+                                dalam proses penyusunan arsip oleh bagian humas dinas.</p>
                         </div>
                     @endif
 
