@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Kelola Struktur Organisasi')
+@section('title', 'Kelola Transparansi Keuangan')
 
 @section('content')
     <div class="w-full bg-[#f8fafc] pb-12 animate-fade-in">
@@ -8,7 +8,7 @@
         <div
             class="w-full bg-white rounded-3xl shadow-[0_4px_30px_rgba(15,23,42,0.04)] border border-slate-200/80 overflow-hidden">
 
-            {{-- Header Panel --}}
+            {{-- Header Panel Premium --}}
             <div
                 class="p-6 border-b border-slate-100 bg-linear-to-r from-slate-50 via-white to-slate-50 flex justify-between items-center">
                 <div class="flex items-center space-x-3.5">
@@ -16,14 +16,13 @@
                         class="h-9 w-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
                     <div>
-                        <h4 class="font-black text-slate-900 uppercase tracking-tight text-sm">Manajemen Struktur Organisasi
-                        </h4>
-                        <p class="text-[11px] text-slate-500 font-medium mt-0.5">Kelola narasi pembagian tugas, upload
-                            gambar bagan hierarki pimpinan, dan lampiran SK Struktur (PDF).</p>
+                        <h4 class="font-black text-slate-900 uppercase tracking-tight text-sm">Manajemen Data Keuangan</h4>
+                        <p class="text-[11px] text-slate-500 font-medium mt-0.5">Kelola narasi anggaran, infografis
+                            statistik keuangan, dan dokumen laporan keuangan resmi.</p>
                     </div>
                 </div>
                 <span
@@ -41,12 +40,11 @@
                 </div>
             @endif
 
-            {{-- Form Utama (Slug otomatis 'struktur') --}}
-            <form action="{{ route('admin.profil.update', 'struktur') }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('admin.profil.update', 'keuangan') }}" method="POST" enctype="multipart/form-data"
                 class="divide-y divide-slate-100">
                 @csrf
 
-                {{-- 01. TEKS (URAIAN/DESKRIPSI) --}}
+                {{-- 01. TEKS --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center space-x-3">
@@ -54,7 +52,7 @@
                                 class="h-7 w-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center font-black text-xs shadow-2xs">
                                 01</div>
                             <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Uraian Teks /
-                                Penjelasan Struktur (Teks)</label>
+                                Kebijakan Anggaran Keuangan</label>
                         </div>
                         @if (isset($item->konten) && !empty(trim($item->konten)) && $item->konten !== '<p><br></p>')
                             <button type="button" onclick="confirmDeleteSection('text')"
@@ -69,15 +67,15 @@
                         value="{{ old('konten', $item->konten ?? '') }}">
                 </div>
 
-                {{-- 02. GAMBAR (BAGAN ORGANISASI) --}}
+                {{-- 02. GAMBAR --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center space-x-3">
                             <div
                                 class="h-7 w-7 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-600 flex items-center justify-center font-black text-xs shadow-2xs">
                                 02</div>
-                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Gambar Bagan
-                                Alur Struktur Organisasi</label>
+                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Infografis
+                                Realisasi Anggaran / Skema Grafik Kas</label>
                         </div>
                         @if (isset($item->gambar_path) && $item->gambar_path)
                             <button type="button" onclick="confirmDeleteSection('image')"
@@ -90,7 +88,7 @@
                         <div
                             class="lg:col-span-4 w-full aspect-video bg-white rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden shadow-2xs group relative">
                             <img id="preview-gambar"
-                                src="{{ $item->gambar_path ? Storage::url($item->gambar_path) : 'https://via.placeholder.com/400x250?text=Bagan+Struktur+Organisasi' }}"
+                                src="{{ $item->gambar_path ? Storage::url($item->gambar_path) : 'https://via.placeholder.com/400x250?text=Grafik+Keuangan' }}"
                                 class="w-full h-full object-contain {{ $item->gambar_path ? '' : 'opacity-20' }}">
                         </div>
                         <div class="lg:col-span-8 w-full space-y-3.5">
@@ -103,15 +101,15 @@
                     </div>
                 </div>
 
-                {{-- 03. PDF (DOKUMEN SK RESMI) --}}
+                {{-- 03. PDF --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center space-x-3">
                             <div
                                 class="h-7 w-7 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center justify-center font-black text-xs shadow-2xs">
                                 03</div>
-                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Berkas SK
-                                Pembagian Tugas / Struktur (PDF)</label>
+                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Berkas
+                                Lampiran Laporan Transparansi Keuangan (PDF)</label>
                         </div>
                         @if (isset($item->pdf_path) && $item->pdf_path)
                             <button type="button" onclick="confirmDeleteSection('pdf')"
@@ -131,15 +129,14 @@
                                 <div
                                     class="bg-white border border-emerald-200 p-3 rounded-xl flex items-center space-x-2.5 shadow-3xs text-emerald-700 font-bold text-xs underline decoration-emerald-300 underline-offset-4">
                                     <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    <a href="{{ Storage::url($item->pdf_path) }}" target="_blank">Lihat Berkas SK Struktur
-                                        Aktif</a>
+                                    <a href="{{ Storage::url($item->pdf_path) }}" target="_blank">Lihat Berkas Dokumen
+                                        Keuangan Aktif</a>
                                 </div>
                             @endif
                         </div>
                     </div>
                 </div>
 
-                {{-- Tombol Submit --}}
                 <div class="p-6 bg-slate-50/50 flex items-center justify-end border-t border-slate-100">
                     <button type="submit"
                         class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-14 py-3.5 rounded-xl font-black text-xs uppercase tracking-[0.2em] transition-all duration-300 shadow-md shadow-blue-600/20 active:scale-98 cursor-pointer">Simpan
@@ -147,8 +144,8 @@
                 </div>
             </form>
 
-            {{-- Form Hapus Komponen Tersembunyi (Sistem Ganda Aman) --}}
-            <form id="form-hapus-komponen" action="{{ route('admin.profil.update', 'struktur') }}" method="POST"
+            {{-- Form Hapus Komponen Tersembunyi (Sistem Ganda) --}}
+            <form id="form-hapus-komponen" action="{{ route('admin.profil.update', 'keuangan') }}" method="POST"
                 class="hidden">
                 @csrf
                 <input type="hidden" name="target_hapus" id="input-target-hapus">
@@ -157,7 +154,6 @@
         </div>
     </div>
 
-    {{-- Quill Editor Asset --}}
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
     <style>
         .ql-toolbar.ql-snow {
@@ -182,7 +178,7 @@
     <script>
         var quill = new Quill('#editor-cikasda', {
             theme: 'snow',
-            placeholder: 'Ketik penjelasan detail mengenai pembagian jabatan atau tugas struktural dinas di sini...',
+            placeholder: 'Ketik ringkasan penggunaan kas anggaran dinas di sini...',
             modules: {
                 toolbar: [
                     ['bold', 'italic', 'underline', 'blockquote'],
@@ -211,8 +207,9 @@
         }
 
         function confirmDeleteSection(type) {
-            if (confirm("Yakin ingin menghapus komponen struktur ini?") && confirm(
-                    "⚠️ TINDAKAN PERMANEN!\nBerkas fisik di Supabase akan dihapus seketika. Lanjutkan?")) {
+            if (confirm("Yakin ingin menghapus komponen anggaran keuangan ini?") && confirm(
+                    "⚠️ TINDAKAN PERMANEN!\nBerkas fisik laporan keuangan di server Supabase akan dihapus seketika. Lanjutkan?"
+                    )) {
                 document.getElementById('input-target-hapus').value = type;
                 document.getElementById('hidden-konten-backup').value = quill.root.innerHTML;
                 document.getElementById('form-hapus-komponen').submit();

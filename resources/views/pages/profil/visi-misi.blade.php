@@ -2,17 +2,15 @@
 
 @section('content')
     {{-- ==================================================================
-         JUMBOTRON HEADER PREMIUM (SESUAI BACKGROUND GEDUNG DAN NAVIGASI USER)
+         JUMBOTRON HEADER PREMIUM (TEMA GEDUNG KONSISTEN)
          ================================================================== --}}
     <div class="relative w-full bg-slate-900 flex flex-col pt-32 pb-16 lg:pt-36 lg:pb-20 overflow-hidden">
 
         {{-- Background Image & Overlay Gradasi --}}
         <div class="absolute inset-0 z-0">
-            {{-- Menggunakan foto asli gedung CIKASDA sesuai aset sistemmu --}}
             <img src="{{ asset('images/slider/slide1.png') }}" alt="Background CIKASDA"
                 class="w-full h-full object-cover object-center grayscale-20">
 
-            {{-- Overlay Gelap Sinkron --}}
             <div class="absolute inset-0 bg-slate-900/80 mix-blend-multiply"></div>
             <div class="absolute inset-0 bg-gradient-to-b from-slate-950/50 via-slate-900/90 to-slate-950"></div>
         </div>
@@ -31,7 +29,6 @@
 
             <p class="text-slate-300 text-xs sm:text-sm md:text-base font-medium max-w-4xl leading-relaxed opacity-90">
                 Arah kebijakan dan target strategis Dinas Cipta Karya dan Sumber Daya Air Provinsi Sulawesi Tengah dalam
-
                 mewujudkan pengelolaan infrastruktur permukiman dan ketahanan air yang berkelanjutan, responsif, serta
                 akuntabel.
             </p>
@@ -42,10 +39,10 @@
     {{-- ==================================================================
          KONTEN UTAMA DENGAN MAC-STYLE BROWSER WRAPPER KONSISTEN
          ================================================================== --}}
-    <div class="bg-slate-950 min-h-screen py-12 lg:py-20 -mt-1 relative z-10"> {{-- bg-slate-950 disinkronkan agar menyatu dengan potongan gradasi bawah jumbotron --}}
+    <div class="bg-slate-950 min-h-screen py-12 lg:py-20 -mt-1 relative z-10">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
 
-            {{-- MAC-STYLE BROWSER CONTAINER (Sesuai Gambar Acuan User) --}}
+            {{-- MAC-STYLE BROWSER CONTAINER --}}
             <div
                 class="w-full bg-white rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] border border-slate-800/20 overflow-hidden">
 
@@ -83,7 +80,7 @@
                 <div class="p-8 sm:p-12 lg:p-16 pt-6 space-y-12">
 
                     {{-- ==========================================
-                         KOMPONEN 1: DATA NASKAH TEKS (Jika Ada)
+                         KOMPONEN 1: DATA NASKAH TEKS
                          ========================================== --}}
                     @if (isset($item->konten) && !empty(trim($item->konten)) && $item->konten !== '<p><br></p>')
                         <div class="w-full">
@@ -106,24 +103,26 @@
                     @endif
 
                     {{-- ==========================================
-                         KOMPONEN 2: DATA GAMBAR / INFOGRAFIS (Jika Ada)
+                         KOMPONEN 2: DATA GAMBAR (BINGKAI PENUH & COVERS ALL)
                          ========================================== --}}
                     @if ($item->gambar_path && \Storage::disk('public')->exists($item->gambar_path))
                         <div class="w-full">
-                            <div class="w-full bg-slate-50 border border-slate-200/80 rounded-2xl p-4 sm:p-6 shadow-inner">
-                                <div
-                                    class="relative group cursor-zoom-in overflow-hidden rounded-xl border border-white w-full flex justify-center bg-white shadow-xs">
-                                    <img src="{{ asset('storage/' . $item->gambar_path) }}"
-                                        alt="Infografis Visi Misi Dinas CIKASDA"
-                                        class="w-full h-auto max-h-[850px] object-contain mx-auto transition-transform duration-1000 group-hover:scale-[1.015]">
+                            {{-- Area Gambar Penuh Mentok ke Sisi Kiri-Kanan Kartu Putih Mac Browser --}}
+                            <div
+                                class="relative group cursor-zoom-in overflow-hidden rounded-xl border-4 border-white shadow-lg w-full flex justify-center bg-white transition-all hover:shadow-xl hover:border-slate-100">
 
-                                    <div
-                                        class="absolute inset-0 bg-blue-950/0 group-hover:bg-blue-950/15 transition-all duration-500 flex items-center justify-center">
-                                        <span
-                                            class="bg-white/95 backdrop-blur-xs text-blue-900 px-6 py-3 rounded-xl font-black shadow-xl opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-500 text-xs uppercase tracking-[0.2em] border border-blue-100">
-                                            Perbesar Infografis
-                                        </span>
-                                    </div>
+                                {{-- KUNCI UTAMA: object-cover & max-height adaptif --}}
+                                <img src="{{ asset('storage/' . $item->gambar_path) }}"
+                                    alt="Infografis Visi Misi Dinas CIKASDA"
+                                    class="w-full h-auto max-h-[850px] object-cover mx-auto transition-transform duration-1000 group-hover:scale-[1.015]">
+
+                                {{-- Hover Effect Glass Indicator --}}
+                                <div
+                                    class="absolute inset-0 bg-blue-950/0 group-hover:bg-blue-950/15 transition-all duration-500 flex items-center justify-center">
+                                    <span
+                                        class="bg-white/95 backdrop-blur-xs text-blue-900 px-6 py-3 rounded-xl font-black shadow-xl opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-500 text-xs uppercase tracking-[0.2em] border border-blue-100">
+                                        Perbesar Infografis
+                                    </span>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +137,7 @@
                     @endif
 
                     {{-- ==========================================
-                         KOMPONEN 3: DATA DOKUMEN PDF SK RESMI (Jika Ada)
+                         KOMPONEN 3: DATA DOKUMEN PDF SK RESMI
                          ========================================== --}}
                     @if ($item->pdf_path && \Storage::disk('public')->exists($item->pdf_path))
                         <div class="w-full">

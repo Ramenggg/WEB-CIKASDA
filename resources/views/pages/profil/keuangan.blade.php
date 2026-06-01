@@ -1,7 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- JUMBOTRON HEADER PREMIUM --}}
+    {{-- ==================================================================
+         JUMBOTRON HEADER PREMIUM (TEMA GEDUNG KONSISTEN)
+         ================================================================== --}}
     <div class="relative w-full bg-slate-900 flex flex-col pt-32 pb-16 lg:pt-36 lg:pb-20 overflow-hidden">
         <div class="absolute inset-0 z-0">
             <img src="{{ asset('images/slider/slide1.png') }}" alt="Background CIKASDA"
@@ -13,30 +15,31 @@
         <div class="relative z-10 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end min-h-[140px]">
             <div class="flex items-center space-x-2 text-[10px] sm:text-xs font-black tracking-widest uppercase">
                 <span class="text-slate-400">PROFIL</span> <span class="text-slate-500 font-medium">›</span> <span
-                    class="text-blue-400">PEJABAT STRUKTURAL</span>
+                    class="text-blue-400">TRANSPARANSI KEUANGAN</span>
             </div>
             <h1 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight mt-3 mb-4 drop-shadow-md">
-                Pejabat Struktural</h1>
+                Transparansi Keuangan</h1>
             <p class="text-slate-300 text-xs sm:text-sm md:text-base font-medium max-w-4xl leading-relaxed opacity-90">
-                Daftar nama, jabatan, serta jajaran pemangku kebijakan eselon struktural pimpinan teras di lingkungan Dinas
-                Cipta Karya dan Sumber Daya Air.</p>
+                Transparansi penuh pengelolaan Anggaran Pendapatan dan Belanja Daerah (APBD) serta realisasi keuangan makro
+                lingkup Dinas Cipta Karya dan Sumber Daya Air.</p>
         </div>
     </div>
 
-    {{-- KONTEN UTAMA MAC-STYLE --}}
+    {{-- KONTEN UTAMA MAC-STYLE BROWSER --}}
     <div class="bg-slate-950 min-h-screen py-12 lg:py-20 -mt-1 relative z-10">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div
                 class="w-full bg-white rounded-3xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.5)] border border-slate-800/20 overflow-hidden">
 
+                {{-- TOP BAR --}}
                 <div class="px-6 py-4 bg-white border-b border-slate-100 flex items-center justify-between">
                     <div class="flex items-center space-x-2 shrink-0">
                         <span class="w-3 h-3 rounded-full bg-red-400 block shadow-xs"></span>
                         <span class="w-3 h-3 rounded-full bg-yellow-400 block shadow-xs"></span>
                         <span class="w-3 h-3 rounded-full bg-green-400 block shadow-xs"></span>
                         <span
-                            class="text-[11px] text-slate-400 font-bold uppercase tracking-wider pl-4 border-l border-slate-100 ml-2">PROFIL
-                            PIMPINAN</span>
+                            class="text-[11px] text-slate-400 font-bold uppercase tracking-wider pl-4 border-l border-slate-100 ml-2">NERACA
+                            KEUANGAN</span>
                     </div>
                     <div
                         class="flex items-center space-x-2 text-slate-500 font-extrabold text-[10px] sm:text-xs uppercase tracking-wider">
@@ -44,14 +47,17 @@
                     </div>
                 </div>
 
+                {{-- CORE JUDUL --}}
                 <div class="text-center pt-12 pb-4">
                     <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tight inline-block relative">
-                        JAJARAN PEJABAT RESMI
+                        REALISASI ANGGARAN & DPA RESMI
                         <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 h-1 w-10 bg-blue-600 rounded-full"></div>
                     </h2>
                 </div>
 
                 <div class="p-8 sm:p-12 lg:p-16 pt-6 space-y-12">
+
+                    {{-- KOMPONEN 1: TEXT FORMAT KEUANGAN --}}
                     @if (isset($item->konten) && !empty(trim($item->konten)) && $item->konten !== '<p><br></p>')
                         <div class="w-full">
                             <div
@@ -69,18 +75,18 @@
                         <hr class="border-slate-100 my-8">
                     @endif
 
-                    {{-- GAMBAR FULL BINGKAI --}}
+                    {{-- KOMPONEN 2: GAMBAR KEUANGAN BINGKAI PENUH MANDIRI --}}
                     @if ($item->gambar_path && \Storage::disk('public')->exists($item->gambar_path))
                         <div class="w-full">
                             <div
                                 class="relative group cursor-zoom-in overflow-hidden rounded-xl border-4 border-white shadow-lg w-full flex justify-center bg-white transition-all hover:shadow-xl hover:border-slate-100">
-                                <img src="{{ asset('storage/' . $item->gambar_path) }}" alt="Infografis Jajaran Pejabat"
+                                <img src="{{ asset('storage/' . $item->gambar_path) }}" alt="Infografis Keuangan Dinas"
                                     class="w-full h-auto max-h-[850px] object-cover mx-auto transition-transform duration-1000 group-hover:scale-[1.015]">
                                 <div
                                     class="absolute inset-0 bg-blue-950/0 group-hover:bg-blue-950/15 transition-all duration-500 flex items-center justify-center">
                                     <span
                                         class="bg-white/95 backdrop-blur-xs text-blue-900 px-6 py-3 rounded-xl font-black shadow-xl opacity-0 group-hover:opacity-100 translate-y-3 group-hover:translate-y-0 transition-all duration-500 text-xs uppercase tracking-[0.2em] border border-blue-100">Perbesar
-                                        Struktur Pejabat</span>
+                                        Grafik Keuangan</span>
                                 </div>
                             </div>
                         </div>
@@ -93,6 +99,7 @@
                         <hr class="border-slate-100 my-8">
                     @endif
 
+                    {{-- KOMPONEN 3: DOKUMEN DOWNLOAD PDF --}}
                     @if ($item->pdf_path && \Storage::disk('public')->exists($item->pdf_path))
                         <div class="w-full">
                             <div
@@ -108,10 +115,10 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <h5 class="text-base font-black text-slate-900 tracking-tight">Dokumen SK Penunjukan
-                                            Pejabat Struktural Pengelola</h5>
-                                        <p class="text-xs text-slate-500 font-semibold mt-0.5">Unduh berkas salinan SK
-                                            pelantikan dan penugasan pejabat resmi (PDF).</p>
+                                        <h5 class="text-base font-black text-slate-900 tracking-tight">Dokumen Neraca /
+                                            Laporan Realisasi Akuntabilitas Keuangan</h5>
+                                        <p class="text-xs text-slate-500 font-semibold mt-0.5">Unduh berkas laporan
+                                            pertanggungjawaban penyerapan kas resmi (PDF).</p>
                                     </div>
                                 </div>
                                 <a href="{{ asset('storage/' . $item->pdf_path) }}" target="_blank"
@@ -121,12 +128,13 @@
                         </div>
                     @endif
 
+                    {{-- FALLBACK SAFETY --}}
                     @if (
                         (!isset($item->konten) || empty(trim($item->konten)) || $item->konten === '<p><br></p>') &&
                             (!$item->gambar_path || !\Storage::disk('public')->exists($item->gambar_path)) &&
                             (!$item->pdf_path || !\Storage::disk('public')->exists($item->pdf_path)))
                         <div class="w-full text-center py-12">
-                            <p class="text-slate-400 font-bold">Informasi Pejabat Struktural belum tersedia.</p>
+                            <p class="text-slate-400 font-bold">Informasi Data Transparansi Keuangan belum tersedia.</p>
                         </div>
                     @endif
                 </div>
