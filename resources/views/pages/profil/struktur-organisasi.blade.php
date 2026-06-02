@@ -1,120 +1,166 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- CONTAINER UTAMA: Full Screen Vertical Layout --}}
-    <div class="relative w-full min-h-screen bg-slate-900 flex flex-col pt-32 pb-20 lg:pt-36 lg:pb-28 overflow-hidden">
-
-        {{-- Background Image & Overlay --}}
+    {{-- HERO SECTION --}}
+    <div class="relative w-full overflow-hidden pt-32 pb-48 lg:pt-40 lg:pb-64 bg-blue-900">
+        {{-- Background Image --}}
         <div class="absolute inset-0 z-0">
-            {{-- Sesuaikan dengan foto asli gedung CIKASDA milikmu --}}
-            <img src="{{ asset('images/slider/slide1.png') }}" alt="Background CIKASDA"
-                class="w-full h-full object-cover object-center grayscale-20">
-
-            {{-- Overlay Gelap: Gradasi dari atas ke bawah --}}
-            <div class="absolute inset-0 bg-slate-900/80 mix-blend-multiply"></div>
-            <div class="absolute inset-0 bg-linear-to-b from-slate-950/50 via-slate-900/90 to-slate-950"></div>
+            <img src="{{ asset('images/slider/slide1.png') }}" alt="Background CIKASDA" class="w-full h-full object-cover object-center scale-105 transform">
+            <div class="absolute inset-0 bg-blue-950/80 mix-blend-multiply"></div>
+            <div class="absolute inset-0 bg-linear-to-b from-blue-900/60 to-transparent"></div>
         </div>
-
-        {{-- Grid Konten (Atas Teks, Bawah Bagan) --}}
-        <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col">
-
-            {{-- BAGIAN ATAS: Teks & Deskripsi --}}
-            <div class="w-full max-w-3xl mb-12 lg:mb-16">
-
-                {{-- Breadcrumb Navigasi --}}
-                <nav class="flex items-center space-x-3 mb-6" aria-label="Breadcrumb">
-                    <span class="text-[10px] sm:text-xs font-bold text-slate-300 uppercase tracking-widest cursor-default">
-                        Profil
-                    </span>
-                    <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                    <span class="text-[10px] sm:text-xs font-bold text-blue-400 uppercase tracking-widest cursor-default">
-                        Struktur Organisasi
-                    </span>
-                </nav>
-
-                {{-- Judul --}}
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-6 leading-[1.1]">
+        
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="w-full flex flex-col items-start text-left">
+                {{-- Breadcrumb (Beautified) --}}
+                <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 text-blue-100 text-xs md:text-sm mb-8 font-medium shadow-sm">
+                    <a href="{{ url('/') }}" class="hover:text-white transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        Beranda
+                    </a>
+                    <svg class="w-3.5 h-3.5 text-blue-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    <span class="hover:text-white transition-colors cursor-pointer">Profil</span>
+                    <svg class="w-3.5 h-3.5 text-blue-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    <span class="text-white font-semibold">Struktur Organisasi</span>
+                </div>
+                
+                <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-heading text-white mb-6 tracking-tight relative">
                     Struktur Organisasi
                 </h1>
+                
+                <div class="text-blue-100 text-sm md:text-base leading-relaxed mb-8 max-w-2xl mt-2 pl-4 border-l-2 border-blue-500/50">
+                    {!! $item->konten ?? 'Struktur organisasi adalah kerangka kerja formal yang mengatur pembagian tugas, wewenang, dan hubungan kerja antar individu dalam suatu instansi. Sistem ini memastikan operasional berjalan efektif, alur komunikasi jelas, dan setiap anggota mengetahui tanggung jawab mereka.' !!}
+                </div>
+            </div>
+        </div>
+    </div>
 
-                {{-- Deskripsi dari Database --}}
-                <div class="text-sm md:text-base lg:text-lg text-slate-300 leading-relaxed font-medium">
-                    {{ $item->konten ?? 'Struktur Organisasi Dinas Cipta Karya dan Sumber Daya Air Provinsi Sulawesi Tengah ditetapkan berdasarkan peraturan daerah yang berlaku, guna menjamin terciptanya tata kelola instansi yang responsif dan akuntabel dalam pembangunan infrastruktur daerah.' }}
+    {{-- KONTEN UTAMA OVERLAPPING HERO --}}
+    <div class="relative z-20 max-w-[98%] xl:max-w-7xl mx-auto -mt-24 pb-24">
+        <div class="flex flex-col lg:flex-row gap-8">
+            
+            {{-- Bagian Kiri: Chart Area (Sekitar 75%) --}}
+            <div class="lg:w-3/4 flex flex-col gap-8">
+                
+                <div class="bg-white rounded-3xl shadow-xl overflow-hidden p-6 border border-slate-100 flex flex-col h-full">
+                <div class="text-center mb-8 relative">
+                    <h2 class="text-lg md:text-xl font-bold text-slate-800 inline-block relative pb-3">
+                        Bagan Struktur Organisasi
+                        <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-blue-600 rounded-full"></span>
+                        <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-slate-100 rounded-full -z-10"></span>
+                    </h2>
+                </div>
+                
+                {{-- Header Tools Bar --}}
+                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                    <div>
+                        @if (isset($item) && $item->pdf_path)
+                            <a href="{{ Storage::url($item->pdf_path) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium shadow-sm">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Unduh Bagan
+                            </a>
+                        @else
+                            <button class="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-400 rounded-lg cursor-not-allowed text-sm font-medium shadow-sm">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Unduh Bagan
+                            </button>
+                        @endif
+                    </div>
+                    
+                    <div class="flex flex-wrap items-center gap-3">
+                        <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                            <button class="px-3 py-2 text-slate-500 hover:bg-slate-50 border-r border-slate-200"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
+                            <span class="px-3 py-2 text-sm font-medium text-slate-700">100%</span>
+                            <button class="px-3 py-2 text-slate-500 hover:bg-slate-50 border-l border-slate-200"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Chart Area --}}
+                <div class="relative w-full bg-white flex-1 min-h-[500px] flex items-center justify-center overflow-x-auto border border-slate-100 rounded-xl p-4">
+                    @if (isset($item) && $item->gambar_path)
+                        <img src="{{ Storage::url($item->gambar_path) }}" alt="Bagan Struktur Organisasi CIKASDA"
+                            class="w-full h-auto object-contain transition-transform duration-700 cursor-zoom-in">
+                    @else
+                        <div class="relative z-10 w-full flex flex-col items-center justify-center py-12">
+                            <div class="w-24 h-24 mb-6 bg-slate-50 rounded-full border border-slate-100 flex items-center justify-center mx-auto shadow-sm">
+                                <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">Bagan Belum Tersedia</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed max-w-md text-center">Struktur organisasi akan ditampilkan setelah gambar bagan diunggah oleh administrator ke dalam sistem.</p>
+                        </div>
+                    @endif
+                </div>
                 </div>
             </div>
 
-            {{-- BAGIAN BAWAH: Jendela Bagan ala macOS (Membentang Lebar) --}}
-            <div class="w-full">
-                <div
-                    class="bg-white rounded-4xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.6)] overflow-hidden border border-slate-100 ring-1 ring-white/10">
+            {{-- Bagian Kanan: Sekilas Dinas Sidebar (Sekitar 25%) --}}
+            <div class="lg:w-1/4">
+                <div class="sticky top-24 bg-slate-50 rounded-2xl p-6 border border-slate-100 shadow-sm">
+                    
+                    <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider flex items-center mb-6">
+                        <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Sekilas Dinas
+                    </h3>
 
-                    {{-- Top Bar Frame (Titik macOS & Label) --}}
-                    <div
-                        class="bg-slate-50/80 backdrop-blur-md border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10">
-                        <div class="flex items-center space-x-4">
-                            {{-- Titik Aksen --}}
-                            <div class="flex space-x-1.5">
-                                <div class="w-3 h-3 rounded-full bg-slate-300"></div>
-                                <div class="w-3 h-3 rounded-full bg-blue-400"></div>
-                                <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                    <div class="space-y-4">
+                        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-xs flex items-start space-x-3 hover:shadow-md transition-shadow">
+                            <div class="bg-blue-50 text-blue-600 p-2 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                             </div>
-                            <div class="h-4 w-px bg-slate-300"></div>
-                            <span class="text-[10px] font-bold text-slate-500 tracking-[0.2em] uppercase">Bagan Resmi</span>
-                        </div>
-                        <div class="hidden sm:flex items-center space-x-2">
-                            <span class="text-[10px] font-black text-slate-700 uppercase tracking-widest">
-                                Dinas Cipta Karya & Sumber Daya Air
-                            </span>
-                            {{-- Ikon kecil pemanis --}}
-                            <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                </path>
-                            </svg>
-                        </div>
-                    </div>
-
-                    {{-- Area Konten Jendela --}}
-                    <div class="p-6 lg:p-12">
-                        {{-- Judul Dalam Kartu --}}
-                        <div class="text-center mb-8 lg:mb-12">
-                            <h2 class="text-2xl font-black text-slate-900 uppercase tracking-widest relative inline-block">
-                                Bagan Organisasi
-                                <div class="absolute -bottom-4 left-1/2 -translate-x-1/2 h-1 w-12 bg-blue-600 rounded-full">
-                                </div>
-                            </h2>
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium mb-0.5">Jumlah Bidang</p>
+                                <p class="text-sm font-bold text-slate-800">{{ $item->jumlah_bidang ?? '-' }}</p>
+                            </div>
                         </div>
 
-                        {{-- Gambar Bagan dengan Zoom --}}
-                        <div
-                            class="relative group cursor-zoom-in w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 sm:p-8 overflow-hidden shadow-inner">
+                        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-xs flex items-start space-x-3 hover:shadow-md transition-shadow">
+                            <div class="bg-indigo-50 text-indigo-600 p-2 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium mb-0.5">Jumlah Subbagian</p>
+                                <p class="text-sm font-bold text-slate-800">{{ $item->jumlah_subbagian ?? '-' }}</p>
+                            </div>
+                        </div>
 
-                            @if (isset($item) && $item->gambar_path)
-                                <img src="{{ Storage::url($item->gambar_path) }}" alt="Bagan Struktur Organisasi CIKASDA"
-                                    class="w-full h-auto object-contain transition-transform duration-1000 group-hover:scale-[1.02] relative z-10">
-                            @else
-                                <img src="https://via.placeholder.com/1600x800.png?text=Bagan+belum+tersedia"
-                                    alt="Bagan Struktur Organisasi CIKASDA" class="w-full h-auto opacity-40 relative z-10">
-                            @endif
+                        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-xs flex items-start space-x-3 hover:shadow-md transition-shadow">
+                            <div class="bg-teal-50 text-teal-600 p-2 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium mb-0.5">Jumlah UPT</p>
+                                <p class="text-sm font-bold text-slate-800">{{ $item->jumlah_upt ?? '-' }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-xs flex items-start space-x-3 hover:shadow-md transition-shadow">
+                            <div class="bg-violet-50 text-violet-600 p-2 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium mb-0.5">Total Pegawai</p>
+                                <p class="text-sm font-bold text-slate-800">{{ $item->total_pegawai ?? '-' }}</p>
+                            </div>
+                        </div>
 
-                            {{-- Efek Hover untuk Zoom --}}
-                            <div
-                                class="absolute inset-0 bg-blue-950/0 group-hover:bg-blue-950/10 transition-all duration-500 flex items-center justify-center z-20 backdrop-blur-[1px] opacity-0 group-hover:opacity-100">
-                                <span
-                                    class="bg-white/95 text-blue-900 px-6 py-3 rounded-xl font-black shadow-2xl text-xs uppercase tracking-[0.2em] border border-blue-100 flex items-center translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7">
-                                        </path>
-                                    </svg>
-                                    Perbesar Bagan
-                                </span>
+                        <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-xs flex items-start space-x-3 hover:shadow-md transition-shadow">
+                            <div class="bg-cyan-50 text-cyan-600 p-2 rounded-lg">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </div>
+                            <div>
+                                <p class="text-xs text-slate-500 font-medium mb-0.5">Tahun Dibentuk</p>
+                                <p class="text-sm font-bold text-slate-800">{{ $item->tahun_dibentuk ?? '-' }}</p>
                             </div>
                         </div>
                     </div>
 
+                    <div class="mt-6 pt-6 border-t border-slate-200">
+                        <a href="{{ url('/') }}" class="w-full flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-3 px-4 rounded-xl transition-colors shadow-sm cursor-pointer">
+                            <span>Kembali ke Beranda</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    </div>
                 </div>
             </div>
 

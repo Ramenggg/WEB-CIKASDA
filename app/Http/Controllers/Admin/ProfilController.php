@@ -52,6 +52,7 @@ class ProfilController extends Controller
         $request->validate([
             'konten' => 'nullable|string',
             'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'gambar_2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'pdf_file' => 'nullable|mimes:pdf|max:5120',
         ]);
 
@@ -71,7 +72,11 @@ class ProfilController extends Controller
             } elseif ($target === 'image' && $item->gambar_path) {
                 Storage::disk('public')->delete($item->gambar_path); // Hapus fisik gambar di Supabase
                 $item->gambar_path = null; // Set null di DB
-                $pesanSukses = 'Berkas Gambar Infografis berhasil dimusnahkan dari server!';
+                $pesanSukses = 'Berkas Gambar Infografis 1 berhasil dimusnahkan dari server!';
+            } elseif ($target === 'image_2' && $item->gambar_path_2) {
+                Storage::disk('public')->delete($item->gambar_path_2); // Hapus fisik gambar 2 di Supabase
+                $item->gambar_path_2 = null; // Set null di DB
+                $pesanSukses = 'Berkas Gambar Infografis 2 berhasil dimusnahkan dari server!';
             } elseif ($target === 'pdf' && $item->pdf_path) {
                 Storage::disk('public')->delete($item->pdf_path); // Hapus fisik PDF di Supabase
                 $item->pdf_path = null; // Set null di DB
@@ -90,6 +95,13 @@ class ProfilController extends Controller
                 Storage::disk('public')->delete($item->gambar_path);
             }
             $item->gambar_path = $request->file('gambar')->store('profil', 'public');
+        }
+
+        if ($request->hasFile('gambar_2')) {
+            if ($item->gambar_path_2) {
+                Storage::disk('public')->delete($item->gambar_path_2);
+            }
+            $item->gambar_path_2 = $request->file('gambar_2')->store('profil', 'public');
         }
 
         if ($request->hasFile('pdf_file')) {

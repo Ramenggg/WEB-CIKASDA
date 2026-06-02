@@ -137,8 +137,66 @@
                     <div class="flex justify-between items-center">
                         <div class="flex items-center space-x-3">
                             <div
-                                class="h-7 w-7 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center justify-center font-black text-xs shadow-2xs">
+                                class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">
                                 03
+                            </div>
+                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">
+                                Gambar / Infografis Visi Misi 2
+                            </label>
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            @if (isset($item->gambar_path_2) && $item->gambar_path_2)
+                                <button type="button" onclick="confirmDeleteSection('image_2')"
+                                    class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">
+                                    🗑️ Hapus Gambar 2
+                                </button>
+                            @endif
+                            <span
+                                class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider bg-slate-100 rounded-md px-2 py-0.5 border border-slate-200/40">Opsional</span>
+                        </div>
+                    </div>
+
+                    <div
+                        class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
+                        <div
+                            class="lg:col-span-4 w-full aspect-video bg-white rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden shadow-2xs shrink-0 group relative">
+                            @if (isset($item->gambar_path_2) && $item->gambar_path_2)
+                                <img id="preview-gambar-2" src="{{ Storage::url($item->gambar_path_2) }}"
+                                    class="w-full h-full object-contain">
+                            @else
+                                <img id="preview-gambar-2" src="https://via.placeholder.com/400x250?text=Format+Infografis"
+                                    class="w-full h-full object-contain opacity-20">
+                            @endif
+                        </div>
+
+                        <div class="lg:col-span-8 w-full space-y-3.5">
+                            <input type="file" name="gambar_2" onchange="previewImage2(event)" accept="image/*"
+                                class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-slate-900 file:text-white hover:file:bg-blue-600 file:transition-all file:cursor-pointer file:shadow-xs">
+
+                            <div
+                                class="bg-white p-4 rounded-xl border border-slate-200 text-[11px] text-slate-600 font-semibold leading-relaxed shadow-3xs">
+                                <div class="flex items-center space-x-1.5 text-blue-700 font-bold mb-1">
+                                    <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                    <span>STANDAR EKSTENSI BERKAS:</span>
+                                </div>
+                                Format Gambar Valid: <span class="text-slate-900 font-bold">PNG, JPG, JPEG, WEBP</span> •
+                                Batas Maksimal Kapasitas: <span class="text-slate-900 font-bold">2 Megabytes (2MB)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="h-7 w-7 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center justify-center font-black text-xs shadow-2xs">
+                                04
                             </div>
                             <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">
                                 Dokumen Lampiran (Format PDF Resmi)
@@ -300,6 +358,17 @@
                 let reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('preview-gambar').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function previewImage2(event) {
+            let input = event.target;
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-gambar-2').src = e.target.result;
                 }
                 reader.readAsDataURL(input.files[0]);
             }
