@@ -24,19 +24,27 @@
                     <span class="text-white font-semibold">Tugas dan Fungsi</span>
                 </div>
                 
-                <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-heading text-white mb-6 tracking-tight relative">
-                    Tugas dan Fungsi
-                </h1>
-                
-                <div class="text-blue-100 text-sm md:text-base leading-relaxed mb-8 max-w-2xl mt-2 pl-4 border-l-2 border-blue-500/50">
-                    Penjabaran tupoksi, wewenang, dan tanggung jawab kerja lini organisasi Dinas Cipta Karya dan Sumber Daya Air dalam menyelenggarakan urusan pemerintahan daerah.
+                <div class="border-l-4 border-blue-500/50 pl-4 md:pl-6 mb-8 mt-4">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-heading text-white mb-4 tracking-tight relative">
+                        Tugas dan Fungsi
+                    </h1>
+                    
+                    <div class="text-blue-100 text-sm md:text-base leading-relaxed max-w-2xl">
+                        @if (isset($item->konten) && !empty(trim(strip_tags($item->konten))))
+                            <div class="prose prose-invert prose-p:text-blue-100 prose-p:m-0 prose-p:leading-relaxed max-w-none text-sm md:text-base">
+                                {!! $item->konten !!}
+                            </div>
+                        @else
+                            Penjabaran tupoksi, wewenang, dan tanggung jawab kerja lini organisasi Dinas Cipta Karya dan Sumber Daya Air dalam menyelenggarakan urusan pemerintahan daerah.
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- KONTEN UTAMA OVERLAPPING HERO --}}
-    <div class="relative z-20 max-w-[98%] xl:max-w-7xl mx-auto -mt-24 pb-24">
+    <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 pb-24">
         <div class="flex flex-col lg:flex-row gap-8">
             
             {{-- Bagian Kiri: Konten Area (Sekitar 75%) --}}
@@ -51,14 +59,7 @@
                     </h2>
                 </div>
 
-                {{-- Naskah Teks Tugas Fungsi --}}
-                @if (isset($item->konten) && !empty(trim($item->konten)) && $item->konten !== '<p><br></p>')
-                    <div class="prose prose-slate max-w-none break-words text-slate-700 leading-relaxed font-medium mb-10
-                                prose-headings:font-bold prose-headings:text-slate-900 
-                                prose-ol:space-y-2 prose-ul:space-y-2">
-                        {!! $item->konten !!}
-                    </div>
-                @endif
+                {{-- Content is rendered in the Hero section --}}
                 
                 {{-- Header Tools Bar (Download & Zoom controls for image) --}}
                 @if ((isset($item) && $item->pdf_path && \Storage::disk('public')->exists($item->pdf_path)) || (isset($item) && $item->gambar_path && \Storage::disk('public')->exists($item->gambar_path)))

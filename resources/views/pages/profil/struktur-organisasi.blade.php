@@ -24,19 +24,21 @@
                     <span class="text-white font-semibold">Struktur Organisasi</span>
                 </div>
                 
-                <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-heading text-white mb-6 tracking-tight relative">
-                    Struktur Organisasi
-                </h1>
-                
-                <div class="text-blue-100 text-sm md:text-base leading-relaxed mb-8 max-w-2xl mt-2 pl-4 border-l-2 border-blue-500/50">
-                    {!! $item->konten ?? 'Struktur organisasi adalah kerangka kerja formal yang mengatur pembagian tugas, wewenang, dan hubungan kerja antar individu dalam suatu instansi. Sistem ini memastikan operasional berjalan efektif, alur komunikasi jelas, dan setiap anggota mengetahui tanggung jawab mereka.' !!}
+                <div class="border-l-4 border-blue-500/50 pl-4 md:pl-6 mb-8 mt-4">
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-heading text-white mb-4 tracking-tight relative">
+                        Struktur Organisasi
+                    </h1>
+                    
+                    <div class="text-blue-100 text-sm md:text-base leading-relaxed max-w-2xl">
+                        {!! $item->konten ?? 'Struktur organisasi adalah kerangka kerja formal yang mengatur pembagian tugas, wewenang, dan hubungan kerja antar individu dalam suatu instansi. Sistem ini memastikan operasional berjalan efektif, alur komunikasi jelas, dan setiap anggota mengetahui tanggung jawab mereka.' !!}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- KONTEN UTAMA OVERLAPPING HERO --}}
-    <div class="relative z-20 max-w-[98%] xl:max-w-7xl mx-auto -mt-24 pb-24">
+    <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 pb-24">
         <div class="flex flex-col lg:flex-row gap-8">
             
             {{-- Bagian Kiri: Chart Area (Sekitar 75%) --}}
