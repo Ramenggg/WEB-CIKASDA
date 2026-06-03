@@ -53,36 +53,33 @@
                     </h2>
                 </div>
                 
-                {{-- Header Tools Bar --}}
-                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <div>
-                        @if (isset($item) && $item->pdf_path)
-                            <a href="{{ Storage::url($item->pdf_path) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium shadow-sm">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                Unduh Bagan
-                            </a>
-                        @else
-                            <button class="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-400 rounded-lg cursor-not-allowed text-sm font-medium shadow-sm">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                Unduh Bagan
-                            </button>
-                        @endif
-                    </div>
-                    
-                    <div class="flex flex-wrap items-center gap-3">
-                        <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm">
-                            <button class="px-3 py-2 text-slate-500 hover:bg-slate-50 border-r border-slate-200"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
-                            <span class="px-3 py-2 text-sm font-medium text-slate-700">100%</span>
-                            <button class="px-3 py-2 text-slate-500 hover:bg-slate-50 border-l border-slate-200"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
-                        </div>
+
+
+                {{-- Zoom Controls --}}
+                @if (isset($item) && $item->gambar_path)
+                <div class="flex justify-end mb-4">
+                    <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm">
+                        <button type="button" onclick="zoomOut()" class="px-3 py-2 text-slate-500 hover:bg-slate-50 border-r border-slate-200 transition-colors" title="Perkecil">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg>
+                        </button>
+                        <span id="zoom-level" class="px-3 py-2 text-sm font-bold text-slate-700 w-16 text-center select-none">100%</span>
+                        <button type="button" onclick="zoomIn()" class="px-3 py-2 text-slate-500 hover:bg-slate-50 border-l border-slate-200 transition-colors" title="Perbesar">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                        </button>
+                        <button type="button" onclick="resetZoom()" class="px-3 py-2 text-blue-600 hover:bg-blue-50 border-l border-slate-200 transition-colors" title="Kembalikan Ukuran Asli">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                        </button>
                     </div>
                 </div>
+                @endif
 
                 {{-- Chart Area --}}
-                <div class="relative w-full bg-white flex-1 min-h-[500px] flex items-center justify-center overflow-x-auto border border-slate-100 rounded-xl p-4">
+                <div id="zoom-container" class="relative w-full bg-slate-50/50 flex-1 min-h-[500px] overflow-auto border border-slate-100 rounded-xl p-4 cursor-grab">
                     @if (isset($item) && $item->gambar_path)
-                        <img src="{{ Storage::url($item->gambar_path) }}" alt="Bagan Struktur Organisasi CIKASDA"
-                            class="w-full h-auto object-contain transition-transform duration-700 cursor-zoom-in">
+                        <div id="zoom-wrapper" class="flex items-center justify-center transition-all duration-300 mx-auto" style="width: 100%;">
+                            <img src="{{ Storage::url($item->gambar_path) }}" alt="Bagan Struktur Organisasi CIKASDA"
+                                class="w-full h-auto object-contain shadow-sm rounded-lg pointer-events-none">
+                        </div>
                     @else
                         <div class="relative z-10 w-full flex flex-col items-center justify-center py-12">
                             <div class="w-24 h-24 mb-6 bg-slate-50 rounded-full border border-slate-100 flex items-center justify-center mx-auto shadow-sm">
@@ -168,4 +165,89 @@
 
         </div>
     </div>
+
+    @if (isset($item) && $item->gambar_path)
+    <script>
+        let currentZoom = 100;
+        const zoomStep = 25;
+        const maxZoom = 300;
+        const minZoom = 50;
+
+        function updateZoom() {
+            const wrapper = document.getElementById('zoom-wrapper');
+            const zoomLabel = document.getElementById('zoom-level');
+            
+            if(wrapper && zoomLabel) {
+                wrapper.style.width = currentZoom + '%';
+                zoomLabel.innerText = currentZoom + '%';
+            }
+        }
+
+        function zoomIn() {
+            if (currentZoom < maxZoom) {
+                currentZoom += zoomStep;
+                updateZoom();
+            }
+        }
+
+        function zoomOut() {
+            if (currentZoom > minZoom) {
+                currentZoom -= zoomStep;
+                updateZoom();
+            }
+        }
+
+        function resetZoom() {
+            currentZoom = 100;
+            updateZoom();
+        }
+
+        // Drag to Pan & Wheel to Zoom
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('zoom-container');
+            if(!container) return;
+
+            let isDown = false;
+            let startX, startY, scrollLeft, scrollTop;
+
+            container.addEventListener('mousedown', (e) => {
+                isDown = true;
+                container.style.cursor = 'grabbing';
+                startX = e.pageX - container.offsetLeft;
+                startY = e.pageY - container.offsetTop;
+                scrollLeft = container.scrollLeft;
+                scrollTop = container.scrollTop;
+            });
+            
+            const stopDragging = () => {
+                isDown = false;
+                container.style.cursor = 'grab';
+            };
+            
+            container.addEventListener('mouseleave', stopDragging);
+            container.addEventListener('mouseup', stopDragging);
+            
+            container.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - container.offsetLeft;
+                const y = e.pageY - container.offsetTop;
+                container.scrollLeft = scrollLeft - (x - startX) * 1.5;
+                container.scrollTop = scrollTop - (y - startY) * 1.5;
+            });
+
+            container.addEventListener('wheel', (e) => {
+                // Gunakan kombinasi Ctrl/Command + Scroll untuk zoom (standar Trackpad Pinch)
+                if(e.ctrlKey || e.metaKey) { 
+                    e.preventDefault(); 
+                    if(e.deltaY < 0) {
+                        zoomIn();
+                    } else {
+                        zoomOut();
+                    }
+                }
+            }, { passive: false });
+        });
+    </script>
+    @endif
 @endsection

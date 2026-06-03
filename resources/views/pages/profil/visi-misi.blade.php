@@ -54,36 +54,11 @@
                 <div class="bg-white rounded-3xl shadow-xl overflow-hidden p-6 border border-slate-100">
                     <div class="text-center mb-8 relative">
                     <h2 class="text-lg md:text-xl font-bold text-slate-800 inline-block relative pb-3">
-                        Visi & Misi Instansi
+                        Visi & Misi Pemerintah Provinsi
                         <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-blue-600 rounded-full"></span>
                         <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-slate-100 rounded-full -z-10"></span>
                     </h2>
                 </div>
-
-
-                {{-- Header Tools Bar (Download & Zoom controls for image) --}}
-                @if ((isset($item) && $item->pdf_path && \Storage::disk('public')->exists($item->pdf_path)) || (isset($item) && $item->gambar_path && \Storage::disk('public')->exists($item->gambar_path)))
-                <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                    <div>
-                        @if (isset($item) && $item->pdf_path && \Storage::disk('public')->exists($item->pdf_path))
-                            <a href="{{ Storage::url($item->pdf_path) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors text-sm font-medium shadow-sm">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                Unduh Dokumen SK Resmi
-                            </a>
-                        @endif
-                    </div>
-                    
-                    @if (isset($item) && $item->gambar_path && \Storage::disk('public')->exists($item->gambar_path))
-                    <div class="flex flex-wrap items-center gap-3">
-                        <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-white shadow-sm">
-                            <button class="px-3 py-2 text-slate-500 hover:bg-slate-50 border-r border-slate-200"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path></svg></button>
-                            <span class="px-3 py-2 text-sm font-medium text-slate-700">100%</span>
-                            <button class="px-3 py-2 text-slate-500 hover:bg-slate-50 border-l border-slate-200"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg></button>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-                @endif
 
                 {{-- Chart Area / Infografis --}}
                 <div class="relative w-full bg-slate-50/50 flex-1 min-h-[400px] flex items-center justify-center overflow-x-auto border border-slate-100 rounded-xl p-4">
@@ -106,7 +81,7 @@
                 <div class="bg-white rounded-3xl shadow-xl overflow-hidden p-6 border border-slate-100">
                     <div class="text-center mb-8 relative">
                         <h2 class="text-lg md:text-xl font-bold text-slate-800 inline-block relative pb-3">
-                            Visi & Misi Pemerintah Provinsi
+                            Visi & Misi Instansi
                             <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-indigo-600 rounded-full"></span>
                             <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-slate-100 rounded-full -z-10"></span>
                         </h2>
