@@ -88,7 +88,16 @@ class ProfilController extends Controller
         }
 
         // --- Logika Penyimpanan Normal Bawaan Kemarin ---
-        $item->konten = $request->input('konten');
+        if ($halaman === 'pejabat') {
+            $item->konten = json_encode([
+                'nama_kadis' => $request->input('nama_kadis'),
+                'biografi_kadis' => $request->input('biografi_kadis'),
+                'nama_sekretaris' => $request->input('nama_sekretaris'),
+                'biografi_sekretaris' => $request->input('biografi_sekretaris'),
+            ]);
+        } else {
+            $item->konten = $request->input('konten');
+        }
 
         if ($request->hasFile('gambar')) {
             if ($item->gambar_path) {
