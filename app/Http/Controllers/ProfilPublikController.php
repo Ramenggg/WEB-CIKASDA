@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Berita;
 use App\Models\ProfilItem;
+use App\Models\AlbumKegiatan; // FIX KUNCI: Panggil model album untuk galeri foto di sini!
 
 class ProfilPublikController extends Controller
 {
@@ -100,5 +101,20 @@ class ProfilPublikController extends Controller
 
         // Oper data berita ke file blade milik user
         return view('user.berita.index', compact('beritas'));
+    }
+
+    /**
+     * ==================================================================
+     * FIX KUNCI: Tampilkan Galeri Foto Kegiatan ke Pengunjung / Publik
+     * GET /profil/galeri-foto
+     * ==================================================================
+     */
+    public function fotoIndeks()
+    {
+        // Ambil semua data album, sertakan data foto di dalamnya, urutkan dari yang terbaru
+        $albums = AlbumKegiatan::with('fotos')->latest()->get();
+
+        // Lempar data ke lokasi file target view user yang sudah kamu konfirmasi
+        return view('pages.galeri.galeri-foto', compact('albums'));
     }
 }

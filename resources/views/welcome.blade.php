@@ -5,6 +5,8 @@
 
     <x-pilar-informasi />
 
+    <x-layanan-cards />
+
     <x-berita />
 
     <x-hubungi-kami />

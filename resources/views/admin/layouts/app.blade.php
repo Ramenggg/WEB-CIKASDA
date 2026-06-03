@@ -99,7 +99,7 @@
                 </details>
 
                 <details class="group [&_summary::-webkit-details-marker]:hidden"
-                    {{ request()->is('admin/galeri*') ? 'open' : '' }}>
+                    {{ request()->is('admin/galeri-foto*') ? 'open' : '' }}>
 
                     <summary
                         class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white cursor-pointer transition-all list-none group-open:bg-slate-800/40 group-open:text-white">
@@ -119,8 +119,9 @@
 
                     <div class="mt-1 pl-4 pr-1 space-y-1 border-l-2 border-slate-800 ml-6">
 
-                        <a href="/admin/galeri/foto"
-                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/galeri/foto*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
+                        {{-- FIX KUNCI: Menembak langsung ke name route Laravel yang valid agar anti-404 --}}
+                        <a href="{{ route('admin.galeri.foto.tambah') }}"
+                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->routeIs('admin.galeri.foto.tambah') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
                             Foto Kegiatan
                         </a>
 

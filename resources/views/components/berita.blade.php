@@ -11,7 +11,7 @@
             </div>
             <h2 class="text-3xl md:text-3xl font-normal text-slate-800 tracking-tight">
                 Berita Terbaru <br> Dinas Sumber Daya Air dan Cipta Karya Provinsi Sulawesi Tengah
-            </h2>
+            </h2>,
         </div>
 
         <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 p-6 md:p-8">

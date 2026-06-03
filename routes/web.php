@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProfilController;
+use App\Http\Controllers\Admin\BeritaController;
+use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\ProfilPublikController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,64 +14,83 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Rute Halaman Utama
+// --------------------------------------------------------------------------
+// 1. RUTE HALAMAN UTAMA (LANDING PAGE)
+// --------------------------------------------------------------------------
 Route::get('/', function () {
     return view('welcome');
 });
 
-// --------------------------------------------------------
-// Rute Halaman Profil Publik (Akses Pengunjung)
-// --------------------------------------------------------
+// --------------------------------------------------------------------------
+// 2. RUTE HALAMAN USER / PUBLIK (AKSES PENGUNJUNG WEBSITE)
+// --------------------------------------------------------------------------
 Route::prefix('profil')
     ->name('profil.')
     ->group(function () {
-        Route::get('/struktur-organisasi', [ProfilPublikController::class, 'struktur'])->name('struktur');
+        // --- A. KELOMPOK MENU PROFIL DINAS ---
+        Route::get('/sejarah', [ProfilPublikController::class, 'sejarah'])->name('sejarah');
+        Route::get('/pejabat', [ProfilPublikController::class, 'pejabat'])->name('pejabat');
         Route::get('/visi-misi', [ProfilPublikController::class, 'visiMisi'])->name('visi-misi');
         Route::get('/tugas-fungsi', [ProfilPublikController::class, 'tugasFungsi'])->name('tugas-fungsi');
+        Route::get('/struktur-organisasi', [ProfilPublikController::class, 'struktur'])->name('struktur');
 
-        // KUNCI PENYESUAIAN: URL diubah dari '/sejarah-singkat' menjadi '/sejarah'
-        // Biar ketika kamu akses /profil/sejarah langsung jebol aman tanpa 404!
-        Route::get('/sejarah', [ProfilPublikController::class, 'sejarah'])->name('sejarah');
-
-        Route::get('/pejabat', [ProfilPublikController::class, 'pejabat'])->name('pejabat');
-        Route::get('/maklumat', [ProfilPublikController::class, 'maklumat'])->name('maklumat');
+        // --- B. KELOMPOK MENU TRANSPARANSI & INFORMASI PUBLIK ---
         Route::get('/lhkpn', [ProfilPublikController::class, 'lhkpn'])->name('lhkpn');
         Route::get('/keuangan', [ProfilPublikController::class, 'keuangan'])->name('keuangan');
+        Route::get('/maklumat', [ProfilPublikController::class, 'maklumat'])->name('maklumat');
 
+        // --- C. KELOMPOK MENU MULTIMEDIA / GALERI CIKASDA ---
+        Route::get('/galeri-foto', [GaleriController::class, 'userFotoIndeks'])->name('galeri-foto');
+        Route::get('/galeri-video', [GaleriController::class, 'userVideoIndeks'])->name('galeri-video');
+        Route::get('/booklet-digital', [GaleriController::class, 'userBookletIndeks'])->name('booklet');
+
+        // --- D. KELOMPOK MENU WARTA & BERITA INSTANSI ---
         Route::get('/berita-instansi', [ProfilPublikController::class, 'beritaIndeks'])->name('berita');
     });
 
-// --------------------------------------------------------
-// Rute Panel Admin (Pusat Kendali)
-// --------------------------------------------------------
+// --------------------------------------------------------------------------
+// 3. RUTE PANEL ADMIN (PUSAT KENDALI SISTEM)
+// --------------------------------------------------------------------------
 Route::prefix('admin')
     ->name('admin.')
     ->group(function () {
-        // Dashboard Utama
+        // --- A. DASHBOARD UTAMA & LOGS ---
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-
-        // Log Aktivitas Admin
         Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');
 
-        // Kelola Konten Profil (Dinamis: Meng-handle Otomatis ke-8 Menu di atas lewat parameter {halaman})
+        // --- B. KELOLA KONTEN PROFIL DINAMIS ---
         Route::get('/profil/{halaman}', [ProfilController::class, 'edit'])->name('profil.edit');
         Route::post('/profil/{halaman}', [ProfilController::class, 'update'])->name('profil.update');
 
-        // Kelola Berita Instansi
+        // --- C. KELOLA WARTA BERITA INSTANSI ---
         Route::get('/berita', function () {
             return redirect()->route('admin.berita.tambah');
         })->name('berita.index');
-
         Route::get('/berita/tambah', function () {
             return view('admin.berita.tambah');
         })->name('berita.tambah');
+        Route::post('/berita/simpan', [BeritaController::class, 'store'])->name('berita.simpan');
 
-        Route::post('/berita/simpan', [App\Http\Controllers\Admin\BeritaController::class, 'store'])->name('berita.simpan');
+        // --- D. CORE MULTIMEDIA SUB-MENU (SATU CONTROLLER UNTUK SEMUA) ---
+        // Sub-Menu 1: Kelola Foto Kegiatan
+        Route::get('/galeri-foto/tambah', [GaleriController::class, 'adminFotoTambah'])->name('galeri.foto.tambah');
+        Route::post('/galeri-foto/simpan', [GaleriController::class, 'adminFotoSimpan'])->name('galeri.foto.simpan');
+        Route::delete('/galeri-foto/hapus/{id}', [GaleriController::class, 'adminFotoDestroy'])->name('galeri.foto.hapus');
+
+        // Sub-Menu 2: Kelola Video Dokumentasi
+        Route::get('/galeri/video', [GaleriController::class, 'adminVideoTambah'])->name('galeri.video.tambah');
+        Route::post('/galeri/video/simpan', [GaleriController::class, 'adminVideoSimpan'])->name('galeri.video.simpan');
+        Route::delete('/galeri/video/hapus/{id}', [GaleriController::class, 'adminVideoDestroy'])->name('galeri.video.hapus');
+
+        // Sub-Menu 3: Kelola Booklet / Brosur Digital (UPGRADED RESMI)
+        Route::get('/galeri/booklet', [GaleriController::class, 'adminBookletTambah'])->name('galeri.booklet.tambah');
+        Route::post('/galeri/booklet/simpan', [GaleriController::class, 'adminBookletSimpan'])->name('galeri.booklet.simpan');
+        Route::delete('/galeri/booklet/hapus/{id}', [GaleriController::class, 'adminBookletDestroy'])->name('galeri.booklet.hapus');
     });
 
-// --------------------------------------------------------
-// Rute Autentikasi & User Profile (Bawaan Laravel)
-// --------------------------------------------------------
+// --------------------------------------------------------------------------
+// 4. RUTE AUTENTIKASI & USER PROFILE (DEFAULT AUTH LARAVEL)
+// --------------------------------------------------------------------------
 Route::get('/dashboard', function () {
     return view('dashboard');
 })
@@ -82,4 +103,5 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Load Rute Bawaan Laravel Breeze / Jetstream Auth
 require __DIR__ . '/auth.php';

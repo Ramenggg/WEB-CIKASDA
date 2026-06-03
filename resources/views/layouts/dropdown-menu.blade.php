@@ -43,10 +43,10 @@
         </div>
     </div>
 
-    {{-- MENU GALERI --}}
+    {{-- MENU GALERI (FIX SINKRONISASI ROUTE USER) --}}
     <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
         <button
-            class="flex items-center px-2 py-2 transition outline-none text-sm font-medium tracking-normal {{ request()->is('galeri*') ? 'text-yellow-400' : 'text-white hover:text-yellow-400' }}">
+            class="flex items-center px-2 py-2 transition outline-none text-sm font-medium tracking-normal {{ request()->is('profil/galeri*') ? 'text-yellow-400' : 'text-white hover:text-yellow-400' }}">
             Galeri
             <svg class="ml-1.5 w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,12 +56,22 @@
 
         <div x-show="open" x-transition.opacity.duration.200ms
             class="absolute left-0 top-full mt-1 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
-            <a href="/galeri/foto"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Foto</a>
-            <a href="/galeri/video"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Video</a>
-            <a href="/galeri/booklet"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Booklet</a>
+
+            {{-- FIX KUNCI: Menembak ke name rute resmi Laravel agar terhindar dari eror 404 --}}
+            <a href="{{ route('profil.galeri-foto') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.galeri-foto') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">
+                Foto
+            </a>
+
+            <a href="{{ route('profil.galeri-video') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.galeri-video') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">
+                Video
+            </a>
+
+            <a href="{{ route('profil.booklet') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.booklet') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">
+                Booklet
+            </a>
         </div>
     </div>
 
