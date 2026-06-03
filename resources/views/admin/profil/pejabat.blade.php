@@ -4,7 +4,7 @@
 
 @section('content')
     @php
-        $dataPejabat = json_decode($item->konten ?? '{}', true);
+        $dataPejabat = json_decode($item->content_data ?? '{}', true);
         $namaKadis = $dataPejabat['nama_kadis'] ?? '';
         $biografiKadis = $dataPejabat['biografi_kadis'] ?? '';
         $namaSekretaris = $dataPejabat['nama_sekretaris'] ?? '';
@@ -49,6 +49,19 @@
                 class="divide-y divide-slate-100">
                 @csrf
 
+                {{-- 00. DESKRIPSI SINGKAT HERO --}}
+                <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
+                    <div class="flex items-center space-x-3">
+                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">00</div>
+                        <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 shadow-2xs bg-white overflow-hidden">
+                        <div id="editor-hero">{{ old('hero_description', $item->hero_description ?? '') }}</div>
+                    </div>
+                    <input type="hidden" name="hero_description" id="hidden-hero"
+                        value="{{ old('hero_description', $item->hero_description ?? '') }}">
+                </div>
+
                 {{-- KEPALA DINAS --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
                     <div class="flex items-center space-x-3 mb-6">
@@ -64,8 +77,8 @@
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
                         <div class="lg:col-span-4 w-full aspect-[3/4] bg-white rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden shadow-2xs">
                             <img id="preview-kadis"
-                                src="{{ $item->gambar_path ? Storage::url($item->gambar_path) : asset('images/pejabat/kadis.png') }}"
-                                class="w-full h-full object-cover {{ !$item->gambar_path ? 'opacity-80' : '' }}">
+                                src="{{ $item->primary_image_path ? Storage::url($item->primary_image_path) : asset('images/pejabat/kadis.png') }}"
+                                class="w-full h-full object-cover {{ !$item->primary_image_path ? 'opacity-80' : '' }}">
                         </div>
                         <div class="lg:col-span-8 w-full space-y-5">
                             <div>
@@ -106,8 +119,8 @@
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
                         <div class="lg:col-span-4 w-full aspect-[3/4] bg-white rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden shadow-2xs">
                             <img id="preview-sekretaris"
-                                src="{{ $item->gambar_path_2 ? Storage::url($item->gambar_path_2) : asset('images/pejabat/sekretaris.png') }}"
-                                class="w-full h-full object-cover {{ !$item->gambar_path_2 ? 'opacity-80' : '' }}">
+                                src="{{ $item->secondary_image_path ? Storage::url($item->secondary_image_path) : asset('images/pejabat/sekretaris.png') }}"
+                                class="w-full h-full object-cover {{ !$item->secondary_image_path ? 'opacity-80' : '' }}">
                         </div>
                         <div class="lg:col-span-8 w-full space-y-5">
                             <div>
@@ -143,7 +156,7 @@
 
     {{-- Quill Editor Asset --}}
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
-    <style>
+    <style type="text/tailwindcss">
         .ql-toolbar.ql-snow {
             @apply flex flex-row flex-wrap items-center bg-slate-50 border border-slate-200 p-2 !important;
             border-top-left-radius: 0.75rem !important;
@@ -168,6 +181,7 @@
         .ql-editor li {
             margin-bottom: 0.25em !important;
         }
+        #editor-hero { min-height: 100px; font-size: 0.875rem; line-height: 1.6; padding: 1rem; font-family: ui-sans-serif, system-ui, sans-serif; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 

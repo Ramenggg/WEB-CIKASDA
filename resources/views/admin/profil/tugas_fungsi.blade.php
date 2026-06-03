@@ -44,35 +44,15 @@
                 @csrf
 
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="h-7 w-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center font-black text-xs shadow-2xs">
-                                01
-                            </div>
-                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">
-                                Uraian Tugas & Fungsi (Format Teks)
-                            </label>
-                        </div>
-
-                        <div class="flex items-center space-x-2">
-                            @if (isset($item->konten) && !empty(trim($item->konten)) && $item->konten !== '<p><br></p>')
-                                <button type="button" onclick="confirmDeleteSection('text')"
-                                    class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">
-                                    🗑️ Hapus Teks
-                                </button>
-                            @endif
-                            <span
-                                class="text-[10px] text-slate-400 font-extrabold uppercase tracking-wider bg-slate-100 rounded-md px-2 py-0.5 border border-slate-200/40">Opsional</span>
-                        </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">01</div>
+                        <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
                     </div>
-
-                    <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-2xs bg-white">
-                        <div id="editor-cikasda">{!! old('konten', $item->konten ?? '') !!}</div>
+                    <div class="rounded-2xl border border-slate-200 shadow-2xs bg-white overflow-hidden">
+                        <div id="editor-hero">{{ old('hero_description', $item->hero_description ?? '') }}</div>
                     </div>
-
-                    <input type="hidden" name="konten" id="hidden-konten"
-                        value="{{ old('konten', $item->konten ?? '') }}">
+                    <input type="hidden" name="hero_description" id="hidden-hero"
+                        value="{{ old('hero_description', $item->hero_description ?? '') }}">
                 </div>
 
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
@@ -88,7 +68,7 @@
                         </div>
 
                         <div class="flex items-center space-x-2">
-                            @if (isset($item->gambar_path) && $item->gambar_path)
+                            @if (isset($item->primary_image_path) && $item->primary_image_path)
                                 <button type="button" onclick="confirmDeleteSection('image')"
                                     class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">
                                     🗑️ Hapus Gambar
@@ -103,8 +83,8 @@
                         class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
                         <div
                             class="lg:col-span-4 w-full aspect-video bg-white rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden shadow-2xs shrink-0 group relative">
-                            @if (isset($item->gambar_path) && $item->gambar_path)
-                                <img id="preview-gambar" src="{{ Storage::url($item->gambar_path) }}"
+                            @if (isset($item->primary_image_path) && $item->primary_image_path)
+                                <img id="preview-gambar" src="{{ Storage::url($item->primary_image_path) }}"
                                     class="w-full h-full object-contain">
                             @else
                                 <img id="preview-gambar" src="https://via.placeholder.com/400x250?text=Format+Infografis"
@@ -146,7 +126,7 @@
                         </div>
 
                         <div class="flex items-center space-x-2">
-                            @if (isset($item->pdf_path) && $item->pdf_path)
+                            @if (isset($item->primary_document_path) && $item->primary_document_path)
                                 <button type="button" onclick="confirmDeleteSection('pdf')"
                                     class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">
                                     🗑️ Hapus Dokumen PDF
@@ -172,11 +152,11 @@
                             <input type="file" name="pdf_file" accept=".pdf"
                                 class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-red-600 file:text-white hover:file:bg-red-700 file:transition-all file:cursor-pointer file:shadow-xs">
 
-                            @if (isset($item->pdf_path) && $item->pdf_path)
+                            @if (isset($item->primary_document_path) && $item->primary_document_path)
                                 <div
                                     class="bg-white border border-emerald-200 p-3 rounded-xl flex items-center space-x-2.5 shadow-3xs">
                                     <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    <a href="{{ Storage::url($item->pdf_path) }}" target="_blank"
+                                    <a href="{{ Storage::url($item->primary_document_path) }}" target="_blank"
                                         class="text-xs font-black text-emerald-700 hover:text-emerald-900 underline underline-offset-2 transition-all">
                                         Berkas Aktif: Lihat / Unduh Peraturan Tupoksi Resmi PDF
                                     </a>
@@ -197,102 +177,61 @@
             <form id="form-hapus-komponen" action="{{ route('admin.profil.update', 'tugas-fungsi') }}" method="POST"
                 class="hidden">
                 @csrf
-                <input type="hidden" name="target_hapus" id="input-target-hapus">
-                <input type="hidden" name="konten" id="hidden-konten-backup">
-            </form>
+                <input type="hidden" name="target_hapus" id="input-target-hapus">            </form>
 
         </div>
     </div>
 
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
-    <style>
+    <style type="text/tailwindcss">
         .ql-toolbar.ql-snow {
             @apply flex flex-row flex-nowrap items-center justify-start bg-slate-50 border border-slate-200 p-3 !important;
             border-top-left-radius: 1rem !important;
             border-top-right-radius: 1rem !important;
             scrollbar-width: none;
         }
-
-        .ql-toolbar.ql-snow::-webkit-scrollbar {
-            @apply hidden w-0 h-0 !important;
-        }
-
+        .ql-toolbar.ql-snow::-webkit-scrollbar { @apply hidden w-0 h-0 !important; }
         .ql-snow .ql-formats {
             @apply inline-flex items-center bg-white border border-slate-200/60 rounded-xl px-1.5 py-0.5 mr-1 shrink-0 !important;
         }
-
-        .ql-snow .ql-toolbar button,
-        .ql-snow.ql-toolbar button {
+        .ql-snow .ql-toolbar button, .ql-snow.ql-toolbar button {
             @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-800 transition-all duration-150 !important;
         }
-
-        .ql-snow .ql-toolbar button:hover,
-        .ql-snow.ql-toolbar button:hover {
+        .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:hover {
             @apply bg-slate-100 text-blue-600 !important;
         }
-
-        .ql-snow .ql-toolbar button.ql-active,
-        .ql-snow.ql-toolbar button.ql-active {
+        .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar button.ql-active {
             @apply bg-blue-50 text-blue-600 border border-blue-200/80 !important;
         }
-
-        .ql-snow .ql-toolbar .ql-stroke {
-            @apply text-slate-800 !important;
-            stroke-width: 2.5 !important;
-        }
-
-        .ql-snow .ql-toolbar .ql-fill {
-            @apply fill-slate-800 !important;
-        }
-
-        .ql-snow .ql-picker {
-            @apply inline-flex items-center h-8 bg-white border border-slate-200 rounded-lg text-slate-900 text-xs font-black pl-2 pr-4 transition-all !important;
-        }
-
-        .ql-snow .ql-picker.ql-header {
-            @apply w-24 !important;
-        }
-
-        .ql-snow .ql-picker-options {
-            @apply bg-white border border-slate-200 rounded-xl shadow-xl p-1 z-[9999] !important;
-        }
-
+        .ql-snow .ql-toolbar .ql-stroke { stroke-width: 2.5 !important; }
         .ql-container.ql-snow {
             @apply border border-slate-200 bg-white !important;
             border-bottom-left-radius: 1rem !important;
             border-bottom-right-radius: 1rem !important;
         }
-
-        #editor-cikasda {
-            @apply min-h-[250px] text-base leading-relaxed text-slate-900 p-6 !important;
-            font-family: ui-sans-serif, system-ui, sans-serif !important;
-        }
+        #editor-cikasda { @apply min-h-[250px] text-base leading-relaxed text-slate-900 p-6 !important; font-family: ui-sans-serif, system-ui, sans-serif !important; }
+        #editor-hero { @apply min-h-[100px] text-sm leading-relaxed text-slate-900 p-4 !important; font-family: ui-sans-serif, system-ui, sans-serif !important; }
     </style>
-
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
     <script>
-        var quill = new Quill('#editor-cikasda', {
+
+
+        var quillHero = new Quill('#editor-hero', {
             theme: 'snow',
-            placeholder: 'Ketik naskah uraian Tugas dan Fungsi Dinas di sini...',
+            placeholder: 'Ketik deskripsi singkat untuk banner hero halaman publik...',
             modules: {
                 toolbar: [
-                    ['bold', 'italic', 'underline', 'blockquote'],
-                    [{
-                        'list': 'ordered'
-                    }, {
-                        'list': 'bullet'
-                    }],
-                    ['link'],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                     ['clean']
                 ]
             }
         });
-
-        quill.on('text-change', function() {
-            document.getElementById('hidden-konten').value = quill.root.innerHTML;
+        quillHero.on('text-change', function() {
+            document.getElementById('hidden-hero').value = quillHero.root.innerHTML;
         });
 
-        function previewImage(event) {
+                function previewImage(event) {
             let input = event.target;
             if (input.files && input.files[0]) {
                 let reader = new FileReader();
@@ -312,7 +251,6 @@
                     );
                 if (check2) {
                     document.getElementById('input-target-hapus').value = type;
-                    document.getElementById('hidden-konten-backup').value = quill.root.innerHTML;
                     document.getElementById('form-hapus-komponen').submit();
                 }
             }

@@ -118,7 +118,7 @@
     {{-- Load CSS Quill Word Editor --}}
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
 
-    <style>
+    <style type="text/tailwindcss">
         /* ATURAN TINGGI KOTAK EDITOR */
         #editor-cikasda {
             min-height: 500px !important;

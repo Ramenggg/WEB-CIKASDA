@@ -31,6 +31,14 @@
                     <span>Dashboard</span>
                 </a>
 
+                <a href="/admin/profil/sekilas-dinas"
+                    class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->is('admin/profil/sekilas-dinas*') ? 'bg-blue-600 text-white font-bold shadow-lg shadow-blue-600/20' : 'text-slate-400 hover:bg-slate-800/60 hover:text-white' }}">
+                    <svg class="w-5 h-5 opacity-80" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    <span>Data Sekilas Dinas</span>
+                </a>
+
                 <div class="pt-4 pb-1 text-[10px] font-extrabold text-slate-500 uppercase px-4 tracking-widest">Master
                     Konten</div>
 
@@ -87,13 +95,14 @@
 
                         <a href="/admin/profil/lhkpn"
                             class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/profil/lhkpn*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
-                            LHKPN
+                            LHKPN & LHKASN
                         </a>
 
                         <a href="/admin/profil/keuangan"
                             class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/profil/keuangan*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
                             Keuangan
                         </a>
+
 
                     </div>
                 </details>

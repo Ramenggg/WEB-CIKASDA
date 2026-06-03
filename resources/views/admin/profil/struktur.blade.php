@@ -46,27 +46,16 @@
                 class="divide-y divide-slate-100">
                 @csrf
 
-                {{-- 01. TEKS (URAIAN/DESKRIPSI) --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="h-7 w-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center font-black text-xs shadow-2xs">
-                                01</div>
-                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Uraian Teks /
-                                Penjelasan Struktur (Teks)</label>
-                        </div>
-                        @if (isset($item->konten) && !empty(trim($item->konten)) && $item->konten !== '<p><br></p>')
-                            <button type="button" onclick="confirmDeleteSection('text')"
-                                class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">🗑️
-                                Hapus Teks</button>
-                        @endif
+                    <div class="flex items-center space-x-3">
+                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">01</div>
+                        <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
                     </div>
-                    <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-2xs bg-white">
-                        <div id="editor-cikasda">{!! old('konten', $item->konten ?? '') !!}</div>
+                    <div class="rounded-2xl border border-slate-200 shadow-2xs bg-white overflow-hidden">
+                        <div id="editor-hero">{{ old('hero_description', $item->hero_description ?? '') }}</div>
                     </div>
-                    <input type="hidden" name="konten" id="hidden-konten"
-                        value="{{ old('konten', $item->konten ?? '') }}">
+                    <input type="hidden" name="hero_description" id="hidden-hero"
+                        value="{{ old('hero_description', $item->hero_description ?? '') }}">
                 </div>
 
                 {{-- 02. GAMBAR (BAGAN ORGANISASI) --}}
@@ -79,7 +68,7 @@
                             <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Gambar Bagan
                                 Alur Struktur Organisasi</label>
                         </div>
-                        @if (isset($item->gambar_path) && $item->gambar_path)
+                        @if (isset($item->primary_image_path) && $item->primary_image_path)
                             <button type="button" onclick="confirmDeleteSection('image')"
                                 class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">🗑️
                                 Hapus Gambar</button>
@@ -90,8 +79,8 @@
                         <div
                             class="lg:col-span-4 w-full aspect-video bg-white rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden shadow-2xs group relative">
                             <img id="preview-gambar"
-                                src="{{ $item->gambar_path ? Storage::url($item->gambar_path) : 'https://via.placeholder.com/400x250?text=Bagan+Struktur+Organisasi' }}"
-                                class="w-full h-full object-contain {{ $item->gambar_path ? '' : 'opacity-20' }}">
+                                src="{{ $item->primary_image_path ? Storage::url($item->primary_image_path) : 'https://via.placeholder.com/400x250?text=Bagan+Struktur+Organisasi' }}"
+                                class="w-full h-full object-contain {{ $item->primary_image_path ? '' : 'opacity-20' }}">
                         </div>
                         <div class="lg:col-span-8 w-full space-y-3.5">
                             <input type="file" name="gambar" onchange="previewImage(event)" accept="image/*"
@@ -113,7 +102,7 @@
                             <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Berkas SK
                                 Pembagian Tugas / Struktur (PDF)</label>
                         </div>
-                        @if (isset($item->pdf_path) && $item->pdf_path)
+                        @if (isset($item->primary_document_path) && $item->primary_document_path)
                             <button type="button" onclick="confirmDeleteSection('pdf')"
                                 class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">🗑️
                                 Hapus PDF</button>
@@ -127,11 +116,11 @@
                         <div class="lg:col-span-11 w-full space-y-3">
                             <input type="file" name="pdf_file" accept=".pdf"
                                 class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-red-600 file:text-white hover:file:bg-red-700 file:transition-all file:cursor-pointer">
-                            @if (isset($item->pdf_path) && $item->pdf_path)
+                            @if (isset($item->primary_document_path) && $item->primary_document_path)
                                 <div
                                     class="bg-white border border-emerald-200 p-3 rounded-xl flex items-center space-x-2.5 shadow-3xs text-emerald-700 font-bold text-xs underline decoration-emerald-300 underline-offset-4">
                                     <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    <a href="{{ Storage::url($item->pdf_path) }}" target="_blank">Lihat Berkas SK Struktur
+                                    <a href="{{ Storage::url($item->primary_document_path) }}" target="_blank">Lihat Berkas SK Struktur
                                         Aktif</a>
                                 </div>
                             @endif
@@ -151,71 +140,80 @@
             <form id="form-hapus-komponen" action="{{ route('admin.profil.update', 'struktur') }}" method="POST"
                 class="hidden">
                 @csrf
-                <input type="hidden" name="target_hapus" id="input-target-hapus">
-                <input type="hidden" name="konten" id="hidden-konten-backup">
-            </form>
+                <input type="hidden" name="target_hapus" id="input-target-hapus">            </form>
         </div>
     </div>
 
-    {{-- Quill Editor Asset --}}
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
-    <style>
+    <style type="text/tailwindcss">
         .ql-toolbar.ql-snow {
             @apply flex flex-row flex-nowrap items-center justify-start bg-slate-50 border border-slate-200 p-3 !important;
             border-top-left-radius: 1rem !important;
             border-top-right-radius: 1rem !important;
             scrollbar-width: none;
         }
-
+        .ql-toolbar.ql-snow::-webkit-scrollbar { @apply hidden w-0 h-0 !important; }
+        .ql-snow .ql-formats {
+            @apply inline-flex items-center bg-white border border-slate-200/60 rounded-xl px-1.5 py-0.5 mr-1 shrink-0 !important;
+        }
+        .ql-snow .ql-toolbar button, .ql-snow.ql-toolbar button {
+            @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-800 transition-all duration-150 !important;
+        }
+        .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:hover {
+            @apply bg-slate-100 text-blue-600 !important;
+        }
+        .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar button.ql-active {
+            @apply bg-blue-50 text-blue-600 border border-blue-200/80 !important;
+        }
+        .ql-snow .ql-toolbar .ql-stroke { stroke-width: 2.5 !important; }
         .ql-container.ql-snow {
             @apply border border-slate-200 bg-white !important;
             border-bottom-left-radius: 1rem !important;
             border-bottom-right-radius: 1rem !important;
         }
-
-        #editor-cikasda {
-            @apply min-h-[250px] text-base leading-relaxed text-slate-900 p-6 !important;
-            font-family: ui-sans-serif, system-ui, sans-serif !important;
-        }
+        #editor-cikasda { @apply min-h-[250px] text-base leading-relaxed text-slate-900 p-6 !important; font-family: ui-sans-serif, system-ui, sans-serif !important; }
+        #editor-hero { @apply min-h-[100px] text-sm leading-relaxed text-slate-900 p-4 !important; font-family: ui-sans-serif, system-ui, sans-serif !important; }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
     <script>
-        var quill = new Quill('#editor-cikasda', {
+
+        var quillHero = new Quill('#editor-hero', {
             theme: 'snow',
-            placeholder: 'Ketik penjelasan detail mengenai pembagian jabatan atau tugas struktural dinas di sini...',
+            placeholder: 'Ketik deskripsi singkat untuk banner hero halaman publik...',
             modules: {
                 toolbar: [
-                    ['bold', 'italic', 'underline', 'blockquote'],
-                    [{
-                        'list': 'ordered'
-                    }, {
-                        'list': 'bullet'
-                    }],
-                    ['link'],
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
                     ['clean']
                 ]
             }
         });
-        quill.on('text-change', function() {
-            document.getElementById('hidden-konten').value = quill.root.innerHTML;
+        quillHero.on('text-change', function() {
+            document.getElementById('hidden-hero').value = quillHero.root.innerHTML;
         });
 
-        function previewImage(event) {
-            let reader = new FileReader();
-            reader.onload = function(e) {
-                let preview = document.getElementById('preview-gambar');
-                preview.src = e.target.result;
-                preview.classList.remove('opacity-20');
-            };
-            reader.readAsDataURL(event.target.files[0]);
+                function previewImage(event) {
+            let input = event.target;
+            if (input.files && input.files[0]) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-gambar').src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
         }
 
         function confirmDeleteSection(type) {
-            if (confirm("Yakin ingin menghapus komponen struktur ini?") && confirm(
-                    "⚠️ TINDAKAN PERMANEN!\nBerkas fisik di Supabase akan dihapus seketika. Lanjutkan?")) {
-                document.getElementById('input-target-hapus').value = type;
-                document.getElementById('hidden-konten-backup').value = quill.root.innerHTML;
-                document.getElementById('form-hapus-komponen').submit();
+            let namaKomponen = type === 'text' ? 'URAIAN TEKS' : (type === 'image' ? 'DIAGRAM GAMBAR' : 'BERKAS PDF');
+            let check1 = confirm("Apakah Anda yakin ingin menghapus komponen " + namaKomponen + " Struktur Organisasi?");
+            if (check1) {
+                let check2 = confirm(
+                    "⚠️ PERINGATAN KEDUA:\nTindakan ini bersifat PERMANEN dan akan langsung menghapus berkas di server Supabase.\n\nApakah Anda benar-benar serius?"
+                );
+                if (check2) {
+                    document.getElementById('input-target-hapus').value = type;
+                    document.getElementById('form-hapus-komponen').submit();
+                }
             }
         }
     </script>

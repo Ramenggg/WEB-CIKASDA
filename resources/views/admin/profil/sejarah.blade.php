@@ -21,8 +21,7 @@
                     <div>
                         <h4 class="font-black text-slate-900 uppercase tracking-tight text-sm">Manajemen Sejarah Singkat
                         </h4>
-                        <p class="text-[11px] text-slate-500 font-medium mt-0.5">Konfigurasi naskah lini masa, dokumentasi
-                            foto arsip lawas, dan dokumen regulasi pembentukan dinas.</p>
+                        <p class="text-[11px] text-slate-500 font-medium mt-0.5">Konfigurasi naskah lini masa dan sejarah pembentukan dinas.</p>
                     </div>
                 </div>
                 <span
@@ -44,6 +43,19 @@
                 class="divide-y divide-slate-100">
                 @csrf
 
+                {{-- 00. DESKRIPSI SINGKAT HERO --}}
+                <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
+                    <div class="flex items-center space-x-3">
+                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">00</div>
+                        <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
+                    </div>
+                    <div class="rounded-2xl border border-slate-200 shadow-2xs bg-white overflow-hidden">
+                        <div id="editor-hero">{{ old('hero_description', $item->hero_description ?? '') }}</div>
+                    </div>
+                    <input type="hidden" name="hero_description" id="hidden-hero"
+                        value="{{ old('hero_description', $item->hero_description ?? '') }}">
+                </div>
+
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
                     <div class="flex justify-between items-center">
                         <div class="flex items-center space-x-3">
@@ -57,7 +69,7 @@
                         </div>
 
                         <div class="flex items-center space-x-2">
-                            @if (isset($item->konten) && !empty(trim($item->konten)) && $item->konten !== '<p><br></p>')
+                            @if (isset($item->content_data) && !empty(trim($item->content_data)) && $item->content_data !== '<p><br></p>')
                                 <button type="button" onclick="confirmDeleteSection('text')"
                                     class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">
                                     🗑️ Hapus Teks
@@ -69,11 +81,11 @@
                     </div>
 
                     <div class="rounded-2xl overflow-hidden border border-slate-200 shadow-2xs bg-white">
-                        <div id="editor-cikasda">{!! old('konten', $item->konten ?? '') !!}</div>
+                        <div id="editor-cikasda">{!! old('konten', $item->content_data ?? '') !!}</div>
                     </div>
 
                     <input type="hidden" name="konten" id="hidden-konten"
-                        value="{{ old('konten', $item->konten ?? '') }}">
+                        value="{{ old('konten', $item->content_data ?? '') }}">
                 </div>
 
                 {{-- Upload Gambar & PDF telah dihapus sesuai permintaan --}}
@@ -97,7 +109,7 @@
     </div>
 
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
-    <style>
+    <style type="text/tailwindcss">
         .ql-toolbar.ql-snow {
             @apply flex flex-row flex-nowrap items-center justify-start bg-slate-50 border border-slate-200 p-3 !important;
             border-top-left-radius: 1rem !important;
@@ -180,7 +192,22 @@
             }
         });
 
-        quill.on('text-change', function() {
+        
+        var quillHero = new Quill('#editor-hero', {
+            theme: 'snow',
+            placeholder: 'Ketik deskripsi singkat untuk banner hero halaman publik...',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                ]
+            }
+        });
+        quillHero.on('text-change', function() {
+            document.getElementById('hidden-hero').value = quillHero.root.innerHTML;
+        });
+quill.on('text-change', function() {
             document.getElementById('hidden-konten').value = quill.root.innerHTML;
         });
 

@@ -37,7 +37,7 @@
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Maklumat
                 Informasi Publik</a>
             <a href="/profil/lhkpn"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">LHKPN</a>
+                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">LHKPN & LHKASN</a>
             <a href="/profil/keuangan"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Keuangan</a>
         </div>

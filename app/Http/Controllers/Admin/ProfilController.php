@@ -12,37 +12,35 @@ class ProfilController extends Controller
     /**
      * Daftar halaman profil yang valid.
      * Kunci = slug URL, Nilai = label tampilan
-     * KUNCI: Sudah lengkap dari urutan 1 sampai 8 sesuai kebutuhan Dinas CIKASDA!
      */
     private array $halamanValid = [
-        'struktur' => 'Struktur Organisasi',
-        'visi-misi' => 'Visi dan Misi',
+        'struktur'     => 'Struktur Organisasi',
+        'visi-misi'    => 'Visi dan Misi',
         'tugas-fungsi' => 'Tugas dan Fungsi',
-        'sejarah' => 'Sejarah Singkat',
-        'pejabat' => 'Pejabat',
-        'maklumat' => 'Maklumat Informasi Publik',
-        'lhkpn' => 'LHKPN',
-        'keuangan' => 'Keuangan',
+        'sejarah'      => 'Sejarah Singkat',
+        'pejabat'      => 'Pejabat',
+        'maklumat'     => 'Maklumat Informasi Publik',
+        'lhkpn'        => 'LHKPN & LHKASN',
+        'keuangan'     => 'Keuangan',
+        'sekilas-dinas'=> 'Data Sekilas Dinas',
     ];
 
     /**
-     * Tampilkan form edit untuk halaman profil tertentu.
+     * Tampilkan form edit.
      * GET /admin/profil/{halaman}
      */
     public function edit(string $halaman)
     {
-        // Validasi slug agar tidak sembarang halaman bisa diakses
         abort_unless(array_key_exists($halaman, $this->halamanValid), 404);
 
-        $item = ProfilItem::firstOrNew(['slug' => $halaman]);
+        $item  = ProfilItem::firstOrNew(['slug' => $halaman]);
         $judul = $this->halamanValid[$halaman];
 
-        // Otomatis mengarah ke file view masing-masing, contoh: profil.visi_misi
         return view('admin.profil.' . str_replace('-', '_', $halaman), compact('item', 'judul'));
     }
 
     /**
-     * Simpan perubahan konten halaman profil (Google Form Style - Nullable).
+     * Simpan perubahan halaman profil.
      * POST /admin/profil/{halaman}
      */
     public function update(Request $request, string $halaman)
@@ -50,80 +48,122 @@ class ProfilController extends Controller
         abort_unless(array_key_exists($halaman, $this->halamanValid), 404);
 
         $request->validate([
-            'konten' => 'nullable|string',
-            'gambar' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'gambar_2' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'pdf_file' => 'nullable|mimes:pdf|max:5120',
+            'konten'           => 'nullable|string',
+            'hero_description' => 'nullable|string',
+            'gambar'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'gambar_2'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'pdf_file'         => 'nullable|mimes:pdf|max:5120',
+            'pdf_file_2'       => 'nullable|mimes:pdf|max:5120',
         ]);
 
-        $item = ProfilItem::firstOrNew(['slug' => $halaman]);
-        $item->slug = $halaman;
+        $item  = ProfilItem::firstOrNew(['slug' => $halaman]);
+        $item->slug  = $halaman;
         $item->judul = $this->halamanValid[$halaman];
+        $label = $this->halamanValid[$halaman];
 
-        // ==================================================================
-        // LOGIKA BARU: INTERSEPSI PERINTAH HAPUS GANDA DARI VIEW FORM
-        // ==================================================================
+        // ── HAPUS KOMPONEN (double-confirm dari view) ──────────────────────
         if ($request->filled('target_hapus')) {
-            $target = $request->input('target_hapus');
+            $target      = $request->input('target_hapus');
+            $pesanSukses = 'Komponen berhasil dihapus.';
 
-            if ($target === 'text') {
-                $item->konten = null; // Kosongkan narasi di DB
-                $pesanSukses = 'Komponen Teks Visi Misi berhasil dihapus!';
-            } elseif ($target === 'image' && $item->gambar_path) {
-                Storage::disk('public')->delete($item->gambar_path); // Hapus fisik gambar di Supabase
-                $item->gambar_path = null; // Set null di DB
-                $pesanSukses = 'Berkas Gambar Infografis 1 berhasil dimusnahkan dari server!';
-            } elseif ($target === 'image_2' && $item->gambar_path_2) {
-                Storage::disk('public')->delete($item->gambar_path_2); // Hapus fisik gambar 2 di Supabase
-                $item->gambar_path_2 = null; // Set null di DB
-                $pesanSukses = 'Berkas Gambar Infografis 2 berhasil dimusnahkan dari server!';
-            } elseif ($target === 'pdf' && $item->pdf_path) {
-                Storage::disk('public')->delete($item->pdf_path); // Hapus fisik PDF di Supabase
-                $item->pdf_path = null; // Set null di DB
-                $pesanSukses = 'Dokumen lampiran PDF resmi berhasil dihapus permanen!';
-            }
+            match (true) {
+                $target === 'text' => (function () use (&$item, $label, &$pesanSukses) {
+                    $item->content_data = null;
+                    $pesanSukses = "Konten teks \"{$label}\" berhasil dihapus!";
+                })(),
+                $target === 'image' && (bool) $item->primary_image_path => (function () use (&$item, $label, &$pesanSukses) {
+                    Storage::disk('public')->delete($item->primary_image_path);
+                    $item->primary_image_path = null;
+                    $pesanSukses = "Gambar utama \"{$label}\" berhasil dihapus dari server!";
+                })(),
+                $target === 'image_2' && (bool) $item->secondary_image_path => (function () use (&$item, $label, &$pesanSukses) {
+                    Storage::disk('public')->delete($item->secondary_image_path);
+                    $item->secondary_image_path = null;
+                    $pesanSukses = "Gambar kedua \"{$label}\" berhasil dihapus dari server!";
+                })(),
+                $target === 'pdf' && (bool) $item->primary_document_path => (function () use (&$item, $label, &$pesanSukses) {
+                    Storage::disk('public')->delete($item->primary_document_path);
+                    $item->primary_document_path = null;
+                    $pesanSukses = "Dokumen PDF \"{$label}\" berhasil dihapus permanen!";
+                })(),
+                $target === 'pdf_2' && (bool) $item->secondary_document_path => (function () use (&$item, $label, &$pesanSukses) {
+                    Storage::disk('public')->delete($item->secondary_document_path);
+                    $item->secondary_document_path = null;
+                    $pesanSukses = "Dokumen PDF kedua \"{$label}\" berhasil dihapus permanen!";
+                })(),
+                default => null,
+            };
 
             $item->save();
             return redirect()->route('admin.profil.edit', $halaman)->with('success', $pesanSukses);
         }
 
-        // --- Logika Penyimpanan Normal Bawaan Kemarin ---
+        // ── SIMPAN KONTEN UTAMA ────────────────────────────────────────────
         if ($halaman === 'pejabat') {
-            $item->konten = json_encode([
-                'nama_kadis' => $request->input('nama_kadis'),
-                'biografi_kadis' => $request->input('biografi_kadis'),
-                'nama_sekretaris' => $request->input('nama_sekretaris'),
+            $item->content_data = json_encode([
+                'nama_kadis'          => $request->input('nama_kadis'),
+                'biografi_kadis'      => $request->input('biografi_kadis'),
+                'nama_sekretaris'     => $request->input('nama_sekretaris'),
                 'biografi_sekretaris' => $request->input('biografi_sekretaris'),
             ]);
-        } else {
-            $item->konten = $request->input('konten');
+        } elseif ($halaman === 'sekilas-dinas') {
+            $item->content_data = json_encode([
+                'jumlah_bidang'    => $request->input('jumlah_bidang'),
+                'jumlah_subbagian' => $request->input('jumlah_subbagian'),
+                'jumlah_upt'       => $request->input('jumlah_upt'),
+                'total_pegawai'    => $request->input('total_pegawai'),
+                'tahun_dibentuk'   => $request->input('tahun_dibentuk'),
+            ]);
+        } elseif ($halaman === 'sejarah') {
+            // Sejarah punya Quill editor utama → simpan ke content_data
+            $konten = $request->input('konten');
+            if ($konten !== null && trim(strip_tags($konten)) !== '') {
+                $item->content_data = $konten;
+            }
         }
+        // Halaman lain (visi-misi, tugas-fungsi, dst) tidak punya teks utama –
+        // konten mereka cukup dari hero_description + gambar/PDF
 
+        // ── HERO DESCRIPTION (semua halaman) ──────────────────────────────
+        $heroVal = $request->input('hero_description');
+        $item->hero_description = ($heroVal && trim(strip_tags($heroVal)) !== '') ? $heroVal : null;
+
+        // ── UPLOAD GAMBAR UTAMA ────────────────────────────────────────────
         if ($request->hasFile('gambar')) {
-            if ($item->gambar_path) {
-                Storage::disk('public')->delete($item->gambar_path);
+            if ($item->primary_image_path) {
+                Storage::disk('public')->delete($item->primary_image_path);
             }
-            $item->gambar_path = $request->file('gambar')->store('profil', 'public');
+            $item->primary_image_path = $request->file('gambar')->store('profil', 'public');
         }
 
+        // ── UPLOAD GAMBAR KEDUA ────────────────────────────────────────────
         if ($request->hasFile('gambar_2')) {
-            if ($item->gambar_path_2) {
-                Storage::disk('public')->delete($item->gambar_path_2);
+            if ($item->secondary_image_path) {
+                Storage::disk('public')->delete($item->secondary_image_path);
             }
-            $item->gambar_path_2 = $request->file('gambar_2')->store('profil', 'public');
+            $item->secondary_image_path = $request->file('gambar_2')->store('profil', 'public');
         }
 
+        // ── UPLOAD PDF UTAMA ───────────────────────────────────────────────
         if ($request->hasFile('pdf_file')) {
-            if ($item->pdf_path) {
-                Storage::disk('public')->delete($item->pdf_path);
+            if ($item->primary_document_path) {
+                Storage::disk('public')->delete($item->primary_document_path);
             }
-            $item->pdf_path = $request->file('pdf_file')->store('profil/dokumen', 'public');
+            $item->primary_document_path = $request->file('pdf_file')->store('profil/dokumen', 'public');
+        }
+
+        // ── UPLOAD PDF KEDUA ───────────────────────────────────────────────
+        if ($request->hasFile('pdf_file_2')) {
+            if ($item->secondary_document_path) {
+                Storage::disk('public')->delete($item->secondary_document_path);
+            }
+            $item->secondary_document_path = $request->file('pdf_file_2')->store('profil/dokumen', 'public');
         }
 
         $item->save();
 
         return redirect()
             ->route('admin.profil.edit', $halaman)
-            ->with('success', 'Konten "' . $this->halamanValid[$halaman] . '" berhasil diperbarui!');
+            ->with('success', "Konten \"{$label}\" berhasil diperbarui!");
     }
 }
