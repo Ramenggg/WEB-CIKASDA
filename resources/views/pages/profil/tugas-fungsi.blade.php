@@ -25,7 +25,7 @@
 
                 {{-- Chart Area / Infografis --}}
                 <div class="relative w-full bg-slate-50/50 flex-1 min-h-[400px] flex items-center justify-center overflow-x-auto border border-slate-100 rounded-xl p-4">
-                    @if (isset($item) && $item->primary_image_path && \Storage::disk('public')->exists($item->primary_image_path))
+                    @if (isset($item) && $item->primary_image_path)
                         <img src="{{ Storage::url($item->primary_image_path) }}" alt="Infografis Tugas dan Fungsi CIKASDA"
                             class="w-full h-auto object-contain transition-transform duration-700 cursor-zoom-in rounded-2xl shadow-md">
                     @else

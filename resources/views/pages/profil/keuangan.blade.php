@@ -27,7 +27,7 @@
                     @endif
 
                     {{-- Gambar Keuangan --}}
-                    @if ($item && $item->primary_image_path && \Storage::disk('public')->exists($item->primary_image_path))
+                    @if ($item && $item->primary_image_path)
                         <div class="mb-10 w-full relative group cursor-zoom-in overflow-hidden rounded-xl border-4 border-white shadow-lg flex justify-center bg-white transition-all hover:shadow-xl hover:border-slate-100">
                             <img src="{{ asset('storage/' . $item->primary_image_path) }}" alt="Infografis Keuangan Dinas"
                                 class="w-full h-auto max-h-[850px] object-cover mx-auto transition-transform duration-1000 group-hover:scale-[1.015] rounded-2xl shadow-md">

@@ -23,7 +23,7 @@
 
                     {{-- Infografis Area --}}
                     <div class="relative w-full rounded-xl overflow-hidden">
-                        @if (isset($item) && $item->primary_image_path && \Storage::disk('public')->exists($item->primary_image_path))
+                        @if (isset($item) && $item->primary_image_path)
                             <img src="{{ Storage::url($item->primary_image_path) }}" alt="Piagam Maklumat Pelayanan"
                                 class="w-full h-auto object-contain transition-transform duration-700 hover:scale-[1.01] rounded-2xl shadow-md">
                         @else
