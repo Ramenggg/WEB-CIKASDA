@@ -11,53 +11,40 @@
             <div class="lg:w-3/4 flex flex-col gap-8">
                 
                 <div class="bg-white rounded-3xl shadow-xl overflow-hidden p-6 border border-slate-100 flex flex-col h-full">
-                <div class="text-center mb-8 relative">
-                    <h2 class="text-lg md:text-xl font-bold text-slate-800 inline-block relative pb-3">
-                        Tugas dan Fungsi
-                        <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-blue-600 rounded-full"></span>
-                        <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-slate-100 rounded-full -z-10"></span>
-                    </h2>
-                </div>
+                    <div class="text-center mb-8 relative">
+                        <h2 class="text-lg md:text-xl font-bold text-slate-800 inline-block relative pb-3">
+                            Dokumen Tugas Pokok & Fungsi
+                            <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-16 h-1 bg-blue-600 rounded-full"></span>
+                            <span class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-slate-100 rounded-full -z-10"></span>
+                        </h2>
+                    </div>
 
-                {{-- Content is rendered in the Hero section --}}
-                
-
-
-                {{-- Chart Area / Infografis --}}
-                <div class="relative w-full bg-slate-50/50 flex-1 min-h-[400px] flex items-center justify-center overflow-x-auto border border-slate-100 rounded-xl p-4">
-                    @if (isset($item) && $item->primary_image_path)
-                        <img src="{{ Storage::url($item->primary_image_path) }}" alt="Infografis Tugas dan Fungsi CIKASDA"
-                            class="w-full h-auto object-contain transition-transform duration-700 cursor-zoom-in rounded-2xl shadow-md">
-                    @else
-                        <div class="relative z-10 w-full flex flex-col items-center justify-center py-12">
+                    {{-- Embed PDF Reader --}}
+                    <div class="relative w-full bg-slate-50/50 flex-1 flex flex-col items-center justify-center border border-slate-100 rounded-xl p-8">
+                        @if (isset($item) && $item->primary_document_path)
+                            <div class="w-full space-y-4">
+                                <div class="w-full h-[500px] md:h-[600px] rounded-xl border border-slate-200 shadow-inner overflow-hidden bg-slate-100">
+                                    <iframe src="{{ Storage::url($item->primary_document_path) }}" class="w-full h-full" title="Dokumen Tugas & Fungsi"></iframe>
+                                </div>
+                                <div class="flex justify-end">
+                                    <a href="{{ Storage::url($item->primary_document_path) }}" target="_blank"
+                                        class="shrink-0 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 flex items-center space-x-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                        <span>Buka Dokumen di Tab Baru</span>
+                                    </a>
+                                </div>
+                            </div>
+                        @else
                             <div class="w-24 h-24 mb-6 bg-white rounded-full border border-slate-200 flex items-center justify-center mx-auto shadow-sm">
                                 <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                             </div>
-                            <h3 class="text-xl font-bold text-slate-700 mb-2">Infografis Belum Tersedia</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed max-w-md text-center">Infografis visual uraian Tugas & Fungsi akan ditampilkan setelah diunggah oleh administrator.</p>
-                        </div>
-                    @endif
-                </div>
-                </div>
-
-                {{-- PDF Lampiran --}}
-                @if (isset($item) && $item->primary_document_path)
-                    <div class="w-full bg-gradient-to-r from-red-50/50 via-slate-50 to-red-50/20 border border-slate-200 rounded-3xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
-                        <div class="flex items-center space-x-4 text-center sm:text-left flex-col sm:flex-row gap-4 sm:gap-0">
-                            <div class="h-14 w-14 bg-white border border-slate-200 rounded-xl flex items-center justify-center shrink-0 shadow-sm">
-                                <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <h5 class="text-base font-black text-slate-900 tracking-tight">Dokumen SK Peraturan Tugas & Fungsi</h5>
-                                <p class="text-xs text-slate-500 font-semibold mt-0.5">Unduh dokumen dasar hukum Tugas Pokok & Fungsi resmi (Format PDF).</p>
-                            </div>
-                        </div>
-                        <a href="{{ Storage::url($item->primary_document_path) }}" target="_blank"
-                            class="shrink-0 w-full sm:w-auto text-center bg-red-600 hover:bg-red-700 text-white font-black text-xs uppercase tracking-widest px-6 py-4 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5">Download PDF</a>
+                            <h3 class="text-xl font-bold text-slate-700 mb-2">Dokumen Belum Tersedia</h3>
+                            <p class="text-slate-500 text-sm leading-relaxed max-w-md text-center">Dokumen keputusan/peraturan mengenai Tugas Pokok & Fungsi Dinas CIKASDA saat ini belum tersedia.</p>
+                        @endif
                     </div>
-                @endif
+                </div>
 
             </div>
 
