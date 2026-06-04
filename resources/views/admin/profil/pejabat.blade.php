@@ -45,6 +45,19 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div class="mx-8 mt-6 px-5 py-4 bg-red-50 border border-red-100 rounded-2xl text-red-800 text-sm font-bold shadow-2xs">
+                    <div class="flex items-center space-x-2 mb-2 text-red-900 font-extrabold uppercase tracking-wide text-xs">
+                        ⚠️ Gagal Menyimpan:
+                    </div>
+                    <ul class="list-disc list-inside text-xs space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form id="form-pejabat" action="{{ route('admin.profil.update', 'pejabat') }}" method="POST" enctype="multipart/form-data"
                 class="divide-y divide-slate-100">
                 @csrf

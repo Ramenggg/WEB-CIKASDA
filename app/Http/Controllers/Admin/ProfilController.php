@@ -53,9 +53,9 @@ class ProfilController extends Controller
         $rules = [
             'konten'           => 'nullable|string',
             'hero_description' => 'nullable|string',
-            'pdf_file'         => 'nullable|mimes:pdf|max:5120',
-            'pdf_file_2'       => 'nullable|mimes:pdf|max:5120',
-            'pdf_file_3'       => 'nullable|mimes:pdf|max:5120',
+            'pdf_file'         => 'nullable|mimes:pdf|max:51200',
+            'pdf_file_2'       => 'nullable|mimes:pdf|max:51200',
+            'pdf_file_3'       => 'nullable|mimes:pdf|max:51200',
         ];
 
         if ($halaman === 'keuangan') {

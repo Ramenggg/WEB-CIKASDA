@@ -39,6 +39,19 @@
                 </div>
             @endif
 
+            @if ($errors->any())
+                <div class="mx-8 mt-6 px-5 py-4 bg-red-50 border border-red-100 rounded-2xl text-red-800 text-sm font-bold shadow-2xs">
+                    <div class="flex items-center space-x-2 mb-2 text-red-900 font-extrabold uppercase tracking-wide text-xs">
+                        ⚠️ Gagal Menyimpan:
+                    </div>
+                    <ul class="list-disc list-inside text-xs space-y-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             {{-- Panduan --}}
             <div class="mx-8 mt-6 px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl text-blue-800 text-xs font-semibold leading-relaxed">
                 <span class="font-black uppercase tracking-wider">ℹ️ Panduan:</span> Upload file PDF untuk masing-masing accordion DPPA yang tampil di halaman publik Transparansi Keuangan.
