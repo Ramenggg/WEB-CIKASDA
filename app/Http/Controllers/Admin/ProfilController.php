@@ -47,6 +47,8 @@ class ProfilController extends Controller
     {
         abort_unless(array_key_exists($halaman, $this->halamanValid), 404);
 
+        $disk = $this->getDisk();
+
         $request->validate([
             'konten'           => 'nullable|string',
             'hero_description' => 'nullable|string',
@@ -72,22 +74,22 @@ class ProfilController extends Controller
                     $pesanSukses = "Konten teks \"{$label}\" berhasil dihapus!";
                 })(),
                 $target === 'image' && (bool) $item->primary_image_path => (function () use (&$item, $label, &$pesanSukses) {
-                    Storage::disk('public')->delete($item->primary_image_path);
+                    Storage::disk($disk)->delete($item->primary_image_path);
                     $item->primary_image_path = null;
                     $pesanSukses = "Gambar utama \"{$label}\" berhasil dihapus dari server!";
                 })(),
                 $target === 'image_2' && (bool) $item->secondary_image_path => (function () use (&$item, $label, &$pesanSukses) {
-                    Storage::disk('public')->delete($item->secondary_image_path);
+                    Storage::disk($disk)->delete($item->secondary_image_path);
                     $item->secondary_image_path = null;
                     $pesanSukses = "Gambar kedua \"{$label}\" berhasil dihapus dari server!";
                 })(),
                 $target === 'pdf' && (bool) $item->primary_document_path => (function () use (&$item, $label, &$pesanSukses) {
-                    Storage::disk('public')->delete($item->primary_document_path);
+                    Storage::disk($disk)->delete($item->primary_document_path);
                     $item->primary_document_path = null;
                     $pesanSukses = "Dokumen PDF \"{$label}\" berhasil dihapus permanen!";
                 })(),
                 $target === 'pdf_2' && (bool) $item->secondary_document_path => (function () use (&$item, $label, &$pesanSukses) {
-                    Storage::disk('public')->delete($item->secondary_document_path);
+                    Storage::disk($disk)->delete($item->secondary_document_path);
                     $item->secondary_document_path = null;
                     $pesanSukses = "Dokumen PDF kedua \"{$label}\" berhasil dihapus permanen!";
                 })(),
@@ -131,33 +133,33 @@ class ProfilController extends Controller
         // ── UPLOAD GAMBAR UTAMA ────────────────────────────────────────────
         if ($request->hasFile('gambar')) {
             if ($item->primary_image_path) {
-                Storage::disk('public')->delete($item->primary_image_path);
+                Storage::disk($disk)->delete($item->primary_image_path);
             }
-            $item->primary_image_path = $request->file('gambar')->store('profil', 'public');
+            $item->primary_image_path = $request->file('gambar')->store('profil', $disk);
         }
 
         // ── UPLOAD GAMBAR KEDUA ────────────────────────────────────────────
         if ($request->hasFile('gambar_2')) {
             if ($item->secondary_image_path) {
-                Storage::disk('public')->delete($item->secondary_image_path);
+                Storage::disk($disk)->delete($item->secondary_image_path);
             }
-            $item->secondary_image_path = $request->file('gambar_2')->store('profil', 'public');
+            $item->secondary_image_path = $request->file('gambar_2')->store('profil', $disk);
         }
 
         // ── UPLOAD PDF UTAMA ───────────────────────────────────────────────
         if ($request->hasFile('pdf_file')) {
             if ($item->primary_document_path) {
-                Storage::disk('public')->delete($item->primary_document_path);
+                Storage::disk($disk)->delete($item->primary_document_path);
             }
-            $item->primary_document_path = $request->file('pdf_file')->store('profil/dokumen', 'public');
+            $item->primary_document_path = $request->file('pdf_file')->store('profil/dokumen', $disk);
         }
 
         // ── UPLOAD PDF KEDUA ───────────────────────────────────────────────
         if ($request->hasFile('pdf_file_2')) {
             if ($item->secondary_document_path) {
-                Storage::disk('public')->delete($item->secondary_document_path);
+                Storage::disk($disk)->delete($item->secondary_document_path);
             }
-            $item->secondary_document_path = $request->file('pdf_file_2')->store('profil/dokumen', 'public');
+            $item->secondary_document_path = $request->file('pdf_file_2')->store('profil/dokumen', $disk);
         }
 
         $item->save();
@@ -165,5 +167,14 @@ class ProfilController extends Controller
         return redirect()
             ->route('admin.profil.edit', $halaman)
             ->with('success', "Konten \"{$label}\" berhasil diperbarui!");
+    }
+
+    /**
+     * Tentukan disk penyimpanan aktif berdasarkan konfigurasi FILESYSTEM_DISK.
+     * Mengembalikan 'supabase' jika dikonfigurasi, fallback ke 'public' (local).
+     */
+    private function getDisk(): string
+    {
+        return config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
     }
 }

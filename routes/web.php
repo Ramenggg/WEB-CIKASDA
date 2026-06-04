@@ -53,6 +53,7 @@ Route::prefix('profil')
 // --------------------------------------------------------------------------
 Route::prefix('admin')
     ->name('admin.')
+    ->middleware(['auth'])
     ->group(function () {
         // --- A. DASHBOARD UTAMA & LOGS ---
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
