@@ -49,11 +49,18 @@
                 class="divide-y divide-slate-100">
                 @csrf
 
-                {{-- 00. DESKRIPSI SINGKAT HERO --}}
+                                {{-- HERO DESCRIPTION --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
                     <div class="flex items-center space-x-3">
-                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">00</div>
-                        <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
+                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                            </svg>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
+                            <span class="text-[10px] text-slate-400 font-semibold">Teks ini tampil di area hero/banner halaman publik</span>
+                        </div>
                     </div>
                     <div class="rounded-2xl border border-slate-200 shadow-2xs bg-white overflow-hidden">
                         <div id="editor-hero">{{ old('hero_description', $item->hero_description ?? '') }}</div>
@@ -64,14 +71,22 @@
 
                 {{-- KEPALA DINAS --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div
-                            class="h-7 w-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center font-black text-xs shadow-2xs">
-                            01
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="h-7 w-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center font-black text-xs shadow-2xs">
+                                ●
+                            </div>
+                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">
+                                Profil Kepala Dinas
+                            </label>
                         </div>
-                        <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">
-                            Profil Kepala Dinas
-                        </label>
+                        @if (isset($item->primary_image_path) && $item->primary_image_path)
+                            <button type="button" onclick="confirmDeleteSection('image')"
+                                class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">
+                                Hapus Gambar
+                            </button>
+                        @endif
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
@@ -106,14 +121,22 @@
 
                 {{-- SEKRETARIS DINAS --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
-                    <div class="flex items-center space-x-3 mb-6">
-                        <div
-                            class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">
-                            02
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="flex items-center space-x-3">
+                            <div
+                                class="h-7 w-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center font-black text-xs shadow-2xs">
+                                ●
+                            </div>
+                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">
+                                Profil Sekretaris Dinas
+                            </label>
                         </div>
-                        <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">
-                            Profil Sekretaris Dinas
-                        </label>
+                        @if (isset($item->secondary_image_path) && $item->secondary_image_path)
+                            <button type="button" onclick="confirmDeleteSection('image_2')"
+                                class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">
+                                Hapus Gambar
+                            </button>
+                        @endif
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
@@ -151,41 +174,35 @@
                 </div>
             </form>
 
+            {{-- Form Hapus Komponen Tersembunyi --}}
+            <form id="form-hapus-komponen" action="{{ route('admin.profil.update', 'pejabat') }}" method="POST"
+                class="hidden">
+                @csrf
+                <input type="hidden" name="target_hapus" id="input-target-hapus">
+            </form>
+
         </div>
     </div>
 
     {{-- Quill Editor Asset --}}
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
-    <style type="text/tailwindcss">
-        .ql-toolbar.ql-snow {
-            @apply flex flex-row flex-wrap items-center bg-slate-50 border border-slate-200 p-2 !important;
-            border-top-left-radius: 0.75rem !important;
-            border-top-right-radius: 0.75rem !important;
-        }
-        .ql-container.ql-snow {
-            @apply border border-slate-200 bg-white !important;
-            border-bottom-left-radius: 0.75rem !important;
-            border-bottom-right-radius: 0.75rem !important;
-        }
-        .ql-editor {
-            @apply min-h-[150px] text-sm text-slate-800 p-4 leading-relaxed !important;
-        }
-        .ql-editor ul {
-            list-style-type: disc !important;
-            padding-left: 1.5em !important;
-        }
-        .ql-editor ol {
-            list-style-type: decimal !important;
-            padding-left: 1.5em !important;
-        }
-        .ql-editor li {
-            margin-bottom: 0.25em !important;
-        }
-        #editor-hero { min-height: 100px; font-size: 0.875rem; line-height: 1.6; padding: 1rem; font-family: ui-sans-serif, system-ui, sans-serif; }
-    </style>
+    
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
     <script>
+        // Setup Quill for Hero Banner
+        var quillHero = new Quill('#editor-hero', {
+            theme: 'snow',
+            placeholder: 'Ketik deskripsi singkat untuk banner hero halaman publik...',
+            modules: {
+                toolbar: [
+                    ['bold', 'italic', 'underline'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    ['clean']
+                ]
+            }
+        });
+
         // Setup Quill for Kadis
         var quillKadis = new Quill('#editor-kadis', {
             theme: 'snow',
@@ -214,6 +231,7 @@
 
         // Sync Quill to hidden inputs on form submit
         document.getElementById('form-pejabat').addEventListener('submit', function() {
+            document.getElementById('hidden-hero').value = quillHero.root.innerHTML;
             document.getElementById('hidden-biografi-kadis').value = quillKadis.root.innerHTML;
             document.getElementById('hidden-biografi-sekretaris').value = quillSekretaris.root.innerHTML;
         });
@@ -229,6 +247,20 @@
                     img.classList.remove('opacity-80');
                 }
                 reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function confirmDeleteSection(type) {
+            let namaKomponen = type === 'image' ? 'FOTO KEPALA DINAS' : 'FOTO SEKRETARIS DINAS';
+            let check1 = confirm("Apakah Anda yakin ingin menghapus " + namaKomponen + "?");
+            if (check1) {
+                let check2 = confirm(
+                    "⚠️ PERINGATAN KEDUA:\nTindakan ini bersifat PERMANEN dan akan langsung menghapus berkas di server Supabase.\n\nApakah Anda benar-benar serius?"
+                );
+                if (check2) {
+                    document.getElementById('input-target-hapus').value = type;
+                    document.getElementById('form-hapus-komponen').submit();
+                }
             }
         }
     </script>

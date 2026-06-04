@@ -20,14 +20,13 @@
                         </svg>
                     </div>
                     <div>
-                        <h4 class="font-black text-slate-900 uppercase tracking-tight text-sm">Manajemen Data Keuangan</h4>
-                        <p class="text-[11px] text-slate-500 font-medium mt-0.5">Kelola narasi anggaran, infografis
-                            statistik keuangan, dan dokumen laporan keuangan resmi.</p>
+                        <h4 class="font-black text-slate-900 uppercase tracking-tight text-sm">Manajemen Dokumen DPPA & Realisasi Anggaran</h4>
+                        <p class="text-[11px] text-slate-500 font-medium mt-0.5">Kelola dokumen PDF keuangan untuk setiap accordion di halaman publik.</p>
                     </div>
                 </div>
                 <span
                     class="text-[10px] bg-blue-50 border border-blue-200 text-blue-700 font-black px-3 py-1 rounded-full uppercase tracking-wider">
-                    Control Center
+                    5 Accordion
                 </span>
             </div>
 
@@ -40,14 +39,27 @@
                 </div>
             @endif
 
+            {{-- Panduan --}}
+            <div class="mx-8 mt-6 px-5 py-4 bg-blue-50/50 border border-blue-100 rounded-2xl text-blue-800 text-xs font-semibold leading-relaxed">
+                <span class="font-black uppercase tracking-wider">ℹ️ Panduan:</span> Upload file PDF untuk masing-masing accordion DPPA yang tampil di halaman publik Transparansi Keuangan.
+            </div>
+
             <form action="{{ route('admin.profil.update', 'keuangan') }}" method="POST" enctype="multipart/form-data"
                 class="divide-y divide-slate-100">
                 @csrf
 
+                {{-- HERO DESCRIPTION --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
                     <div class="flex items-center space-x-3">
-                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">01</div>
-                        <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
+                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                            </svg>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
+                            <span class="text-[10px] text-slate-400 font-semibold">Teks ini tampil di area hero/banner halaman publik</span>
+                        </div>
                     </div>
                     <div class="rounded-2xl border border-slate-200 shadow-2xs bg-white overflow-hidden">
                         <div id="editor-hero">{{ old('hero_description', $item->hero_description ?? '') }}</div>
@@ -56,75 +68,49 @@
                         value="{{ old('hero_description', $item->hero_description ?? '') }}">
                 </div>
 
-                {{-- 02. GAMBAR --}}
-                <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="h-7 w-7 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-600 flex items-center justify-center font-black text-xs shadow-2xs">
-                                02</div>
-                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Infografis
-                                Realisasi Anggaran / Skema Grafik Kas</label>
-                        </div>
-                        @if (isset($item->primary_image_path) && $item->primary_image_path)
-                            <button type="button" onclick="confirmDeleteSection('image')"
-                                class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">🗑️
-                                Hapus Gambar</button>
-                        @endif
-                    </div>
-                    <div
-                        class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
-                        <div
-                            class="lg:col-span-4 w-full aspect-video bg-white rounded-xl border border-slate-200 flex items-center justify-center overflow-hidden shadow-2xs group relative">
-                            <img id="preview-gambar"
-                                src="{{ $item->primary_image_path ? Storage::url($item->primary_image_path) : 'https://via.placeholder.com/400x250?text=Grafik+Keuangan' }}"
-                                class="w-full h-full object-contain {{ $item->primary_image_path ? '' : 'opacity-20' }}">
-                        </div>
-                        <div class="lg:col-span-8 w-full space-y-3.5">
-                            <input type="file" name="gambar" onchange="previewImage(event)" accept="image/*"
-                                class="block w-full text-sm text-slate-500 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-slate-900 file:text-white hover:file:bg-blue-600 file:transition-all file:cursor-pointer">
-                            <div
-                                class="bg-white p-4 rounded-xl border border-slate-200 text-[11px] text-slate-600 font-semibold leading-relaxed shadow-3xs text-blue-700 font-bold uppercase tracking-wider">
-                                PNG, JPG, JPEG, WEBP • MAKS 2MB</div>
-                        </div>
-                    </div>
-                </div>
+                {{-- ============================================================ --}}
+                {{-- PDF 1: DPPA OPD 1 Sekretariat --}}
+                {{-- ============================================================ --}}
+                @php
+                    $accordions = [
+                        ['num' => '01', 'label' => 'DPPA OPD 1 Sekretariat dan 4 Bidang Teknis', 'field' => 'primary_image_path', 'input' => 'gambar', 'delete' => 'image', 'color' => 'red'],
+                        ['num' => '02', 'label' => 'DPPA OPD UPT Pengelolaan SDA Wilayah I', 'field' => 'secondary_image_path', 'input' => 'gambar_2', 'delete' => 'image_2', 'color' => 'red'],
+                        ['num' => '03', 'label' => 'DPPA OPD UPT Pengelolaan SDA Wilayah II', 'field' => 'primary_document_path', 'input' => 'pdf_file', 'delete' => 'pdf', 'color' => 'red'],
+                        ['num' => '04', 'label' => 'DPPA OPD Unit Pengelolaan SPAM', 'field' => 'secondary_document_path', 'input' => 'pdf_file_2', 'delete' => 'pdf_2', 'color' => 'red'],
+                        ['num' => '05', 'label' => 'Realisasi Anggaran', 'field' => 'extra_document_path', 'input' => 'pdf_file_3', 'delete' => 'pdf_3', 'color' => 'red'],
+                    ];
+                @endphp
 
-                {{-- 03. PDF --}}
-                <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
-                    <div class="flex justify-between items-center">
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="h-7 w-7 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center justify-center font-black text-xs shadow-2xs">
-                                03</div>
-                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Berkas
-                                Lampiran Laporan Transparansi Keuangan (PDF)</label>
-                        </div>
-                        @if (isset($item->primary_document_path) && $item->primary_document_path)
-                            <button type="button" onclick="confirmDeleteSection('pdf')"
-                                class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">🗑️
-                                Hapus PDF</button>
-                        @endif
-                    </div>
-                    <div
-                        class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
-                        <div
-                            class="lg:col-span-1 h-12 w-12 bg-white border border-slate-200 rounded-xl flex items-center justify-center mx-auto shadow-2xs text-red-600 font-bold">
-                            PDF</div>
-                        <div class="lg:col-span-11 w-full space-y-3">
-                            <input type="file" name="pdf_file" accept=".pdf"
-                                class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-red-600 file:text-white hover:file:bg-red-700 file:transition-all file:cursor-pointer">
-                            @if (isset($item->primary_document_path) && $item->primary_document_path)
-                                <div
-                                    class="bg-white border border-emerald-200 p-3 rounded-xl flex items-center space-x-2.5 shadow-3xs text-emerald-700 font-bold text-xs underline decoration-emerald-300 underline-offset-4">
-                                    <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                                    <a href="{{ Storage::url($item->primary_document_path) }}" target="_blank">Lihat Berkas Dokumen
-                                        Keuangan Aktif</a>
+                @foreach ($accordions as $acc)
+                    <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-3">
+                                <div class="h-7 w-7 rounded-lg bg-{{ $acc['color'] }}-50 border border-{{ $acc['color'] }}-200 text-{{ $acc['color'] }}-600 flex items-center justify-center font-black text-xs shadow-2xs">●</div>
+                                <div>
+                                    <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">{{ $acc['label'] }}</label>
+                                    <span class="text-[10px] text-slate-400 font-semibold">Accordion #{{ $acc['num'] }} di halaman publik → PDF</span>
                                 </div>
+                            </div>
+                            @if (isset($item->{$acc['field']}) && $item->{$acc['field']})
+                                <button type="button" onclick="confirmDeleteSection('{{ $acc['delete'] }}')"
+                                    class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">Hapus PDF</button>
                             @endif
                         </div>
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
+                            <div class="lg:col-span-1 h-12 w-12 bg-white border border-slate-200 rounded-xl flex items-center justify-center mx-auto shadow-2xs text-red-600 font-bold text-xs">PDF</div>
+                            <div class="lg:col-span-11 w-full space-y-3">
+                                <input type="file" name="{{ $acc['input'] }}" accept=".pdf"
+                                    class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-red-600 file:text-white hover:file:bg-red-700 file:transition-all file:cursor-pointer">
+                                @if (isset($item->{$acc['field']}) && $item->{$acc['field']})
+                                    <div class="bg-white border border-emerald-200 p-3 rounded-xl flex items-center space-x-2.5 shadow-3xs text-emerald-700 font-bold text-xs underline decoration-emerald-300 underline-offset-4">
+                                        <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                                        <a href="{{ Storage::url($item->{$acc['field']}) }}" target="_blank">Lihat Berkas PDF Aktif — {{ $acc['label'] }}</a>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
                     </div>
-                </div>
+                @endforeach
 
                 <div class="p-6 bg-slate-50/50 flex items-center justify-end border-t border-slate-100">
                     <button type="submit"
@@ -133,47 +119,19 @@
                 </div>
             </form>
 
-            {{-- Form Hapus Komponen Tersembunyi (Sistem Ganda) --}}
+            {{-- Form Hapus Komponen Tersembunyi --}}
             <form id="form-hapus-komponen" action="{{ route('admin.profil.update', 'keuangan') }}" method="POST"
                 class="hidden">
                 @csrf
-                <input type="hidden" name="target_hapus" id="input-target-hapus">            </form>
+                <input type="hidden" name="target_hapus" id="input-target-hapus">
+            </form>
         </div>
     </div>
 
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
-    <style type="text/tailwindcss">
-        .ql-toolbar.ql-snow {
-            @apply flex flex-row flex-nowrap items-center justify-start bg-slate-50 border border-slate-200 p-3 !important;
-            border-top-left-radius: 1rem !important;
-            border-top-right-radius: 1rem !important;
-            scrollbar-width: none;
-        }
-        .ql-toolbar.ql-snow::-webkit-scrollbar { @apply hidden w-0 h-0 !important; }
-        .ql-snow .ql-formats {
-            @apply inline-flex items-center bg-white border border-slate-200/60 rounded-xl px-1.5 py-0.5 mr-1 shrink-0 !important;
-        }
-        .ql-snow .ql-toolbar button, .ql-snow.ql-toolbar button {
-            @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-800 transition-all duration-150 !important;
-        }
-        .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:hover {
-            @apply bg-slate-100 text-blue-600 !important;
-        }
-        .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar button.ql-active {
-            @apply bg-blue-50 text-blue-600 border border-blue-200/80 !important;
-        }
-        .ql-snow .ql-toolbar .ql-stroke { stroke-width: 2.5 !important; }
-        .ql-container.ql-snow {
-            @apply border border-slate-200 bg-white !important;
-            border-bottom-left-radius: 1rem !important;
-            border-bottom-right-radius: 1rem !important;
-        }
-        #editor-cikasda { @apply min-h-[250px] text-base leading-relaxed text-slate-900 p-6 !important; font-family: ui-sans-serif, system-ui, sans-serif !important; }
-        #editor-hero { @apply min-h-[100px] text-sm leading-relaxed text-slate-900 p-4 !important; font-family: ui-sans-serif, system-ui, sans-serif !important; }
-    </style>
+    
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
     <script>
-
         var quillHero = new Quill('#editor-hero', {
             theme: 'snow',
             placeholder: 'Ketik deskripsi singkat untuk banner hero halaman publik...',
@@ -189,20 +147,16 @@
             document.getElementById('hidden-hero').value = quillHero.root.innerHTML;
         });
 
-                function previewImage(event) {
-            let input = event.target;
-            if (input.files && input.files[0]) {
-                let reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('preview-gambar').src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
         function confirmDeleteSection(type) {
-            let namaKomponen = type === 'text' ? 'URAIAN TEKS' : (type === 'image' ? 'DIAGRAM GAMBAR' : 'BERKAS PDF');
-            let check1 = confirm("Apakah Anda yakin ingin menghapus komponen " + namaKomponen + " Kebijakan Keuangan?");
+            const names = {
+                'image': 'DPPA OPD 1 Sekretariat (PDF)',
+                'image_2': 'DPPA UPT SDA Wilayah I (PDF)',
+                'pdf': 'DPPA UPT SDA Wilayah II (PDF)',
+                'pdf_2': 'DPPA Unit SPAM (PDF)',
+                'pdf_3': 'Realisasi Anggaran (PDF)'
+            };
+            let namaKomponen = names[type] || type;
+            let check1 = confirm("Apakah Anda yakin ingin menghapus dokumen " + namaKomponen + "?");
             if (check1) {
                 let check2 = confirm(
                     "⚠️ PERINGATAN KEDUA:\nTindakan ini bersifat PERMANEN dan akan langsung menghapus berkas di server Supabase.\n\nApakah Anda benar-benar serius?"

@@ -22,16 +22,21 @@
 
                     {{-- Konten LHKPN --}}
                     <div class="relative w-full bg-slate-50/50 flex-1 flex flex-col items-center justify-center border border-slate-100 rounded-xl p-8">
-                        @if (isset($item) && $item->primary_document_path && \Storage::disk('public')->exists($item->primary_document_path))
-                            <div class="w-24 h-24 mb-6 bg-red-50 rounded-full border border-red-100 flex items-center justify-center shadow-sm">
-                                <svg class="w-10 h-10 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        @if (isset($item) && $item->primary_document_path)
+                            <div class="w-full space-y-4">
+                                <div class="w-full h-[500px] md:h-[600px] rounded-xl border border-slate-200 shadow-inner overflow-hidden bg-slate-100">
+                                    <iframe src="{{ Storage::url($item->primary_document_path) }}" class="w-full h-full" title="Dokumen LHKPN"></iframe>
+                                </div>
+                                <div class="flex justify-end">
+                                    <a href="{{ Storage::url($item->primary_document_path) }}" target="_blank"
+                                        class="shrink-0 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 flex items-center space-x-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                        <span>Buka LHKPN di Tab Baru</span>
+                                    </a>
+                                </div>
                             </div>
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">Dokumen Resmi Tersedia</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed max-w-md text-center mb-8">Anda dapat mengunduh dan meninjau rincian tanda terima Laporan Harta Kekayaan Penyelenggara Negara (LHKPN).</p>
-                            <a href="{{ Storage::url($item->primary_document_path) }}" target="_blank" class="inline-flex items-center space-x-2 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                <span>Unduh PDF LHKPN</span>
-                            </a>
                         @else
                             <div class="w-24 h-24 mb-6 bg-white rounded-full border border-slate-200 flex items-center justify-center mx-auto shadow-sm">
                                 <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -54,16 +59,21 @@
 
                     {{-- Konten LHKASN --}}
                     <div class="relative w-full bg-slate-50/50 flex-1 flex flex-col items-center justify-center border border-slate-100 rounded-xl p-8">
-                        @if (isset($item) && $item->secondary_document_path && \Storage::disk('public')->exists($item->secondary_document_path))
-                            <div class="w-24 h-24 mb-6 bg-orange-50 rounded-full border border-orange-100 flex items-center justify-center shadow-sm">
-                                <svg class="w-10 h-10 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        @if (isset($item) && $item->secondary_document_path)
+                            <div class="w-full space-y-4">
+                                <div class="w-full h-[500px] md:h-[600px] rounded-xl border border-slate-200 shadow-inner overflow-hidden bg-slate-100">
+                                    <iframe src="{{ Storage::url($item->secondary_document_path) }}" class="w-full h-full" title="Dokumen LHKASN"></iframe>
+                                </div>
+                                <div class="flex justify-end">
+                                    <a href="{{ Storage::url($item->secondary_document_path) }}" target="_blank"
+                                        class="shrink-0 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-md transition-all duration-200 hover:-translate-y-0.5 flex items-center space-x-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                        </svg>
+                                        <span>Buka LHKASN di Tab Baru</span>
+                                    </a>
+                                </div>
                             </div>
-                            <h3 class="text-xl font-bold text-slate-800 mb-2">Dokumen Resmi Tersedia</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed max-w-md text-center mb-8">Anda dapat mengunduh dan meninjau rincian tanda terima Laporan Harta Kekayaan Aparatur Sipil Negara (LHKASN).</p>
-                            <a href="{{ Storage::url($item->secondary_document_path) }}" target="_blank" class="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                                <span>Unduh PDF LHKASN</span>
-                            </a>
                         @else
                             <div class="w-24 h-24 mb-6 bg-white rounded-full border border-slate-200 flex items-center justify-center mx-auto shadow-sm">
                                 <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
@@ -79,6 +89,7 @@
             {{-- Bagian Kanan: Sekilas Dinas Sidebar (Sekitar 25%) --}}
             <div class="lg:w-1/4">
                 <x-sekilas-dinas-sidebar />
+            </div>
         </div>
     </div>
 @endsection

@@ -49,14 +49,24 @@ class ProfilController extends Controller
 
         $disk = $this->getDisk();
 
-        $request->validate([
+        // ── VALIDASI DINAMIS ───────────────────────────────────────────────
+        $rules = [
             'konten'           => 'nullable|string',
             'hero_description' => 'nullable|string',
-            'gambar'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-            'gambar_2'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'pdf_file'         => 'nullable|mimes:pdf|max:5120',
             'pdf_file_2'       => 'nullable|mimes:pdf|max:5120',
-        ]);
+            'pdf_file_3'       => 'nullable|mimes:pdf|max:5120',
+        ];
+
+        if ($halaman === 'keuangan') {
+            $rules['gambar']   = 'nullable|file|mimes:pdf|max:5120';
+            $rules['gambar_2'] = 'nullable|file|mimes:pdf|max:5120';
+        } else {
+            $rules['gambar']   = 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120';
+            $rules['gambar_2'] = 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120';
+        }
+
+        $request->validate($rules);
 
         $item  = ProfilItem::firstOrNew(['slug' => $halaman]);
         $item->slug  = $halaman;
@@ -68,33 +78,30 @@ class ProfilController extends Controller
             $target      = $request->input('target_hapus');
             $pesanSukses = 'Komponen berhasil dihapus.';
 
-            match (true) {
-                $target === 'text' => (function () use (&$item, $label, &$pesanSukses) {
-                    $item->content_data = null;
-                    $pesanSukses = "Konten teks \"{$label}\" berhasil dihapus!";
-                })(),
-                $target === 'image' && (bool) $item->primary_image_path => (function () use (&$item, $label, &$pesanSukses) {
-                    Storage::disk($disk)->delete($item->primary_image_path);
-                    $item->primary_image_path = null;
-                    $pesanSukses = "Gambar utama \"{$label}\" berhasil dihapus dari server!";
-                })(),
-                $target === 'image_2' && (bool) $item->secondary_image_path => (function () use (&$item, $label, &$pesanSukses) {
-                    Storage::disk($disk)->delete($item->secondary_image_path);
-                    $item->secondary_image_path = null;
-                    $pesanSukses = "Gambar kedua \"{$label}\" berhasil dihapus dari server!";
-                })(),
-                $target === 'pdf' && (bool) $item->primary_document_path => (function () use (&$item, $label, &$pesanSukses) {
-                    Storage::disk($disk)->delete($item->primary_document_path);
-                    $item->primary_document_path = null;
-                    $pesanSukses = "Dokumen PDF \"{$label}\" berhasil dihapus permanen!";
-                })(),
-                $target === 'pdf_2' && (bool) $item->secondary_document_path => (function () use (&$item, $label, &$pesanSukses) {
-                    Storage::disk($disk)->delete($item->secondary_document_path);
-                    $item->secondary_document_path = null;
-                    $pesanSukses = "Dokumen PDF kedua \"{$label}\" berhasil dihapus permanen!";
-                })(),
-                default => null,
-            };
+            if ($target === 'text') {
+                $item->content_data = null;
+                $pesanSukses = "Konten teks \"{$label}\" berhasil dihapus!";
+            } elseif ($target === 'image' && $item->primary_image_path) {
+                Storage::disk($disk)->delete($item->primary_image_path);
+                $item->primary_image_path = null;
+                $pesanSukses = "Gambar utama \"{$label}\" berhasil dihapus dari server!";
+            } elseif ($target === 'image_2' && $item->secondary_image_path) {
+                Storage::disk($disk)->delete($item->secondary_image_path);
+                $item->secondary_image_path = null;
+                $pesanSukses = "Gambar kedua \"{$label}\" berhasil dihapus dari server!";
+            } elseif ($target === 'pdf' && $item->primary_document_path) {
+                Storage::disk($disk)->delete($item->primary_document_path);
+                $item->primary_document_path = null;
+                $pesanSukses = "Dokumen PDF \"{$label}\" berhasil dihapus permanen!";
+            } elseif ($target === 'pdf_2' && $item->secondary_document_path) {
+                Storage::disk($disk)->delete($item->secondary_document_path);
+                $item->secondary_document_path = null;
+                $pesanSukses = "Dokumen PDF kedua \"{$label}\" berhasil dihapus permanen!";
+            } elseif ($target === 'pdf_3' && $item->extra_document_path) {
+                Storage::disk($disk)->delete($item->extra_document_path);
+                $item->extra_document_path = null;
+                $pesanSukses = "Dokumen PDF ketiga \"{$label}\" berhasil dihapus permanen!";
+            }
 
             $item->save();
             return redirect()->route('admin.profil.edit', $halaman)->with('success', $pesanSukses);
@@ -117,14 +124,8 @@ class ProfilController extends Controller
                 'tahun_dibentuk'   => $request->input('tahun_dibentuk'),
             ]);
         } elseif ($halaman === 'sejarah') {
-            // Sejarah punya Quill editor utama → simpan ke content_data
-            $konten = $request->input('konten');
-            if ($konten !== null && trim(strip_tags($konten)) !== '') {
-                $item->content_data = $konten;
-            }
+            $item->content_data = $request->input('konten');
         }
-        // Halaman lain (visi-misi, tugas-fungsi, dst) tidak punya teks utama –
-        // konten mereka cukup dari hero_description + gambar/PDF
 
         // ── HERO DESCRIPTION (semua halaman) ──────────────────────────────
         $heroVal = $request->input('hero_description');
@@ -135,7 +136,9 @@ class ProfilController extends Controller
             if ($item->primary_image_path) {
                 Storage::disk($disk)->delete($item->primary_image_path);
             }
-            $item->primary_image_path = $request->file('gambar')->store('profil', $disk);
+            $file = $request->file('gambar');
+            $folder = $file->extension() === 'pdf' ? 'profil/dokumen' : 'profil';
+            $item->primary_image_path = $file->store($folder, $disk);
         }
 
         // ── UPLOAD GAMBAR KEDUA ────────────────────────────────────────────
@@ -143,7 +146,9 @@ class ProfilController extends Controller
             if ($item->secondary_image_path) {
                 Storage::disk($disk)->delete($item->secondary_image_path);
             }
-            $item->secondary_image_path = $request->file('gambar_2')->store('profil', $disk);
+            $file = $request->file('gambar_2');
+            $folder = $file->extension() === 'pdf' ? 'profil/dokumen' : 'profil';
+            $item->secondary_image_path = $file->store($folder, $disk);
         }
 
         // ── UPLOAD PDF UTAMA ───────────────────────────────────────────────
@@ -160,6 +165,14 @@ class ProfilController extends Controller
                 Storage::disk($disk)->delete($item->secondary_document_path);
             }
             $item->secondary_document_path = $request->file('pdf_file_2')->store('profil/dokumen', $disk);
+        }
+
+        // ── UPLOAD PDF KETIGA (Accordion 5 Keuangan) ──────────────────────
+        if ($request->hasFile('pdf_file_3')) {
+            if ($item->extra_document_path) {
+                Storage::disk($disk)->delete($item->extra_document_path);
+            }
+            $item->extra_document_path = $request->file('pdf_file_3')->store('profil/dokumen', $disk);
         }
 
         $item->save();

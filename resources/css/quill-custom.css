@@ -1,0 +1,37 @@
+.ql-toolbar.ql-snow {
+    @apply flex flex-row flex-nowrap items-center justify-start bg-slate-50 border border-slate-200 p-3;
+    border-top-left-radius: 1rem !important;
+    border-top-right-radius: 1rem !important;
+    scrollbar-width: none;
+}
+.ql-toolbar.ql-snow::-webkit-scrollbar { 
+    @apply hidden w-0 h-0; 
+}
+.ql-snow .ql-formats {
+    @apply inline-flex items-center bg-white border border-slate-200/60 rounded-xl px-1.5 py-0.5 mr-1 shrink-0;
+}
+.ql-snow .ql-toolbar button, .ql-snow.ql-toolbar button {
+    @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-800 transition-all duration-150;
+}
+.ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:hover {
+    @apply bg-slate-100 text-blue-600;
+}
+.ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar button.ql-active {
+    @apply bg-blue-50 text-blue-600 border border-blue-200/80;
+}
+.ql-snow .ql-toolbar .ql-stroke { 
+    stroke-width: 2.5 !important; 
+}
+.ql-container.ql-snow {
+    @apply border border-slate-200 bg-white;
+    border-bottom-left-radius: 1rem !important;
+    border-bottom-right-radius: 1rem !important;
+}
+#editor-cikasda { 
+    @apply min-h-[250px] text-base leading-relaxed text-slate-900 p-6; 
+    font-family: ui-sans-serif, system-ui, sans-serif !important; 
+}
+#editor-hero, #editor-kadis, #editor-sekretaris { 
+    @apply min-h-[100px] text-sm leading-relaxed text-slate-900 p-4; 
+    font-family: ui-sans-serif, system-ui, sans-serif !important; 
+}

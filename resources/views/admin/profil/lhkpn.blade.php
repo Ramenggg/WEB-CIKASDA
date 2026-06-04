@@ -43,10 +43,18 @@
                 class="divide-y divide-slate-100">
                 @csrf
 
+                                {{-- HERO DESCRIPTION --}}
                 <div class="p-8 space-y-4 bg-white hover:bg-slate-50/30 transition-all duration-300">
                     <div class="flex items-center space-x-3">
-                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">01</div>
-                        <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
+                        <div class="h-7 w-7 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center font-black text-xs shadow-2xs">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                            </svg>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Deskripsi Singkat Banner (Hero)</label>
+                            <span class="text-[10px] text-slate-400 font-semibold">Teks ini tampil di area hero/banner halaman publik</span>
+                        </div>
                     </div>
                     <div class="rounded-2xl border border-slate-200 shadow-2xs bg-white overflow-hidden">
                         <div id="editor-hero">{{ old('hero_description', $item->hero_description ?? '') }}</div>
@@ -63,14 +71,13 @@
                         <div class="flex items-center space-x-3">
                             <div
                                 class="h-7 w-7 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center justify-center font-black text-xs shadow-2xs">
-                                02</div>
+                                ●</div>
                             <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Dokumen Tanda
                                 Terima / Rincian LHKPN (PDF)</label>
                         </div>
                         @if (isset($item->primary_document_path) && $item->primary_document_path)
                             <button type="button" onclick="confirmDeleteSection('pdf')"
-                                class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">🗑️
-                                Hapus PDF</button>
+                                class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">Hapus PDF</button>
                         @endif
                     </div>
                     <div
@@ -98,25 +105,24 @@
                     <div class="flex justify-between items-center">
                         <div class="flex items-center space-x-3">
                             <div
-                                class="h-7 w-7 rounded-lg bg-orange-50 border border-orange-200 text-orange-600 flex items-center justify-center font-black text-xs shadow-2xs">
-                                03</div>
+                                class="h-7 w-7 rounded-lg bg-red-50 border border-red-200 text-red-600 flex items-center justify-center font-black text-xs shadow-2xs">
+                                ●</div>
                             <label class="block text-xs font-black text-slate-900 uppercase tracking-[0.15em]">Dokumen
                                 Tanda Terima / Rincian LHKASN (PDF)</label>
                         </div>
                         @if (isset($item->secondary_document_path) && $item->secondary_document_path)
                             <button type="button" onclick="confirmDeleteSection('pdf_2')"
-                                class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">🗑️
-                                Hapus PDF LHKASN</button>
+                                class="text-[11px] bg-red-50 border border-red-200 hover:bg-red-100 text-red-600 font-bold px-3 py-1 rounded-md transition-all cursor-pointer">Hapus PDF</button>
                         @endif
                     </div>
                     <div
                         class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-slate-50/40 p-5 rounded-2xl border border-slate-200/50">
                         <div
-                            class="lg:col-span-1 h-12 w-12 bg-white border border-orange-200 rounded-xl flex items-center justify-center mx-auto shadow-2xs text-orange-600 font-bold">
+                            class="lg:col-span-1 h-12 w-12 bg-white border border-red-200 rounded-xl flex items-center justify-center mx-auto shadow-2xs text-red-600 font-bold">
                             PDF</div>
                         <div class="lg:col-span-11 w-full space-y-3">
                             <input type="file" name="pdf_file_2" accept=".pdf"
-                                class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-orange-500 file:text-white hover:file:bg-orange-600 file:transition-all file:cursor-pointer">
+                                class="block w-full text-sm text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-red-600 file:text-white hover:file:bg-red-700 file:transition-all file:cursor-pointer">
                             @if (isset($item->secondary_document_path) && $item->secondary_document_path)
                                 <div
                                     class="bg-white border border-emerald-200 p-3 rounded-xl flex items-center space-x-2.5 shadow-3xs text-emerald-700 font-bold text-xs underline decoration-emerald-300 underline-offset-4">
@@ -145,35 +151,7 @@
     </div>
 
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
-    <style type="text/tailwindcss">
-        .ql-toolbar.ql-snow {
-            @apply flex flex-row flex-nowrap items-center justify-start bg-slate-50 border border-slate-200 p-3 !important;
-            border-top-left-radius: 1rem !important;
-            border-top-right-radius: 1rem !important;
-            scrollbar-width: none;
-        }
-        .ql-toolbar.ql-snow::-webkit-scrollbar { @apply hidden w-0 h-0 !important; }
-        .ql-snow .ql-formats {
-            @apply inline-flex items-center bg-white border border-slate-200/60 rounded-xl px-1.5 py-0.5 mr-1 shrink-0 !important;
-        }
-        .ql-snow .ql-toolbar button, .ql-snow.ql-toolbar button {
-            @apply inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-800 transition-all duration-150 !important;
-        }
-        .ql-snow .ql-toolbar button:hover, .ql-snow.ql-toolbar button:hover {
-            @apply bg-slate-100 text-blue-600 !important;
-        }
-        .ql-snow .ql-toolbar button.ql-active, .ql-snow.ql-toolbar button.ql-active {
-            @apply bg-blue-50 text-blue-600 border border-blue-200/80 !important;
-        }
-        .ql-snow .ql-toolbar .ql-stroke { stroke-width: 2.5 !important; }
-        .ql-container.ql-snow {
-            @apply border border-slate-200 bg-white !important;
-            border-bottom-left-radius: 1rem !important;
-            border-bottom-right-radius: 1rem !important;
-        }
-        #editor-cikasda { @apply min-h-[250px] text-base leading-relaxed text-slate-900 p-6 !important; font-family: ui-sans-serif, system-ui, sans-serif !important; }
-        #editor-hero { @apply min-h-[100px] text-sm leading-relaxed text-slate-900 p-4 !important; font-family: ui-sans-serif, system-ui, sans-serif !important; }
-    </style>
+    
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
     <script>
 
@@ -197,7 +175,9 @@
             if (input.files && input.files[0]) {
                 let reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('preview-gambar').src = e.target.result;
+                    let img = document.getElementById('preview-gambar');
+                    img.src = e.target.result;
+                    img.classList.remove('opacity-20');
                 }
                 reader.readAsDataURL(input.files[0]);
             }

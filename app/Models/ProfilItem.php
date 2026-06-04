@@ -11,7 +11,7 @@ class ProfilItem extends Model
 
     protected $table = 'profil_items';
 
-    protected $fillable = ['slug', 'judul', 'content_data', 'primary_image_path', 'secondary_image_path', 'primary_document_path', 'secondary_document_path', 'hero_description'];
+    protected $fillable = ['slug', 'judul', 'content_data', 'primary_image_path', 'secondary_image_path', 'primary_document_path', 'secondary_document_path', 'extra_document_path', 'hero_description'];
 
     /**
      * Ambil data berdasarkan slug, jika tidak ada buat record kosong (tidak disimpan).

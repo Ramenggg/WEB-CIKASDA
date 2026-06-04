@@ -5,3 +5,4 @@
     --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
     --font-heading: "Crimson Text", ui-serif, serif;
 }
+@import "./quill-custom.css";
