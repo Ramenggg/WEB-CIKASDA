@@ -109,11 +109,14 @@ class ProfilController extends Controller
 
         // ── SIMPAN KONTEN UTAMA ────────────────────────────────────────────
         if ($halaman === 'pejabat') {
+            $biografiKadis = $request->input('biografi_kadis');
+            $biografiSekretaris = $request->input('biografi_sekretaris');
+            
             $item->content_data = json_encode([
                 'nama_kadis'          => $request->input('nama_kadis'),
-                'biografi_kadis'      => $request->input('biografi_kadis'),
+                'biografi_kadis'      => ($biografiKadis && trim(strip_tags($biografiKadis)) !== '') ? $biografiKadis : null,
                 'nama_sekretaris'     => $request->input('nama_sekretaris'),
-                'biografi_sekretaris' => $request->input('biografi_sekretaris'),
+                'biografi_sekretaris' => ($biografiSekretaris && trim(strip_tags($biografiSekretaris)) !== '') ? $biografiSekretaris : null,
             ]);
         } elseif ($halaman === 'sekilas-dinas') {
             $item->content_data = json_encode([
