@@ -59,9 +59,11 @@ class GaleriController extends Controller
             'deskripsi_album' => $request->deskripsi_album,
         ]);
 
+        $disk = $this->getDisk();
+
         foreach ($request->file('foto_kegiatan') as $index => $fileFoto) {
             if ($fileFoto->isValid()) {
-                $path       = $fileFoto->store('galeri', 'public');
+                $path       = $fileFoto->store('galeri', $disk);
                 $keterangan = $request->keterangan_foto[$index] ?? pathinfo($fileFoto->getClientOriginalName(), PATHINFO_FILENAME);
 
                 FotoKegiatan::create([
@@ -79,9 +81,11 @@ class GaleriController extends Controller
     {
         $album = AlbumKegiatan::findOrFail($id);
 
+        $disk = $this->getDisk();
+
         foreach ($album->fotos as $foto) {
-            if (Storage::disk('public')->exists($foto->path_foto)) {
-                Storage::disk('public')->delete($foto->path_foto);
+            if (Storage::disk($disk)->exists($foto->path_foto)) {
+                Storage::disk($disk)->delete($foto->path_foto);
             }
         }
 
@@ -111,8 +115,10 @@ class GaleriController extends Controller
         $videoId   = null;
         $videoPath = null;
 
+        $disk = $this->getDisk();
+
         if ($request->hasFile('file_video') && $request->file('file_video')->isValid()) {
-            $videoPath = $request->file('file_video')->store('videos', 'public');
+            $videoPath = $request->file('file_video')->store('videos', $disk);
         } elseif ($request->filled('url_youtube')) {
             $url = $request->url_youtube;
             if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match)) {
@@ -137,8 +143,10 @@ class GaleriController extends Controller
     {
         $video = VideoDokumentasi::findOrFail($id);
 
-        if ($video->file_video && Storage::disk('public')->exists($video->file_video)) {
-            Storage::disk('public')->delete($video->file_video);
+        $disk = $this->getDisk();
+
+        if ($video->file_video && Storage::disk($disk)->exists($video->file_video)) {
+            Storage::disk($disk)->delete($video->file_video);
         }
 
         $video->delete();
@@ -166,8 +174,10 @@ class GaleriController extends Controller
 
         $pdfPath = null;
 
+        $disk = $this->getDisk();
+
         if ($request->hasFile('file_pdf') && $request->file('file_pdf')->isValid()) {
-            $pdfPath = $request->file('file_pdf')->store('booklets', 'public');
+            $pdfPath = $request->file('file_pdf')->store('booklets', $disk);
         }
 
         BookletDigital::create([
@@ -184,11 +194,22 @@ class GaleriController extends Controller
     {
         $booklet = BookletDigital::findOrFail($id);
 
-        if ($booklet->file_pdf && Storage::disk('public')->exists($booklet->file_pdf)) {
-            Storage::disk('public')->delete($booklet->file_pdf);
+        $disk = $this->getDisk();
+
+        if ($booklet->file_pdf && Storage::disk($disk)->exists($booklet->file_pdf)) {
+            Storage::disk($disk)->delete($booklet->file_pdf);
         }
 
         $booklet->delete();
         return redirect()->route('admin.galeri.booklet.tambah')->with('success', 'Booklet digital berhasil dihapus!');
+    }
+
+    /**
+     * Tentukan disk penyimpanan aktif berdasarkan konfigurasi FILESYSTEM_DISK.
+     * Mengembalikan 'supabase' jika dikonfigurasi, fallback ke 'public' (local).
+     */
+    private function getDisk(): string
+    {
+        return config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
     }
 }

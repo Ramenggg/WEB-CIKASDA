@@ -32,10 +32,12 @@ class BeritaController extends Controller
         ]);
 
         // 3. Proses Upload Banyak Gambar Berdasarkan Urutan Drag-and-Drop Admin
+        $disk = $this->getDisk();
+
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $file) {
                 // Simpan file ke folder storage/app/public/berita
-                $path = $file->store('berita', 'public');
+                $path = $file->store('berita', $disk);
 
                 // Simpan ke tabel 'berita_gambars' lengkap dengan nomor urutannya ($index)
                 BeritaGambar::create([
@@ -47,5 +49,14 @@ class BeritaController extends Controller
         }
 
         return redirect()->route('admin.dashboard')->with('success', 'Berita ciamik Anda berhasil diterbitkan!');
+    }
+
+    /**
+     * Tentukan disk penyimpanan aktif berdasarkan konfigurasi FILESYSTEM_DISK.
+     * Mengembalikan 'supabase' jika dikonfigurasi, fallback ke 'public' (local).
+     */
+    private function getDisk(): string
+    {
+        return config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
     }
 }
