@@ -93,10 +93,10 @@ Route::prefix('admin')
 // 4. RUTE AUTENTIKASI & USER PROFILE (DEFAULT AUTH LARAVEL)
 // --------------------------------------------------------------------------
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect()->route('admin.dashboard');
 })
     ->middleware(['auth', 'verified'])
-    ->name('dashboard.user');
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

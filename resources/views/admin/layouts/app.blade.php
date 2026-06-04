@@ -270,15 +270,26 @@
                 class="bg-white border-b border-slate-200 px-8 py-5 flex justify-between items-center sticky top-0 z-40 shadow-xs">
                 <h3 class="font-black text-slate-800 text-lg tracking-tight">@yield('title')</h3>
 
-                <div class="flex items-center space-x-4">
-                    <div class="text-right">
-                        <p class="text-xs font-black text-slate-900 uppercase tracking-wide">Administrator</p>
+                <div class="flex items-center space-x-5">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-black text-slate-900 uppercase tracking-wide">{{ Auth::user()->name ?? 'Administrator' }}</p>
                         <p class="text-[10px] text-green-500 font-extrabold tracking-widest uppercase mt-0.5">Online
                         </p>
                     </div>
                     <div
                         class="h-10 w-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 font-black border border-blue-200 shadow-xs text-sm">
-                        A
+                        {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}
+                    </div>
+                    <div class="pl-4 border-l border-slate-200">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="flex items-center space-x-2 text-sm font-bold text-red-600 hover:text-red-800 transition-colors bg-red-50 hover:bg-red-100 px-4 py-2 rounded-lg border border-red-100">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                <span>Keluar</span>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </header>
