@@ -43,6 +43,8 @@ Route::prefix('profil')->name('profil.')->group(function () {
 
 });
 
+Route::get('/daftar-informasi', [ProfilPublikController::class, 'daftarInformasi'])->name('daftar-informasi');
+
 // ==========================================================================
 // 3. HALAMAN PUBLIK - BERITA
 // ==========================================================================

@@ -68,4 +68,9 @@ class ProfilPublikController extends Controller
 
         return view('user.berita.index', compact('beritas'));
     }
+
+    public function daftarInformasi()
+    {
+        return view('pages.informasi.daftar-informasi');
+    }
 }

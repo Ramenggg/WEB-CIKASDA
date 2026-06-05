@@ -90,14 +90,14 @@
 
             <div x-data="{ subOpen: false }" @mouseenter="subOpen = true" @mouseleave="subOpen = false"
                 class="relative group">
-                <button
-                    class="w-full text-left flex items-center justify-between px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium outline-none">
+                <a href="{{ route('daftar-informasi') }}"
+                    class="w-full flex items-center justify-between px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium outline-none">
                     Daftar Informasi
                     <svg class="w-4 h-4 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor"
                         viewBox="0 0 24 24">
                         <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
-                </button>
+                </a>
                 <div x-show="subOpen" x-transition.opacity.duration.200ms
                     class="absolute left-full top-0 ml-1 w-80 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
                     <a href="/informasi/setiap-saat"

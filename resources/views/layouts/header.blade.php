@@ -82,8 +82,8 @@ if (!isHome) {
                 class="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest {{ request()->is('profil*') ? 'text-yellow-400 bg-blue-950 shadow-inner' : 'text-white hover:bg-blue-800' }} transition-all">Profil</a>
             <a href="/galeri/foto"
                 class="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest {{ request()->is('galeri*') ? 'text-yellow-400 bg-blue-950 shadow-inner' : 'text-white hover:bg-blue-800' }} transition-all">Galeri</a>
-            <a href="/informasi/publikasi"
-                class="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest {{ request()->is('informasi*') ? 'text-yellow-400 bg-blue-950 shadow-inner' : 'text-white hover:bg-blue-800' }} transition-all">Informasi
+            <a href="{{ route('daftar-informasi') }}"
+                class="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest {{ request()->is('daftar-informasi*') ? 'text-yellow-400 bg-blue-950 shadow-inner' : 'text-white hover:bg-blue-800' }} transition-all">Informasi
                 Publik</a>
             <a href="/ppid/surat-keputusan"
                 class="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest {{ request()->is('ppid*') ? 'text-yellow-400 bg-blue-950 shadow-inner' : 'text-white hover:bg-blue-800' }} transition-all">PPID</a>
