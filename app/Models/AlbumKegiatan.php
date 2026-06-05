@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AlbumKegiatan extends Model
 {
-    protected $fillable = ['judul_album', 'deskripsi_album'];
+    protected $fillable = ['judul_album', 'kategori', 'deskripsi_album'];
 
     public function fotos()
     {

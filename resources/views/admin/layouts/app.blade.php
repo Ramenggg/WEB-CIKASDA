@@ -128,19 +128,18 @@
 
                     <div class="mt-1 pl-4 pr-1 space-y-1 border-l-2 border-slate-800 ml-6">
 
-                        {{-- FIX KUNCI: Menembak langsung ke name route Laravel yang valid agar anti-404 --}}
-                        <a href="{{ route('admin.galeri.foto.tambah') }}"
-                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->routeIs('admin.galeri.foto.tambah') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
+                        <a href="{{ route('admin.galeri.foto.index') }}"
+                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->routeIs('admin.galeri.foto.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
                             Foto Kegiatan
                         </a>
 
-                        <a href="/admin/galeri/video"
-                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/galeri/video*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
+                        <a href="{{ route('admin.galeri.video.index') }}"
+                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->routeIs('admin.galeri.video.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
                             Video Dokumentasi
                         </a>
 
-                        <a href="/admin/galeri/booklet"
-                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/galeri/booklet*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
+                        <a href="{{ route('admin.galeri.booklet.index') }}"
+                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->routeIs('admin.galeri.booklet.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
                             Booklet / Brosur Digital
                         </a>
 

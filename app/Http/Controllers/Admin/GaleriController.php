@@ -19,7 +19,16 @@ class GaleriController extends Controller
     public function userFotoIndeks()
     {
         $albums = AlbumKegiatan::with('fotos')->latest()->get();
-        return view('pages.galeri.galeri-foto', compact('albums'));
+        
+        // Get unique categories that actually have albums
+        $kategoriList = AlbumKegiatan::select('kategori')
+            ->distinct()
+            ->whereNotNull('kategori')
+            ->where('kategori', '!=', '')
+            ->orderBy('kategori')
+            ->pluck('kategori');
+            
+        return view('pages.galeri.galeri-foto', compact('albums', 'kategoriList'));
     }
 
     public function userVideoIndeks()
@@ -41,13 +50,22 @@ class GaleriController extends Controller
     public function adminFotoTambah()
     {
         $albums = AlbumKegiatan::with('fotos')->latest()->get();
-        return view('admin.galeri.foto-tambah', compact('albums'));
+        
+        $kategoriList = AlbumKegiatan::select('kategori')
+            ->distinct()
+            ->whereNotNull('kategori')
+            ->where('kategori', '!=', '')
+            ->orderBy('kategori')
+            ->pluck('kategori');
+
+        return view('admin.galeri.foto-tambah', compact('albums', 'kategoriList'));
     }
 
     public function adminFotoSimpan(Request $request)
     {
         $request->validate([
             'judul_album'      => 'required|string|max:255',
+            'kategori'         => 'nullable|string|max:100',
             'deskripsi_album'  => 'nullable|string',
             'foto_kegiatan'    => 'required|array',
             'foto_kegiatan.*'  => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
@@ -56,6 +74,7 @@ class GaleriController extends Controller
 
         $album = AlbumKegiatan::create([
             'judul_album'     => $request->judul_album,
+            'kategori'        => $request->kategori ?: '',
             'deskripsi_album' => $request->deskripsi_album,
         ]);
 
@@ -74,10 +93,10 @@ class GaleriController extends Controller
             }
         }
 
-        return redirect()->route('admin.galeri.foto.tambah')->with('success', 'Album foto kegiatan berhasil diterbitkan!');
+        return redirect()->route('admin.galeri.foto.index')->with('success', 'Album foto kegiatan berhasil diterbitkan!');
     }
 
-    public function adminFotoDestroy($id)
+    public function adminFotoDestroy(string $id)
     {
         $album = AlbumKegiatan::findOrFail($id);
 
@@ -90,7 +109,18 @@ class GaleriController extends Controller
         }
 
         $album->delete();
-        return redirect()->route('admin.galeri.foto.tambah')->with('success', 'Album kegiatan berhasil dihapus!');
+        return redirect()->route('admin.galeri.foto.index')->with('success', 'Album kegiatan berhasil dihapus!');
+    }
+
+    public function adminFotoKategoriHapus(Request $request)
+    {
+        $request->validate([
+            'kategori' => 'required|string'
+        ]);
+
+        AlbumKegiatan::where('kategori', $request->kategori)->update(['kategori' => '']);
+
+        return redirect()->back()->with('success', "Kategori '{$request->kategori}' berhasil dihapus secara permanen. Semua album terkait kini tidak memiliki kategori spesifik.");
     }
 
     // =========================================================================
@@ -136,10 +166,10 @@ class GaleriController extends Controller
             'file_video'     => $videoPath,
         ]);
 
-        return redirect()->route('admin.galeri.video.tambah')->with('success', 'Video dokumentasi berhasil diterbitkan!');
+        return redirect()->route('admin.galeri.video.index')->with('success', 'Video dokumentasi berhasil diterbitkan!');
     }
 
-    public function adminVideoDestroy($id)
+    public function adminVideoDestroy(string $id)
     {
         $video = VideoDokumentasi::findOrFail($id);
 
@@ -150,7 +180,7 @@ class GaleriController extends Controller
         }
 
         $video->delete();
-        return redirect()->route('admin.galeri.video.tambah')->with('success', 'Video dokumentasi berhasil dihapus!');
+        return redirect()->route('admin.galeri.video.index')->with('success', 'Video dokumentasi berhasil dihapus!');
     }
 
     // =========================================================================
@@ -187,10 +217,10 @@ class GaleriController extends Controller
             'url_external'     => $request->url_external,
         ]);
 
-        return redirect()->route('admin.galeri.booklet.tambah')->with('success', 'Booklet digital berhasil diterbitkan!');
+        return redirect()->route('admin.galeri.booklet.index')->with('success', 'Booklet digital berhasil diterbitkan!');
     }
 
-    public function adminBookletDestroy($id)
+    public function adminBookletDestroy(string $id)
     {
         $booklet = BookletDigital::findOrFail($id);
 
@@ -201,7 +231,7 @@ class GaleriController extends Controller
         }
 
         $booklet->delete();
-        return redirect()->route('admin.galeri.booklet.tambah')->with('success', 'Booklet digital berhasil dihapus!');
+        return redirect()->route('admin.galeri.booklet.index')->with('success', 'Booklet digital berhasil dihapus!');
     }
 
     /**

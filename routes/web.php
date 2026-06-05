@@ -14,95 +14,113 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// --------------------------------------------------------------------------
-// 1. RUTE HALAMAN UTAMA (LANDING PAGE)
-// --------------------------------------------------------------------------
+// ==========================================================================
+// 1. LANDING PAGE
+// ==========================================================================
+
 Route::get('/', function () {
     return view('welcome');
+})->name('home');
+
+// ==========================================================================
+// 2. HALAMAN PUBLIK - PROFIL DINAS
+// ==========================================================================
+
+Route::prefix('profil')->name('profil.')->group(function () {
+
+    // Menu: Profil Dinas
+    Route::get('/sejarah',              [ProfilPublikController::class, 'sejarah']    )->name('sejarah');
+    Route::get('/visi-misi',            [ProfilPublikController::class, 'visiMisi']   )->name('visi-misi');
+    Route::get('/tugas-fungsi',         [ProfilPublikController::class, 'tugasFungsi'])->name('tugas-fungsi');
+    Route::get('/struktur-organisasi',  [ProfilPublikController::class, 'struktur']   )->name('struktur');
+    Route::get('/pejabat',              [ProfilPublikController::class, 'pejabat']    )->name('pejabat');
+
+    // Menu: Transparansi & Informasi Publik
+    Route::get('/lhkpn',    [ProfilPublikController::class, 'lhkpn']   )->name('lhkpn');
+    Route::get('/keuangan', [ProfilPublikController::class, 'keuangan'])->name('keuangan');
+    Route::get('/maklumat', [ProfilPublikController::class, 'maklumat'])->name('maklumat');
+
 });
 
-// --------------------------------------------------------------------------
-// 2. RUTE HALAMAN USER / PUBLIK (AKSES PENGUNJUNG WEBSITE)
-// --------------------------------------------------------------------------
-Route::prefix('profil')
-    ->name('profil.')
-    ->group(function () {
-        // --- A. KELOMPOK MENU PROFIL DINAS ---
-        Route::get('/sejarah', [ProfilPublikController::class, 'sejarah'])->name('sejarah');
-        Route::get('/pejabat', [ProfilPublikController::class, 'pejabat'])->name('pejabat');
-        Route::get('/visi-misi', [ProfilPublikController::class, 'visiMisi'])->name('visi-misi');
-        Route::get('/tugas-fungsi', [ProfilPublikController::class, 'tugasFungsi'])->name('tugas-fungsi');
-        Route::get('/struktur-organisasi', [ProfilPublikController::class, 'struktur'])->name('struktur');
+// ==========================================================================
+// 3. HALAMAN PUBLIK - BERITA
+// ==========================================================================
 
-        // --- B. KELOMPOK MENU TRANSPARANSI & INFORMASI PUBLIK ---
-        Route::get('/lhkpn', [ProfilPublikController::class, 'lhkpn'])->name('lhkpn');
-        Route::get('/keuangan', [ProfilPublikController::class, 'keuangan'])->name('keuangan');
-        Route::get('/maklumat', [ProfilPublikController::class, 'maklumat'])->name('maklumat');
+Route::prefix('berita')->name('berita.')->group(function () {
+    Route::get('/',     [BeritaController::class, 'index'])->name('index');
+    Route::get('/{slug}', [BeritaController::class, 'show'] )->name('show');
+});
 
-        // --- C. KELOMPOK MENU MULTIMEDIA / GALERI CIKASDA ---
-        Route::get('/galeri-foto', [GaleriController::class, 'userFotoIndeks'])->name('galeri-foto');
-        Route::get('/galeri-video', [GaleriController::class, 'userVideoIndeks'])->name('galeri-video');
-        Route::get('/booklet-digital', [GaleriController::class, 'userBookletIndeks'])->name('booklet');
+// ==========================================================================
+// 4. HALAMAN PUBLIK - GALERI & MULTIMEDIA
+// ==========================================================================
 
-        // --- D. KELOMPOK MENU WARTA & BERITA INSTANSI ---
-        Route::get('/berita-instansi', [ProfilPublikController::class, 'beritaIndeks'])->name('berita');
+Route::prefix('galeri')->name('galeri.')->group(function () {
+    Route::get('/foto',             [GaleriController::class, 'userFotoIndeks']   )->name('foto');
+    Route::get('/video',            [GaleriController::class, 'userVideoIndeks']  )->name('video');
+    Route::get('/booklet-digital',  [GaleriController::class, 'userBookletIndeks'])->name('booklet');
+});
+
+// ==========================================================================
+// 5. PANEL ADMIN (AUTH REQUIRED)
+// ==========================================================================
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+
+    // --- Dashboard & Logs ---
+    Route::get('/',     [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/logs', [DashboardController::class, 'logs'] )->name('logs');
+
+    // --- Kelola Konten Profil Dinamis ---
+    Route::get( '/profil/{halaman}', [ProfilController::class, 'edit']  )->name('profil.edit');
+    Route::post('/profil/{halaman}', [ProfilController::class, 'update'])->name('profil.update');
+
+    // --- Kelola Berita ---
+    Route::prefix('berita')->name('berita.')->group(function () {
+        Route::get('/',             [BeritaController::class, 'adminIndex'])->name('index');
+        Route::get('/tambah',       [BeritaController::class, 'create']   )->name('tambah');
+        Route::post('/simpan',      [BeritaController::class, 'store']    )->name('simpan');
+        Route::get('/{id}/edit',    [BeritaController::class, 'edit']     )->name('edit');
+        Route::put('/{id}/update',  [BeritaController::class, 'update']   )->name('update');
+        Route::delete('/{id}/hapus',[BeritaController::class, 'destroy']  )->name('hapus');
     });
 
-// --------------------------------------------------------------------------
-// 3. RUTE PANEL ADMIN (PUSAT KENDALI SISTEM)
-// --------------------------------------------------------------------------
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth'])
-    ->group(function () {
-        // --- A. DASHBOARD UTAMA & LOGS ---
-        Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/logs', [DashboardController::class, 'logs'])->name('logs');
-
-        // --- B. KELOLA KONTEN PROFIL DINAMIS ---
-        Route::get('/profil/{halaman}', [ProfilController::class, 'edit'])->name('profil.edit');
-        Route::post('/profil/{halaman}', [ProfilController::class, 'update'])->name('profil.update');
-
-        // --- C. KELOLA WARTA BERITA INSTANSI ---
-        Route::get('/berita', function () {
-            return redirect()->route('admin.berita.tambah');
-        })->name('berita.index');
-        Route::get('/berita/tambah', function () {
-            return view('admin.berita.tambah');
-        })->name('berita.tambah');
-        Route::post('/berita/simpan', [BeritaController::class, 'store'])->name('berita.simpan');
-
-        // --- D. CORE MULTIMEDIA SUB-MENU (SATU CONTROLLER UNTUK SEMUA) ---
-        // Sub-Menu 1: Kelola Foto Kegiatan
-        Route::get('/galeri-foto/tambah', [GaleriController::class, 'adminFotoTambah'])->name('galeri.foto.tambah');
-        Route::post('/galeri-foto/simpan', [GaleriController::class, 'adminFotoSimpan'])->name('galeri.foto.simpan');
-        Route::delete('/galeri-foto/hapus/{id}', [GaleriController::class, 'adminFotoDestroy'])->name('galeri.foto.hapus');
-
-        // Sub-Menu 2: Kelola Video Dokumentasi
-        Route::get('/galeri/video', [GaleriController::class, 'adminVideoTambah'])->name('galeri.video.tambah');
-        Route::post('/galeri/video/simpan', [GaleriController::class, 'adminVideoSimpan'])->name('galeri.video.simpan');
-        Route::delete('/galeri/video/hapus/{id}', [GaleriController::class, 'adminVideoDestroy'])->name('galeri.video.hapus');
-
-        // Sub-Menu 3: Kelola Booklet / Brosur Digital (UPGRADED RESMI)
-        Route::get('/galeri/booklet', [GaleriController::class, 'adminBookletTambah'])->name('galeri.booklet.tambah');
-        Route::post('/galeri/booklet/simpan', [GaleriController::class, 'adminBookletSimpan'])->name('galeri.booklet.simpan');
-        Route::delete('/galeri/booklet/hapus/{id}', [GaleriController::class, 'adminBookletDestroy'])->name('galeri.booklet.hapus');
+    // --- Kelola Galeri Foto ---
+    Route::prefix('galeri-foto')->name('galeri.foto.')->group(function () {
+        Route::get('/',             [GaleriController::class, 'adminFotoTambah'] )->name('index');
+        Route::post('/simpan',      [GaleriController::class, 'adminFotoSimpan'] )->name('simpan');
+        Route::post('/kategori/hapus', [GaleriController::class, 'adminFotoKategoriHapus'])->name('kategori.hapus');
+        Route::delete('/{id}/hapus',[GaleriController::class, 'adminFotoDestroy'])->name('hapus');
     });
 
-// --------------------------------------------------------------------------
-// 4. RUTE AUTENTIKASI & USER PROFILE (DEFAULT AUTH LARAVEL)
-// --------------------------------------------------------------------------
-Route::get('/dashboard', function () {
-    return redirect()->route('admin.dashboard');
-})
+    // --- Kelola Galeri Video ---
+    Route::prefix('galeri-video')->name('galeri.video.')->group(function () {
+        Route::get('/',             [GaleriController::class, 'adminVideoTambah'] )->name('index');
+        Route::post('/simpan',      [GaleriController::class, 'adminVideoSimpan'] )->name('simpan');
+        Route::delete('/{id}/hapus',[GaleriController::class, 'adminVideoDestroy'])->name('hapus');
+    });
+
+    // --- Kelola Booklet Digital ---
+    Route::prefix('galeri-booklet')->name('galeri.booklet.')->group(function () {
+        Route::get('/',             [GaleriController::class, 'adminBookletTambah'] )->name('index');
+        Route::post('/simpan',      [GaleriController::class, 'adminBookletSimpan'] )->name('simpan');
+        Route::delete('/{id}/hapus',[GaleriController::class, 'adminBookletDestroy'])->name('hapus');
+    });
+
+});
+
+// ==========================================================================
+// 6. AUTENTIKASI & PROFIL USER (LARAVEL BREEZE)
+// ==========================================================================
+
+Route::get('/dashboard', fn() => redirect()->route('admin.dashboard'))
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get(   '/profile', [ProfileController::class, 'edit']   )->name('profile.edit');
+    Route::patch( '/profile', [ProfileController::class, 'update'] )->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-// Load Rute Bawaan Laravel Breeze / Jetstream Auth
 require __DIR__ . '/auth.php';

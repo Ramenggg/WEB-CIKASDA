@@ -19,34 +19,34 @@
 
         <div x-show="open" x-transition.opacity.duration.200ms
             class="absolute left-0 top-full mt-1 w-64 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
-            <a href="/profil/struktur-organisasi"
+            <a href="{{ route('profil.struktur') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Struktur
                 Organisasi</a>
-            <a href="/profil/visi-misi"
+            <a href="{{ route('profil.visi-misi') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Visi
                 dan Misi</a>
-            <a href="/profil/tugas-fungsi"
+            <a href="{{ route('profil.tugas-fungsi') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Tugas
                 dan Fungsi</a>
-            <a href="/profil/sejarah"
+            <a href="{{ route('profil.sejarah') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Sejarah
                 Singkat</a>
-            <a href="/profil/pejabat"
+            <a href="{{ route('profil.pejabat') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Pejabat</a>
-            <a href="/profil/maklumat"
+            <a href="{{ route('profil.maklumat') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Maklumat
                 Informasi Publik</a>
-            <a href="/profil/lhkpn"
+            <a href="{{ route('profil.lhkpn') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">LHKPN & LHKASN</a>
-            <a href="/profil/keuangan"
+            <a href="{{ route('profil.keuangan') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Keuangan</a>
         </div>
     </div>
 
-    {{-- MENU GALERI (FIX SINKRONISASI ROUTE USER) --}}
+    {{-- MENU GALERI --}}
     <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
         <button
-            class="flex items-center px-2 py-2 transition outline-none text-sm font-medium tracking-normal {{ request()->is('profil/galeri*') ? 'text-yellow-400' : 'text-white hover:text-yellow-400' }}">
+            class="flex items-center px-2 py-2 transition outline-none text-sm font-medium tracking-normal {{ request()->is('galeri*') ? 'text-yellow-400' : 'text-white hover:text-yellow-400' }}">
             Galeri
             <svg class="ml-1.5 w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -57,19 +57,18 @@
         <div x-show="open" x-transition.opacity.duration.200ms
             class="absolute left-0 top-full mt-1 w-48 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
 
-            {{-- FIX KUNCI: Menembak ke name rute resmi Laravel agar terhindar dari eror 404 --}}
-            <a href="{{ route('profil.galeri-foto') }}"
-                class="block px-5 py-2.5 {{ request()->routeIs('profil.galeri-foto') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">
+            <a href="{{ route('galeri.foto') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('galeri.foto') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">
                 Foto
             </a>
 
-            <a href="{{ route('profil.galeri-video') }}"
-                class="block px-5 py-2.5 {{ request()->routeIs('profil.galeri-video') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">
+            <a href="{{ route('galeri.video') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('galeri.video') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">
                 Video
             </a>
 
-            <a href="{{ route('profil.booklet') }}"
-                class="block px-5 py-2.5 {{ request()->routeIs('profil.booklet') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">
+            <a href="{{ route('galeri.booklet') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('galeri.booklet') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">
                 Booklet
             </a>
         </div>
@@ -170,7 +169,7 @@
         </div>
     </div>
 
-    {{-- MENU LAYANAN (Direct Links External) --}}
+    {{-- MENU LAYANAN --}}
     <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
         <button
             class="flex items-center px-2 py-2 transition outline-none text-sm font-medium tracking-normal {{ request()->is('layanan*') ? 'text-yellow-400' : 'text-white hover:text-yellow-400' }}">
