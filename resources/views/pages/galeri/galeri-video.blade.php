@@ -6,56 +6,10 @@
     <div class="bg-slate-50 min-h-screen pb-16 font-sans">
 
         {{-- ==================================================================
-         1. HERO SECTION GEDUNG UTAMA (SINKRON TOTAL SESUAI TUGAS & FOTO)
+         1. HERO SECTION DINAMIS (SINKRON DENGAN PROFIL LAIN)
          ================================================================== --}}
-        <div class="relative w-full overflow-hidden pt-32 pb-48 lg:pt-40 lg:pb-64 bg-blue-900">
-            {{-- Background Image --}}
-            <div class="absolute inset-0 z-0">
-                <img src="{{ asset('images/slider/slide1.png') }}" alt="Background CIKASDA"
-                    class="w-full h-full object-cover object-center scale-105 transform">
-                <div class="absolute inset-0 bg-blue-950/80 mix-blend-multiply"></div>
-                {{-- Efek Shadow Gradasi Biru Atas ke Bawah --}}
-                <div class="absolute inset-0 bg-linear-to-b from-blue-900/60 to-transparent"></div>
-            </div>
-
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="w-full flex flex-col items-start text-left">
-                    {{-- Breadcrumb (Beautified) --}}
-                    <div
-                        class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-4 py-2 text-blue-100 text-xs md:text-sm mb-8 font-medium shadow-sm">
-                        <a href="{{ url('/') }}" class="hover:text-white transition-colors flex items-center">
-                            <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                                </path>
-                            </svg>
-                            Beranda
-                        </a>
-                        <svg class="w-3.5 h-3.5 text-blue-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                        <span class="hover:text-white transition-colors cursor-pointer">Galeri</span>
-                        <svg class="w-3.5 h-3.5 text-blue-400/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                        </svg>
-                        <span class="text-white font-semibold">Video Dokumentasi</span>
-                    </div>
-
-                    {{-- Judul Utama Besar Premium --}}
-                    <h1
-                        class="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold font-heading text-white mb-6 tracking-tight relative uppercase">
-                        Video Dokumentasi
-                    </h1>
-
-                    {{-- Deskripsi Rata Kiri Dengan Border-L Khas Dinas --}}
-                    <div
-                        class="text-blue-100 text-sm md:text-base leading-relaxed mb-8 max-w-2xl mt-2 pl-4 border-l-2 border-blue-500/50">
-                        Arsip liputan video eksklusif pembangunan infrastruktur, pemantauan fisik lapangan, dan dokumentasi
-                        proyek dinas resmi CIKASDA Provinsi Sulawesi Tengah.
-                    </div>
-                </div>
-            </div>
-        </div>
+        <x-profil-hero title="Video Dokumentasi" 
+            description="Arsip liputan video eksklusif pembangunan infrastruktur, pemantauan fisik lapangan, dan dokumentasi proyek dinas resmi CIKASDA Provinsi Sulawesi Tengah." />
 
         {{-- ==================================================================
          2. GRIDS VIDEO RESPONSIVE (CONTAINER PUTIH UTUH MEMBENTANG LUAS)
@@ -63,27 +17,60 @@
         {{-- KUNCI UTAMA: Menaikkan kontainer utama dan memberikan background putih solid agar tidak menggantung --}}
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-24 md:-mt-32 relative z-20">
             <div
-                class="bg-white rounded-[2rem] p-6 sm:p-8 md:p-12 shadow-[0_15px_50px_rgba(15,23,42,0.04)] border border-slate-200/60 min-h-[50vh]">
+                class="bg-white rounded-4xl p-6 sm:p-8 md:p-12 shadow-[0_15px_50px_rgba(15,23,42,0.04)] border border-slate-200/60 min-h-[50vh]">
 
-                {{-- Judul Seksi Kecil Internal --}}
-                <div class="flex items-center space-x-2.5 mb-8 px-1">
-                    <span class="h-4 w-1 bg-blue-600 rounded-full shadow-xs"></span>
-                    <h2 class="text-xs md:text-sm font-black text-slate-800 uppercase tracking-widest">Arsip Dokumentasi
-                        Video Terbit</h2>
+                {{-- Toolbar: Statistik & Search --}}
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                    <div class="flex items-center gap-4 bg-slate-50 border border-slate-200/60 rounded-xl px-4 py-3 w-fit">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Total Unggahan</p>
+                                <p class="text-sm font-bold text-slate-800 leading-none">
+                                    {{ $totalUnggahan ?? $videos->count() }}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="relative w-full md:w-72">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
+                        </div>
+                        <input type="text" id="searchInput" placeholder="Cari video dokumentasi..."
+                            class="block w-full pl-10 pr-3 py-2.5 border border-slate-200 rounded-xl leading-5 bg-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm transition-shadow">
+                    </div>
+                </div>
+
+                {{-- Empty Search Result State --}}
+                <div id="noResultState" class="hidden py-12 text-center w-full col-span-full">
+                    <p class="text-slate-500 text-sm">Tidak ditemukan video yang cocok dengan pencarian "<span
+                            id="searchKeyword" class="font-bold text-slate-800"></span>".</p>
                 </div>
 
                 {{-- Grid Card Loop --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div id="videoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @forelse($videos ?? [] as $video)
                         {{-- CARD CONTAINER MULTIMEDIA VIDEO --}}
-                        <div onclick="bukaModalVideo('{{ $video->url_youtube }}', '{{ $video->file_video ? asset('storage/' . $video->file_video) : '' }}', '{{ $video->judul_video }}', '{{ $video->deskripsi_video }}')"
-                            class="bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_15px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_25px_rgba(15,23,42,0.06)] group hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between">
+                        <div onclick="bukaModalVideo('{{ $video->url_youtube }}', '{{ $video->url_video ?? '' }}', '{{ addslashes($video->judul_video) }}', '{{ addslashes($video->deskripsi_video) }}')"
+                            class="video-card bg-white rounded-3xl overflow-hidden border border-slate-200/80 shadow-[0_4px_15px_rgba(15,23,42,0.02)] hover:shadow-[0_12px_25px_rgba(15,23,42,0.06)] group hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col justify-between"
+                            data-title="{{ strtolower($video->judul_video) }}"
+                            data-desc="{{ strtolower($video->deskripsi_video) }}">
 
                             {{-- Box Media Cover/Thumbnail Player --}}
                             <div
                                 class="aspect-video w-full bg-slate-900 relative overflow-hidden flex items-center justify-center">
                                 @if ($video->file_video)
-                                    <video src="{{ asset('storage/' . $video->file_video) }}"
+                                    <video src="{{ $video->url_video }}"
                                         class="w-full h-full object-cover" preload="metadata" muted></video>
                                     <div
                                         class="absolute inset-0 bg-slate-950/40 flex items-center justify-center group-hover:bg-slate-950/50 transition-colors">
@@ -156,7 +143,7 @@
          3. CINEMATIC INTERACTIVE THEATRE LIGHTBOX MODAL (MID-SIZE COMPACT FIXED)
          ================================================================== --}}
         <div id="modal-video-theater"
-            class="fixed inset-0 z-[9999] hidden bg-slate-950/80 backdrop-blur-lg flex items-center justify-center p-4 transition-all duration-300">
+            class="fixed inset-0 z-[9999] hidden bg-slate-950/60 backdrop-blur-md flex items-center justify-center p-4 transition-all duration-300">
             {{-- Klik area luar untuk menutup player --}}
             <div class="absolute inset-0 cursor-pointer" onclick="tutupModalVideo()"></div>
 
@@ -280,5 +267,41 @@
                     if (e.key === 'Escape') tutupModalVideo();
                 }
             });
+
+            // LOGIKA PENCARIAN VIDEO
+            const searchInput = document.getElementById('searchInput');
+            function filterVideos() {
+                const keyword = searchInput ? searchInput.value.toLowerCase() : '';
+                const cards = document.querySelectorAll('.video-card');
+                let visibleCount = 0;
+
+                cards.forEach(card => {
+                    const title = card.getAttribute('data-title') || '';
+                    const desc = card.getAttribute('data-desc') || '';
+
+                    const matchesKeyword = title.includes(keyword) || desc.includes(keyword);
+
+                    if (matchesKeyword) {
+                        card.style.display = 'flex';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                const noResult = document.getElementById('noResultState');
+                const searchKeyword = document.getElementById('searchKeyword');
+
+                if (visibleCount === 0 && keyword !== '') {
+                    noResult.classList.remove('hidden');
+                    searchKeyword.textContent = keyword;
+                } else {
+                    noResult.classList.add('hidden');
+                }
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener('input', filterVideos);
+            }
         </script>
     @endsection

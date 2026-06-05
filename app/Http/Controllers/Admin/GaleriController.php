@@ -33,13 +33,33 @@ class GaleriController extends Controller
     public function userVideoIndeks()
     {
         $videos = VideoDokumentasi::latest()->get();
-        return view('pages.galeri.galeri-video', compact('videos'));
+        $totalUnggahan = $videos->count();
+        return view('pages.galeri.galeri-video', compact('videos', 'totalUnggahan'));
     }
 
     public function userBookletIndeks()
     {
-        $booklets = BookletDigital::latest()->get();
-        return view('pages.galeri.booklet-digital', compact('booklets'));
+        $allBooklets = BookletDigital::latest()->get();
+        
+        // Pisahkan berdasarkan kelompok
+        $bookletsSungai = $allBooklets->where('kelompok', 'Sungai Pantai Danau dan Air Baku');
+        $bookletsIrigasi = $allBooklets->where('kelompok', 'Irigasi dan Rawa');
+
+        $totalUnggahan = $allBooklets->count();
+        
+        // Ambil kategori hanya untuk kelompok Irigasi dan Rawa
+        $kategoriIrigasi = BookletDigital::where('kelompok', 'Irigasi dan Rawa')
+            ->whereNotNull('kategori')
+            ->where('kategori', '!=', '')
+            ->distinct()
+            ->pluck('kategori');
+
+        return view('pages.galeri.booklet-digital', compact(
+            'bookletsSungai', 
+            'bookletsIrigasi', 
+            'totalUnggahan', 
+            'kategoriIrigasi'
+        ));
     }
 
     // =========================================================================
@@ -186,7 +206,7 @@ class GaleriController extends Controller
             Storage::disk($disk)->delete($video->file_video);
         }
 
-        $video->delete();
+        $video.delete();
         return redirect()->route('admin.galeri.video.index')->with('success', 'Video dokumentasi berhasil dihapus!');
     }
 
@@ -196,20 +216,27 @@ class GaleriController extends Controller
 
     public function adminBookletTambah()
     {
-        $booklets = BookletDigital::latest()->get();
-        return view('admin.galeri.booklet-tambah', compact('booklets'));
+        $allBooklets = BookletDigital::latest()->get();
+        $bookletsSungai = $allBooklets->where('kelompok', 'Sungai Pantai Danau dan Air Baku');
+        $bookletsIrigasi = $allBooklets->where('kelompok', 'Irigasi dan Rawa');
+
+        return view('admin.galeri.booklet-tambah', compact('bookletsSungai', 'bookletsIrigasi'));
     }
 
     public function adminBookletSimpan(Request $request)
     {
         $request->validate([
             'judul_booklet'    => 'required|string|max:255',
+            'kelompok'         => 'required|string',
+            'kategori'         => 'nullable|string|max:100',
             'deskripsi_booklet'=> 'nullable|string',
-            'file_pdf'         => 'nullable|required_without:url_external|mimes:pdf|max:51200',
+            'file_sampul'      => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'file_pdf'         => 'nullable|required_without:url_external|mimes:pdf,jpeg,png,jpg,webp|max:51200',
             'url_external'     => 'nullable|required_without:file_pdf|url',
         ]);
 
         $pdfPath = null;
+        $sampulPath = null;
 
         $disk = $this->getDisk();
 
@@ -217,8 +244,15 @@ class GaleriController extends Controller
             $pdfPath = $request->file('file_pdf')->store('booklets', $disk);
         }
 
+        if ($request->hasFile('file_sampul') && $request->file('file_sampul')->isValid()) {
+            $sampulPath = $request->file('file_sampul')->store('booklets/sampul', $disk);
+        }
+
         BookletDigital::create([
             'judul_booklet'    => $request->judul_booklet,
+            'path_sampul'      => $sampulPath,
+            'kelompok'         => $request->kelompok,
+            'kategori'         => $request->kategori ?: 'Umum',
             'deskripsi_booklet'=> $request->deskripsi_booklet,
             'file_pdf'         => $pdfPath,
             'url_external'     => $request->url_external,
@@ -235,6 +269,10 @@ class GaleriController extends Controller
 
         if ($booklet->file_pdf && Storage::disk($disk)->exists($booklet->file_pdf)) {
             Storage::disk($disk)->delete($booklet->file_pdf);
+        }
+
+        if ($booklet->path_sampul && Storage::disk($disk)->exists($booklet->path_sampul)) {
+            Storage::disk($disk)->delete($booklet->path_sampul);
         }
 
         $booklet->delete();

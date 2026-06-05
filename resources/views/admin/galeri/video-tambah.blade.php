@@ -3,19 +3,7 @@
 @section('title', 'Kelola Video Dokumentasi')
 
 @section('content')
-    <div
-        class="relative w-full min-h-screen rounded-[2rem] p-6 md:p-8 overflow-hidden isolate shadow-[0_20px_50px_rgba(30,41,59,0.15)] border border-slate-200">
-
-        {{-- BACKGROUND IMAGE GEDUNG UTAMA --}}
-        <div class="absolute inset-0 -z-20 bg-slate-50">
-            <img src="{{ asset('images/slider/slide1.png') }}" alt="Background CIKASDA"
-                class="w-full h-full object-cover object-center brightness-[0.88] contrast-[1.03]">
-            <div class="absolute inset-0 bg-gradient-to-tr from-white/70 via-blue-50/75 to-blue-100/40 mix-blend-overlay">
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/60 to-[#f8fafc]"></div>
-        </div>
-
-        <div class="max-w-7xl mx-auto space-y-10">
+    <div class="max-w-7xl mx-auto space-y-10 animate-fade-in">
 
             {{-- ==================================================================
              PART A: FORM INPUT TAMBAH DATA VIDEO HIBRIDA
@@ -160,12 +148,12 @@
                                 class="aspect-video w-full bg-slate-900 relative overflow-hidden border-b border-slate-100 group/video flex items-center justify-center">
                                 @if ($video->file_video)
                                     {{-- Jika Video Fisik: Gunakan HTML5 Native Video Tag --}}
-                                    <video src="{{ asset('storage/' . $video->file_video) }}"
+                                    <video src="{{ $video->url_video }}"
                                         class="w-full h-full object-cover" preload="metadata" muted></video>
                                     <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
                                         <div
                                             class="text-[10px] bg-blue-600 text-white font-black px-2.5 py-1 rounded-md uppercase tracking-widest absolute top-3 left-3 shadow-sm border border-blue-400">
-                                            File Lokal</div>
+                                            Berkas Video</div>
                                         <div
                                             class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-md transform group-hover/video:scale-110 transition-transform">
                                             ▶</div>
@@ -217,7 +205,6 @@
             </div>
 
         </div>
-    </div>
 
     {{-- ==================================================================
      5. ENGINE JAVASCRIPT AJAX LIVE UPLOAD PROGRESS INDICATOR

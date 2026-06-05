@@ -178,7 +178,7 @@
         }
     </style>
 
-    <div class="max-w-7xl mx-auto pb-16">
+    <div class="max-w-7xl mx-auto pb-16 animate-fade-in">
 
         {{-- HEADER HALAMAN --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-slate-200 pb-6 mb-8 gap-4">

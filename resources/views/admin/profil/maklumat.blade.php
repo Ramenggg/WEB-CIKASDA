@@ -3,10 +3,10 @@
 @section('title', 'Kelola Maklumat Informasi Publik')
 
 @section('content')
-    <div class="w-full bg-[#f8fafc] pb-12 animate-fade-in">
+    <div class="w-full pb-12 animate-fade-in">
 
         <div
-            class="w-full bg-white rounded-3xl shadow-[0_4px_30px_rgba(15,23,42,0.04)] border border-slate-200/80 overflow-hidden">
+            class="w-full bg-white/90 backdrop-blur-md rounded-3xl shadow-[0_4px_30px_rgba(15,23,42,0.04)] border border-slate-200/80 overflow-hidden">
 
             {{-- Header Panel --}}
             <div

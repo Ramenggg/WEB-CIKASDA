@@ -138,14 +138,14 @@
                                     <div class="grid grid-cols-2 grid-rows-2 h-full w-full gap-0.5 bg-white">
                                         @foreach ($album->fotos->take(4) as $foto)
                                             <div class="w-full h-full overflow-hidden">
-                                                <img src="{{ asset('storage/' . $foto->path_foto) }}"
+                                                <img src="{{ $foto->url_foto }}"
                                                     alt="Cover {{ $album->judul_album }}" loading="lazy"
                                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                                             </div>
                                         @endforeach
                                     </div>
                                 @elseif ($album->fotos && $album->fotos->count() > 0)
-                                    <img src="{{ asset('storage/' . $album->fotos[0]->path_foto) }}"
+                                    <img src="{{ $album->fotos[0]->url_foto }}"
                                         alt="Cover {{ $album->judul_album }}" loading="lazy"
                                         class="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500">
                                 @else
@@ -229,7 +229,7 @@
 
         {{-- Modal Galeri --}}
         <div id="modal-galeri"
-            class="fixed inset-0 z-[9999] invisible opacity-0 transition-all duration-300 ease-out bg-slate-950/95 backdrop-blur-xl flex items-center justify-center p-3 sm:p-4 md:p-8">
+            class="fixed inset-0 z-[9999] invisible opacity-0 transition-all duration-300 ease-out bg-slate-950/60 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 md:p-8">
             <div class="absolute inset-0 cursor-pointer" onclick="tutupModalGaleri()"></div>
 
             <div id="modal-galeri-content"
@@ -329,7 +329,7 @@
                 thumb.id = `thumb-item-${index}`;
                 thumb.onclick = () => gantiFotoAktif(index);
                 thumb.innerHTML =
-                    `<img src="/storage/${foto.path_foto}" loading="lazy" class="w-full h-full object-cover select-none">`;
+                    `<img src="${foto.url_foto || '/storage/' + foto.path_foto}" loading="lazy" class="w-full h-full object-cover select-none">`;
                 thumbContainer.appendChild(thumb);
             });
 
@@ -366,7 +366,7 @@
             }
 
             let dataFoto = koleksiFotoAktif[indexAktif];
-            document.getElementById('modal-img-active').src = `/storage/${dataFoto.path_foto}`;
+            document.getElementById('modal-img-active').src = dataFoto.url_foto || `/storage/${dataFoto.path_foto}`;
             document.getElementById('modal-img-caption').innerText = dataFoto.keterangan_foto ? dataFoto.keterangan_foto :
                 'Dokumentasi Foto';
             document.getElementById('modal-counter-badge').innerText = `${indexAktif + 1} / ${koleksiFotoAktif.length}`;

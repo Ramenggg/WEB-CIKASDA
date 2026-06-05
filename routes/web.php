@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProfilController;
 use App\Http\Controllers\Admin\BeritaController;
 use App\Http\Controllers\Admin\GaleriController;
+use App\Http\Controllers\BeritaPublikController;
 use App\Http\Controllers\ProfilPublikController;
 use Illuminate\Support\Facades\Route;
 
@@ -47,8 +48,8 @@ Route::prefix('profil')->name('profil.')->group(function () {
 // ==========================================================================
 
 Route::prefix('berita')->name('berita.')->group(function () {
-    Route::get('/',     [BeritaController::class, 'index'])->name('index');
-    Route::get('/{slug}', [BeritaController::class, 'show'] )->name('show');
+    Route::get('/',       [BeritaPublikController::class, 'index'])->name('index');
+    Route::get('/{slug}', [BeritaPublikController::class, 'show'] )->name('show');
 });
 
 // ==========================================================================

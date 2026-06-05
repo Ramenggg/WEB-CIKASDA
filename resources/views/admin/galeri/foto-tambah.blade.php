@@ -3,20 +3,7 @@
 @section('title', 'Kelola Foto')
 
 @section('content')
-    {{-- KONTAINER GLOBAL: Cerah, jernih, menggunakan slide1.png dengan shadow lembut konsisten --}}
-    <div
-        class="relative w-full min-h-screen rounded-[2rem] p-6 md:p-8 overflow-hidden isolate shadow-[0_20px_50px_rgba(30,41,59,0.15)] border border-slate-200">
-
-        {{-- BACKGROUND IMAGE GEDUNG UTAMA CERAH JELAS --}}
-        <div class="absolute inset-0 -z-20 bg-slate-50">
-            <img src="{{ asset('images/slider/slide1.png') }}" alt="Background CIKASDA"
-                class="w-full h-full object-cover object-center brightness-[0.88] contrast-[1.03]">
-            <div class="absolute inset-0 bg-gradient-to-tr from-white/70 via-blue-50/75 to-blue-100/40 mix-blend-overlay">
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-white/60 to-[#f8fafc]"></div>
-        </div>
-
-        <div class="max-w-7xl mx-auto space-y-10">
+    <div class="max-w-7xl mx-auto space-y-10 animate-fade-in">
 
             {{-- ==================================================================
              PART A: FORM INPUT TAMBAH DATA (BAGIAN ATAS)
@@ -235,7 +222,7 @@
                             <div
                                 class="aspect-video w-full bg-slate-100 relative overflow-hidden border-b border-slate-100 flex items-center justify-center">
                                 @if ($album->fotos && $album->fotos->count() > 0)
-                                    <img src="{{ asset('storage/' . $album->fotos[0]->path_foto) }}"
+                                    <img src="{{ $album->fotos[0]->url_foto }}"
                                         alt="Preview {{ $album->judul_album }}" class="w-full h-full object-cover">
                                 @else
                                     <div
@@ -298,7 +285,6 @@
             </div>
 
         </div>
-    </div>
 
     {{-- JAVASCRIPT ENGINE DYNAMIC MASSAL GENERATOR (KETERANGAN OPSIONAL) --}}
     {{-- JAVASCRIPT ENGINE DYNAMIC MASSAL GENERATOR + FITUR HAPUS INDIVIDUAL --}}
@@ -490,7 +476,7 @@
                 thumb.className = `aspect-square bg-white border rounded-xl overflow-hidden cursor-pointer shadow-3xs transition-all duration-300 hover:scale-105 ${index === 0 ? 'border-blue-600 ring-4 ring-blue-600/10 scale-102' : 'border-slate-200'}`;
                 thumb.id = `thumb-item-${index}`;
                 thumb.onclick = (e) => { e.stopPropagation(); gantiFotoAktif(index); };
-                thumb.innerHTML = `<img src="/storage/${foto.path_foto}" loading="lazy" class="w-full h-full object-cover select-none">`;
+                thumb.innerHTML = `<img src="${foto.url_foto || '/storage/' + foto.path_foto}" loading="lazy" class="w-full h-full object-cover select-none">`;
                 thumbContainer.appendChild(thumb);
             });
 
@@ -521,7 +507,7 @@
             }
 
             let dataFoto = koleksiFotoAktif[indexAktif];
-            document.getElementById('modal-img-active').src = `/storage/${dataFoto.path_foto}`;
+            document.getElementById('modal-img-active').src = dataFoto.url_foto || `/storage/${dataFoto.path_foto}`;
             document.getElementById('modal-img-caption').innerText = dataFoto.keterangan_foto ? dataFoto.keterangan_foto : 'Dokumentasi Foto';
             document.getElementById('modal-counter-badge').innerText = `${indexAktif + 1} / ${koleksiFotoAktif.length}`;
         }

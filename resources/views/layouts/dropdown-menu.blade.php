@@ -118,7 +118,7 @@
             <a href="/informasi/publikasi"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Publikasi
                 Informasi Publik</a>
-            <a href="/informasi/berita"
+            <a href="{{ route('berita.index') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Berita</a>
             <a href="/informasi/dokumen"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Dokumen</a>

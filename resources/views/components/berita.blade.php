@@ -11,7 +11,7 @@
             </div>
             <h2 class="text-3xl md:text-3xl font-normal text-slate-800 tracking-tight">
                 Berita Terbaru <br> Dinas Sumber Daya Air dan Cipta Karya Provinsi Sulawesi Tengah
-            </h2>,
+            </h2>
         </div>
 
         <div class="bg-white rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] border border-slate-100 p-6 md:p-8">
@@ -39,7 +39,7 @@
                 <div class="flex flex-wrap items-center gap-3 w-full lg:w-auto">
 
                     {{-- Kolom Pencarian Mencolok --}}
-                    <form action="/informasi-publik/berita" method="GET" class="relative group flex-1 md:flex-none">
+                    <form action="{{ route('berita.index') }}" method="GET" class="relative group flex-1 md:flex-none">
                         <input type="text" name="search" placeholder="Cari berita..."
                             class="w-full md:w-70 bg-white border-2 border-blue-100 text-slate-800 text-sm font-bold rounded-2xl py-2.5 pl-12 pr-4 outline-none focus:border-blue-600 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 shadow-sm shadow-blue-50 placeholder:text-slate-400 placeholder:font-medium">
 
@@ -53,7 +53,7 @@
                     </form>
 
                     {{-- Tombol Lihat Semua --}}
-                    <a href="/informasi-publik/berita"
+                    <a href="{{ route('berita.index') }}"
                         class="group flex items-center px-6 py-3 bg-blue-600 hover:bg-slate-900 text-white text-xs font-black uppercase tracking-widest rounded-2xl transition-all duration-300 shadow-xl shadow-blue-200 hover:shadow-slate-200 active:scale-95 shrink-0">
                         Lihat Semua
                         <svg class="ml-2 w-4 h-4 transition-transform duration-300 group-hover:translate-x-1"

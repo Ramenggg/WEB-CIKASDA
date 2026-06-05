@@ -104,6 +104,8 @@
                         </a>
 
 
+
+
                     </div>
                 </details>
 
@@ -264,7 +266,15 @@
             </nav>
         </aside>
 
-        <div class="flex-1 ml-64 flex flex-col">
+        <div class="flex-1 ml-64 flex flex-col min-h-screen relative bg-slate-50">
+            {{-- BACKGROUND IMAGE GLOBAL UNTUK SELURUH PANEL ADMIN --}}
+            <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+                <img src="{{ asset('images/slider/slide1.png') }}" alt="Background CIKASDA"
+                    class="w-full h-full object-cover object-center opacity-[0.22] grayscale-10 brightness-[1.05] contrast-[0.95]">
+                <div class="absolute inset-0 bg-gradient-to-tr from-slate-100/90 via-blue-50/80 to-white/95"></div>
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-50/60 to-slate-100"></div>
+            </div>
+
             <header
                 class="bg-white border-b border-slate-200 px-8 py-5 flex justify-between items-center sticky top-0 z-40 shadow-xs">
                 <h3 class="font-black text-slate-800 text-lg tracking-tight">@yield('title')</h3>

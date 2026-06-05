@@ -119,7 +119,7 @@
                         <span
                             class="text-[11px] font-bold text-white uppercase tracking-widest text-center leading-tight drop-shadow-md">Kepala
                             Dinas</span>
-                        <a href="/profil"
+                        <a href="{{ route('profil.pejabat') }}"
                             class="block w-full overflow-hidden rounded-xl shadow-xl border border-slate-700/80 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-blue-500/40">
                             <img src="{{ asset('images/pejabat/kadis.png') }}" alt="Kepala Dinas"
                                 class="w-full aspect-4/5 object-cover bg-slate-200 transition-transform duration-500 hover:scale-105">
@@ -129,7 +129,7 @@
                         <span
                             class="text-[11px] font-bold text-white uppercase tracking-widest text-center leading-tight drop-shadow-md">Sekretaris
                             Dinas</span>
-                        <a href="/profil"
+                        <a href="{{ route('profil.pejabat') }}"
                             class="block w-full overflow-hidden rounded-xl shadow-xl border border-slate-700/80 transition-all duration-300 hover:-translate-y-1 hover:border-blue-500 hover:shadow-blue-500/40">
                             <img src="{{ asset('images/pejabat/sekretaris.png') }}" alt="Sekretaris Dinas"
                                 class="w-full aspect-4/5 object-cover bg-slate-200 transition-transform duration-500 hover:scale-105">
