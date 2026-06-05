@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\AlbumKegiatan;
+use App\Models\AlbumKategori;
 use App\Models\BookletDigital;
 use App\Models\FotoKegiatan;
 use App\Models\VideoDokumentasi;
@@ -19,16 +20,14 @@ class GaleriController extends Controller
     public function userFotoIndeks()
     {
         $albums = AlbumKegiatan::with('fotos')->latest()->get();
-        
-        // Get unique categories that actually have albums
-        $kategoriList = AlbumKegiatan::select('kategori')
-            ->distinct()
-            ->whereNotNull('kategori')
+        $totalAlbum = AlbumKegiatan::whereNotNull('kategori')
             ->where('kategori', '!=', '')
-            ->orderBy('kategori')
-            ->pluck('kategori');
-            
-        return view('pages.galeri.galeri-foto', compact('albums', 'kategoriList'));
+            ->distinct()
+            ->count('kategori');
+        $totalFoto = FotoKegiatan::count();
+        $kategoriList = $this->kategoriAlbumList();
+
+        return view('pages.galeri.galeri-foto', compact('albums', 'kategoriList', 'totalAlbum', 'totalFoto'));
     }
 
     public function userVideoIndeks()
@@ -44,19 +43,13 @@ class GaleriController extends Controller
     }
 
     // =========================================================================
-    // ADMIN — kelola foto kegiatan
+    // ADMIN — kelola foto
     // =========================================================================
 
     public function adminFotoTambah()
     {
         $albums = AlbumKegiatan::with('fotos')->latest()->get();
-        
-        $kategoriList = AlbumKegiatan::select('kategori')
-            ->distinct()
-            ->whereNotNull('kategori')
-            ->where('kategori', '!=', '')
-            ->orderBy('kategori')
-            ->pluck('kategori');
+        $kategoriList = $this->kategoriAlbumList();
 
         return view('admin.galeri.foto-tambah', compact('albums', 'kategoriList'));
     }
@@ -72,9 +65,16 @@ class GaleriController extends Controller
             'keterangan_foto'  => 'nullable|array',
         ]);
 
+        $kategori = trim((string) $request->kategori);
+        if ($kategori === '') {
+            $kategori = 'Umum';
+        }
+
+        AlbumKategori::firstOrCreate(['nama' => $kategori]);
+
         $album = AlbumKegiatan::create([
             'judul_album'     => $request->judul_album,
-            'kategori'        => $request->kategori ?: '',
+            'kategori'        => $kategori,
             'deskripsi_album' => $request->deskripsi_album,
         ]);
 
@@ -93,7 +93,7 @@ class GaleriController extends Controller
             }
         }
 
-        return redirect()->route('admin.galeri.foto.index')->with('success', 'Album foto kegiatan berhasil diterbitkan!');
+        return redirect()->route('admin.galeri.foto.index')->with('success', 'Album foto berhasil diterbitkan!');
     }
 
     public function adminFotoDestroy(string $id)
@@ -109,7 +109,7 @@ class GaleriController extends Controller
         }
 
         $album->delete();
-        return redirect()->route('admin.galeri.foto.index')->with('success', 'Album kegiatan berhasil dihapus!');
+        return redirect()->route('admin.galeri.foto.index')->with('success', 'Album foto berhasil dihapus!');
     }
 
     public function adminFotoKategoriHapus(Request $request)
@@ -118,9 +118,16 @@ class GaleriController extends Controller
             'kategori' => 'required|string'
         ]);
 
-        AlbumKegiatan::where('kategori', $request->kategori)->update(['kategori' => '']);
+        $kategori = trim($request->kategori);
 
-        return redirect()->back()->with('success', "Kategori '{$request->kategori}' berhasil dihapus secara permanen. Semua album terkait kini tidak memiliki kategori spesifik.");
+        if ($kategori === 'Umum') {
+            return redirect()->back()->with('error', 'Kategori Umum tidak dapat dihapus.');
+        }
+
+        AlbumKegiatan::where('kategori', $kategori)->update(['kategori' => 'Umum']);
+        AlbumKategori::where('nama', $kategori)->delete();
+
+        return redirect()->back()->with('success', "Kategori '{$kategori}' berhasil dihapus secara permanen. Semua album terkait kini dipindahkan ke kategori Umum.");
     }
 
     // =========================================================================
@@ -241,5 +248,12 @@ class GaleriController extends Controller
     private function getDisk(): string
     {
         return config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
+    }
+
+    private function kategoriAlbumList()
+    {
+        return AlbumKategori::orderByRaw("CASE WHEN nama = 'Umum' THEN 0 ELSE 1 END")
+            ->orderBy('nama')
+            ->pluck('nama');
     }
 }

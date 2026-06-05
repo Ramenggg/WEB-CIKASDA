@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Kelola Foto Kegiatan')
+@section('title', 'Kelola Foto')
 
 @section('content')
     {{-- KONTAINER GLOBAL: Cerah, jernih, menggunakan slide1.png dengan shadow lembut konsisten --}}
@@ -26,7 +26,7 @@
                 <div
                     class="bg-white/80 backdrop-blur-md p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <h1 class="text-2xl font-black text-slate-900 tracking-tight">Kelola Foto Kegiatan</h1>
+                        <h1 class="text-2xl font-black text-slate-900 tracking-tight">Kelola Foto</h1>
                         <p class="text-xs font-bold text-slate-400 uppercase tracking-wide mt-1">Sistem Dokumentasi Album
                             Cikasda</p>
                     </div>
@@ -47,6 +47,13 @@
                     <div
                         class="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-800 text-xs font-bold shadow-sm">
                         🎉 {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div
+                        class="p-4 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs font-bold shadow-sm">
+                        ⚠️ {{ session('error') }}
                     </div>
                 @endif
 
@@ -75,13 +82,14 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="space-y-2">
                                 <label class="block text-xs font-black text-slate-700 uppercase tracking-wider">Judul Album
-                                    Kegiatan (Contoh: BENDUNG IRIGASI)</label>
+                                    Foto (Contoh: BENDUNG IRIGASI)</label>
                                 <input type="text" name="judul_album" required value="{{ old('judul_album') }}"
-                                    placeholder="Masukkan judul album foto kegiatan resmi..."
+                                    placeholder="Masukkan judul album foto..."
                                     class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-blue-600 outline-none transition font-extrabold text-slate-900 text-base placeholder:font-normal placeholder:text-slate-400">
                             </div>
 
-                            <div class="space-y-2" x-data="{ mode: 'select', kategori: '{{ $kategoriList->first() ?? '' }}', open: false }">
+                            <div class="space-y-2"
+                                x-data="{ mode: 'select', kategori: @js(old('kategori', $kategoriList->first() ?? 'Umum')), open: false }">
                                 <label class="block text-xs font-black text-slate-700 uppercase tracking-wider">Kategori Album</label>
                                 
                                 <input type="hidden" name="kategori" x-model="kategori">
@@ -107,19 +115,19 @@
                                         <div class="max-h-52 overflow-y-auto scrollbar-thin">
                                             @foreach($kategoriList as $kat)
                                                 <div class="flex items-center justify-between w-full hover:bg-blue-50/80 group transition-colors">
-                                                    <button type="button" @click="kategori = '{{ $kat }}'; open = false"
+                                                    <button type="button" @click="kategori = @js($kat); open = false"
                                                         class="flex-1 text-left px-5 py-3 text-sm font-bold text-slate-700 group-hover:text-blue-600 transition-colors flex items-center justify-between">
                                                         {{ $kat }}
-                                                        <svg x-show="kategori === '{{ $kat }}'" style="display: none;" class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                                                        <svg x-show="kategori === @js($kat)" style="display: none;" class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
                                                     </button>
                                                     
-                                                    <form action="{{ route('admin.galeri.foto.kategori.hapus') }}" method="POST" class="pr-4 pl-2" onsubmit="return confirm('Yakin ingin menghapus kategori ini? Semua album yang menggunakan kategori ini akan dialihkan ke kategori Umum.')">
-                                                        @csrf
-                                                        <input type="hidden" name="kategori" value="{{ $kat }}">
-                                                        <button type="submit" @click.stop class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer" title="Hapus Kategori">
+                                                    <div class="pr-4 pl-2">
+                                                        <button type="button" @click.stop="window.hapusKategoriAlbum(@js($kat))"
+                                                            class="w-7 h-7 flex items-center justify-center rounded-lg text-slate-300 hover:text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
+                                                            title="Hapus Kategori">
                                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                                         </button>
-                                                    </form>
+                                                    </div>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -140,7 +148,7 @@
                                         placeholder="Ketik nama kategori baru (contoh: Inspeksi)..."
                                         class="w-full px-5 py-4 rounded-2xl border border-blue-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all font-extrabold text-slate-900 text-base placeholder:font-normal placeholder:text-slate-400 pr-24 shadow-sm bg-white">
                                     
-                                    <button type="button" @click="mode = 'select'; kategori = '{{ $kategoriList->first() ?? '' }}'" 
+                                    <button type="button" @click="mode = 'select'; kategori = @js($kategoriList->first() ?? 'Umum')" 
                                         class="absolute right-3 top-1/2 -translate-y-1/2 px-4 py-2 bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 text-xs font-bold rounded-xl transition-all cursor-pointer shadow-sm">
                                         Batal
                                     </button>
@@ -151,12 +159,12 @@
                         <div class="space-y-2">
                             <div class="flex justify-between items-center">
                                 <label class="block text-xs font-black text-slate-700 uppercase tracking-wider">Deskripsi
-                                    Kegiatan</label>
+                                    Foto</label>
                                 <span
                                     class="text-[10px] bg-slate-100 border border-slate-200 text-slate-500 font-extrabold px-2.5 py-0.5 rounded-md uppercase tracking-wider">Opsional</span>
                             </div>
                             <textarea name="deskripsi_album" rows="3"
-                                placeholder="Masukkan keterangan tambahan mengenai rincian kegiatan ini jika ada..."
+                                placeholder="Masukkan keterangan tambahan mengenai rincian foto ini jika ada..."
                                 class="w-full px-5 py-4 rounded-2xl border border-slate-200 focus:border-blue-600 outline-none transition font-medium text-slate-700 text-sm placeholder:font-normal placeholder:text-slate-400">{{ old('deskripsi_album') }}</textarea>
                         </div>
                     </div>
@@ -199,6 +207,11 @@
                 </form>
             </div>
 
+            <form id="form-hapus-kategori-album" action="{{ route('admin.galeri.foto.kategori.hapus') }}" method="POST" class="hidden">
+                @csrf
+                <input type="hidden" name="kategori" id="hapus-kategori-album-input">
+            </form>
+
             <hr class="border-slate-200/60 my-6">
 
             {{-- ==================================================================
@@ -207,7 +220,7 @@
             <div class="space-y-4">
                 <div class="flex items-center space-x-2.5 px-1">
                     <span class="h-4 w-1 bg-blue-600 rounded-full shadow-xs"></span>
-                    <h2 class="text-sm font-black text-slate-800 uppercase tracking-wider">Daftar Album Terunggah Aktif</h2>
+                    <h2 class="text-sm font-black text-slate-800 uppercase tracking-wider">Daftar Album Foto Terunggah Aktif</h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -278,7 +291,7 @@
                     @empty
                         <div
                             class="col-span-full bg-white rounded-2xl p-12 border border-slate-200 text-center text-xs font-black text-slate-400 uppercase tracking-widest">
-                            Belum ada arsip album foto kegiatan tercatat
+                            Belum ada arsip album foto tercatat
                         </div>
                     @endforelse
                 </div>
@@ -383,6 +396,15 @@
             // Daftarkan file yang tersisa ke DOM input file Laravel
             inputMassal.files = dataTransfer.files;
         }
+
+        function hapusKategoriAlbum(namaKategori) {
+            if (!confirm(`Yakin ingin menghapus kategori "${namaKategori}"? Semua album terkait akan dipindahkan ke kategori Umum.`)) {
+                return;
+            }
+
+            document.getElementById('hapus-kategori-album-input').value = namaKategori;
+            document.getElementById('form-hapus-kategori-album').submit();
+        }
     </script>
     {{-- Modal Galeri (Admin Preview) --}}
     <div id="modal-galeri"
@@ -458,7 +480,7 @@
 
             document.getElementById('modal-title').innerText = judul;
             document.getElementById('modal-desc').innerText = deskripsi ? deskripsi :
-                'Tidak ada rincian deskripsi tambahan mengenai album kegiatan ini.';
+                'Tidak ada rincian deskripsi tambahan mengenai album foto ini.';
 
             let thumbContainer = document.getElementById('modal-thumb-container');
             thumbContainer.innerHTML = '';
@@ -500,7 +522,7 @@
 
             let dataFoto = koleksiFotoAktif[indexAktif];
             document.getElementById('modal-img-active').src = `/storage/${dataFoto.path_foto}`;
-            document.getElementById('modal-img-caption').innerText = dataFoto.keterangan_foto ? dataFoto.keterangan_foto : 'Dokumentasi Kegiatan';
+            document.getElementById('modal-img-caption').innerText = dataFoto.keterangan_foto ? dataFoto.keterangan_foto : 'Dokumentasi Foto';
             document.getElementById('modal-counter-badge').innerText = `${indexAktif + 1} / ${koleksiFotoAktif.length}`;
         }
 
