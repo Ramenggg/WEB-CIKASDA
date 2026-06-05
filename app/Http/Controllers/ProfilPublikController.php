@@ -73,4 +73,9 @@ class ProfilPublikController extends Controller
     {
         return view('pages.informasi.daftar-informasi');
     }
+
+    public function publikasi()
+    {
+        return view('pages.informasi.publikasi-informasi');
+    }
 }

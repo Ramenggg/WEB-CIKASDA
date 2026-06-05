@@ -88,32 +88,9 @@
         <div x-show="open" x-transition.opacity.duration.200ms
             class="absolute left-0 top-full mt-1 w-80 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
 
-            <div x-data="{ subOpen: false }" @mouseenter="subOpen = true" @mouseleave="subOpen = false"
-                class="relative group">
-                <a href="{{ route('daftar-informasi') }}"
-                    class="w-full flex items-center justify-between px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium outline-none">
-                    Daftar Informasi
-                    <svg class="w-4 h-4 text-slate-400 group-hover:text-blue-600" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </a>
-                <div x-show="subOpen" x-transition.opacity.duration.200ms
-                    class="absolute left-full top-0 ml-1 w-80 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
-                    <a href="/informasi/setiap-saat"
-                        class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Daftar
-                        Informasi Publik Setiap Saat</a>
-                    <a href="/informasi/serta-merta"
-                        class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Daftar
-                        Informasi Publik Serta Merta</a>
-                    <a href="/informasi/berkala"
-                        class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Daftar
-                        Informasi Publik Berkala</a>
-                    <a href="/informasi/dikecualikan"
-                        class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Daftar
-                        Informasi Dikecualikan</a>
-                </div>
-            </div>
+            <a href="{{ route('daftar-informasi') }}"
+                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Daftar
+                Informasi</a>
 
             <a href="/informasi/publikasi"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Publikasi

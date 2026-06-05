@@ -44,6 +44,24 @@ Route::prefix('profil')->name('profil.')->group(function () {
 });
 
 Route::get('/daftar-informasi', [ProfilPublikController::class, 'daftarInformasi'])->name('daftar-informasi');
+Route::get('/informasi/publikasi', [ProfilPublikController::class, 'publikasi'])->name('informasi.publikasi');
+
+// Halaman Unduh Klasifikasi Informasi Publik (Redirect to unified page for compatibility)
+Route::get('/daftar-informasi-publik-setiap-saat', function() {
+    return redirect()->route('daftar-informasi', ['tab' => 'setiapsaat']);
+});
+Route::get('/daftar-informasi-publik-serta-merta', function() {
+    return redirect()->route('daftar-informasi', ['tab' => 'sertamerta']);
+});
+Route::get('/daftar-informasi-publik-berkala', function() {
+    return redirect()->route('daftar-informasi', ['tab' => 'berkala']);
+});
+Route::get('/daftar-informasi-dikecualikan', function() {
+    return redirect()->route('daftar-informasi', ['tab' => 'dikecualikan']);
+});
+Route::get('/daftar-informasi-dikecualikan-2', function() {
+    return redirect()->route('daftar-informasi', ['tab' => 'dikecualikan']);
+});
 
 // ==========================================================================
 // 3. HALAMAN PUBLIK - BERITA

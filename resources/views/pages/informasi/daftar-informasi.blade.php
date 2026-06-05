@@ -5,60 +5,208 @@
     <x-profil-hero title="Daftar Informasi" :showContentInHero="false" 
         description="Indeks klasifikasi Informasi Publik Dinas Cipta Karya dan Sumber Daya Air Provinsi Sulawesi Tengah berdasarkan ketentuan UU No. 14 Tahun 2008." />
 
-    {{-- KONTEN UTAMA OVERLAPPING HERO --}}
+    {{-- KONTEN UTAMA OVERLAPPING HERO (Di dalam kotak kolom halaman kontainer) --}}
     <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-40 pb-24"
          x-data="{ 
-             activeTab: 'berkala',
+             activeTab: (new URLSearchParams(window.location.search)).get('tab') || 'semua',
              searchQuery: '',
              isFocused: false,
-             items: [
+             activeAccordion: null,
+             groups: [
                  // 1. BERKALA
-                 { id: 1, title: 'Laporan Keuangan DPA-SKPD & Neraca', category: 'berkala', icon: '📄', detail: 'Informasi keuangan dan pertanggungjawaban dinas berkala.', link: '/profil/keuangan', type: 'internal' },
-                 { id: 2, title: 'Rencana Strategis (Renstra) & Rencana Kerja', category: 'berkala', icon: '📋', detail: 'Dokumen perencanaan jangka panjang dan program kerja operasional tahunan.', link: '/profil/visi-misi', type: 'internal' },
-                 { id: 3, title: 'Laporan Harta Kekayaan ASN (LHKPN / LHKASN)', category: 'berkala', icon: '💼', detail: 'Transparansi pelaporan kekayaan pejabat publik di lingkungan dinas.', link: '/profil/lhkpn', type: 'internal' },
-                 { id: 4, title: 'Struktur Organisasi & Profil Pejabat', category: 'berkala', icon: '👥', detail: 'Daftar pejabat struktural beserta tugas pokok dan fungsi jabatan.', link: '/profil/struktur-organisasi', type: 'internal' },
-                 
+                 {
+                     id: 'berkala-01',
+                     category: 'berkala',
+                     num: '01',
+                     title: 'Keuangan & Realisasi Anggaran',
+                     items: [
+                         { title: 'Laporan Keuangan DPA-SKPD & Neraca', detail: 'Informasi keuangan dan pertanggungjawaban dinas berkala.', link: '/profil/keuangan', type: 'internal', icon: '📊' },
+                         { title: 'Laporan Harta Kekayaan ASN (LHKPN / LHKASN)', detail: 'Transparansi pelaporan kekayaan pejabat publik di lingkungan dinas.', link: '/profil/lhkpn', type: 'internal', icon: '💼' }
+                     ]
+                 },
+                 {
+                     id: 'berkala-02',
+                     category: 'berkala',
+                     num: '02',
+                     title: 'Perencanaan Strategis & Kinerja',
+                     items: [
+                         { title: 'Rencana Strategis (Renstra) & Rencana Kerja', detail: 'Dokumen perencanaan jangka panjang dan program kerja operasional tahunan.', link: '/profil/visi-misi', type: 'internal', icon: '📋' }
+                     ]
+                 },
+                 {
+                     id: 'berkala-03',
+                     category: 'berkala',
+                     num: '03',
+                     title: 'Struktur Organisasi & Profil Instansi',
+                     items: [
+                         { title: 'Struktur Organisasi & Profil Pejabat', detail: 'Daftar pejabat struktural beserta tugas pokok dan fungsi jabatan.', link: '/profil/struktur-organisasi', type: 'internal', icon: '👥' }
+                     ]
+                 },
                  // 2. SERTA MERTA
-                 { id: 5, title: 'Informasi Daya Rusak Air Terhadap Fasilitas Irigasi (IRWA) - 2022', category: 'sertamerta', icon: '🌊', detail: 'Laporan kedaruratan kerusakan fasilitas irigasi dampak daya rusak air.', link: '#', type: 'external' },
-                 { id: 6, title: 'Informasi Daya Rusak Air Terhadap Fasilitas Irigasi (IRWA) - 2023', category: 'sertamerta', icon: '🌊', detail: 'Data penanggulangan darurat kerusakan sistem irigasi di wilayah sungai.', link: '#', type: 'external' },
-                 { id: 7, title: 'Informasi Daya Rusak Air Terhadap Fasilitas Sungai dan Pantai (SPDAB) - 2022', category: 'sertamerta', icon: '🏖️', detail: 'Monitoring kerusakan pantai, tanggul jebol, dan fasilitas pengaman sungai.', link: '#', type: 'external' },
-                 { id: 8, title: 'Informasi Daya Rusak Air Terhadap Fasilitas Sungai dan Pantai (SPDAB) - 2023', category: 'sertamerta', icon: '🏖️', detail: 'Laporan kejadian bencana banjir dan abrasi pantai yang merusak infrastruktur.', link: '#', type: 'external' },
-                 { id: 9, title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (PLBG) - 2022', category: 'sertamerta', icon: '🏢', detail: 'Kerusakan gedung pemerintahan dan fasilitas umum pasca bencana alam.', link: '#', type: 'external' },
-                 { id: 10, title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (PLBG) - 2023', category: 'sertamerta', icon: '🏢', detail: 'Laporan teknis rehabilitasi gedung dan lingkungan akibat dampak bencana.', link: '#', type: 'external' },
-                 { id: 11, title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (AMPLP) - 2022', category: 'sertamerta', icon: '🚰', detail: 'Dampak kerusakan sarana air minum dan penyehatan lingkungan pemukiman.', link: '#', type: 'external' },
-                 { id: 12, title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (AMPLP) - 2023', category: 'sertamerta', icon: '🚰', detail: 'Data tanggap darurat dan rekonstruksi sarana penyediaan air bersih.', link: '#', type: 'external' },
-
+                 {
+                     id: 'sertamerta-01',
+                     category: 'sertamerta',
+                     num: '01',
+                     title: 'Bidang Irigasi (IRWA)',
+                     items: [
+                         { title: 'Informasi Daya Rusak Air Terhadap Fasilitas Irigasi (IRWA) - 2022', detail: 'Laporan kedaruratan kerusakan fasilitas irigasi dampak daya rusak air.', link: '#', type: 'external', icon: '🌊' },
+                         { title: 'Informasi Daya Rusak Air Terhadap Fasilitas Irigasi (IRWA) - 2023', detail: 'Data penanggulangan darurat kerusakan sistem irigasi di wilayah sungai.', link: '#', type: 'external', icon: '🌊' }
+                     ]
+                 },
+                 {
+                     id: 'sertamerta-02',
+                     category: 'sertamerta',
+                     num: '02',
+                     title: 'Bidang Sungai dan Pantai (SPDAB)',
+                     items: [
+                         { title: 'Informasi Daya Rusak Air Terhadap Fasilitas Sungai dan Pantai (SPDAB) - 2022', detail: 'Monitoring kerusakan pantai, tanggul jebol, dan fasilitas pengaman sungai.', link: '#', type: 'external', icon: '🏖️' },
+                         { title: 'Informasi Daya Rusak Air Terhadap Fasilitas Sungai dan Pantai (SPDAB) - 2023', detail: 'Laporan kejadian bencana banjir dan abrasi pantai yang merusak infrastruktur.', link: '#', type: 'external', icon: '🏖️' }
+                     ]
+                 },
+                 {
+                     id: 'sertamerta-03',
+                     category: 'sertamerta',
+                     num: '03',
+                     title: 'Bidang Penataan Lingkungan & Bangunan Gedung (PLBG)',
+                     items: [
+                         { title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (PLBG) - 2022', detail: 'Kerusakan gedung pemerintahan dan fasilitas umum pasca bencana alam.', link: '#', type: 'external', icon: '🏢' },
+                         { title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (PLBG) - 2023', detail: 'Laporan teknis rehabilitasi gedung dan lingkungan akibat dampak bencana.', link: '#', type: 'external', icon: '🏢' }
+                     ]
+                 },
+                 {
+                     id: 'sertamerta-04',
+                     category: 'sertamerta',
+                     num: '04',
+                     title: 'Bidang Air Minum & Penyehatan Lingkungan (AMPLP)',
+                     items: [
+                         { title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (AMPLP) - 2022', detail: 'Dampak kerusakan sarana air minum dan penyehatan lingkungan pemukiman.', link: '#', type: 'external', icon: '🚰' },
+                         { title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (AMPLP) - 2023', detail: 'Data tanggap darurat dan rekonstruksi sarana penyediaan air bersih.', link: '#', type: 'external', icon: '🚰' }
+                     ]
+                 },
                  // 3. SETIAP SAAT
-                 { id: 13, title: 'Standar Pelayanan Layanan Informasi Publik (PPIDP) - 2022', category: 'setiapsaat', icon: '⚙️', detail: 'SOP resmi pelayanan permohonan informasi publik PPID Pembantu.', link: '#', type: 'external' },
-                 { id: 14, title: 'Standar Pelayanan Layanan Informasi Publik (PPIDP) - 2023', category: 'setiapsaat', icon: '⚙️', detail: 'Pembaruan maklumat pelayanan dan standar operasional informasi.', link: '#', type: 'external' },
-                 { id: 15, title: 'Surat Keputusan (SK) Kepala Dinas', category: 'setiapsaat', icon: '📜', detail: 'Kumpulan regulasi keputusan dinas dalam hal keorganisasian dan teknis.', link: '#', type: 'internal' },
-                 { id: 16, title: 'SOP dan SPM PPID Dinas Cikasda', category: 'setiapsaat', icon: '📋', detail: 'Standard Operating Procedure dan Standar Pelayanan Minimal informasi publik.', link: '/ppid/sop-spm', type: 'internal' },
-
+                 {
+                     id: 'setiapsaat-01',
+                     category: 'setiapsaat',
+                     num: '01',
+                     title: 'Standar Pelayanan Layanan Informasi (PPIDP)',
+                     items: [
+                         { title: 'Standar Pelayanan Layanan Informasi Publik (PPIDP) - 2022', detail: 'SOP resmi pelayanan permohonan informasi publik PPID Pembantu.', link: '#', type: 'external', icon: '⚙️' },
+                         { title: 'Standar Pelayanan Layanan Informasi Publik (PPIDP) - 2023', detail: 'Pembaruan maklumat pelayanan dan standar operasional informasi.', link: '#', type: 'external', icon: '⚙️' }
+                     ]
+                 },
+                 {
+                     id: 'setiapsaat-02',
+                     category: 'setiapsaat',
+                     num: '02',
+                     title: 'Regulasi & Keputusan Kepala Dinas',
+                     items: [
+                         { title: 'Surat Keputusan (SK) Kepala Dinas', detail: 'Kumpulan regulasi keputusan dinas dalam hal keorganisasian dan teknis.', link: '#', type: 'internal', icon: '📜' }
+                     ]
+                 },
+                 {
+                     id: 'setiapsaat-03',
+                     category: 'setiapsaat',
+                     num: '03',
+                     title: 'SOP & Maklumat Pelayanan Publik',
+                     items: [
+                         { title: 'SOP dan SPM PPID Dinas Cikasda', detail: 'Standard Operating Procedure dan Standar Pelayanan Minimal informasi publik.', link: '/ppid/sop-spm', type: 'internal', icon: '📋' }
+                     ]
+                 },
                  // 4. DIKECUALIKAN
-                 { id: 17, title: 'Dokumen Kepegawaian (Arsip Fisik Individu ASN)', category: 'dikecualikan', icon: '🔒', detail: 'Kategori rahasia jabatan karena menyangkut data riwayat pribadi pegawai.', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP' },
-                 { id: 18, title: 'Daftar Usulan Mutasi Jabatan ASN', category: 'dikecualikan', icon: '🔒', detail: 'Proses perencanaan penempatan jabatan staf yang belum bersifat final.', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf h UU KIP' },
-                 { id: 19, title: 'Laporan Pengusulan Cerai ASN', category: 'dikecualikan', icon: '🔒', detail: 'Data privasi keluarga pegawai yang dilindungi undang-undang hak sipil.', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP' },
-                 { id: 20, title: 'Disposisi Surat Pimpinan & Nota Dinas Internal', category: 'dikecualikan', icon: '🔒', detail: 'Naskah dinas intern yang masih berupa draf kebijakan tertutup.', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf a UU KIP' },
-                 { id: 21, title: 'Dokumen SPJ (Surat Pertanggungjawaban)', category: 'dikecualikan', icon: '🔒', detail: 'Kwitansi, invoice belanja daerah yang memuat rincian data pihak ketiga.', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf j UU KIP' },
-                 { id: 22, title: 'Surat Penawaran Harga Pemenang Lelang', category: 'dikecualikan', icon: '🔒', detail: 'Dokumen rahasia persaingan usaha sehat pengadaan barang/jasa.', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP' },
-                 { id: 23, title: 'Data Hidrologi & Curah Hujan/Debit Sungai Mentah', category: 'dikecualikan', icon: '🔒', detail: 'Kumpulan database hidrometri wilayah sungai sebelum melalui verifikasi.', status: 'Ketat/Terbatas', dasar_hukum: 'Peraturan Teknis BMKG/Dinas' }
-             ]
+                 {
+                     id: 'dikecualikan-01',
+                     category: 'dikecualikan',
+                     num: '01',
+                     title: 'Kepegawaian & Disiplin ASN',
+                     items: [
+                         { title: 'Dokumen Kepegawaian (Arsip Fisik Individu ASN)', detail: 'Kategori rahasia jabatan karena menyangkut data riwayat pribadi pegawai.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP', icon: '🔒' },
+                         { title: 'Daftar Usulan Mutasi Jabatan ASN', detail: 'Proses perencanaan penempatan jabatan staf yang belum bersifat final.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf h UU KIP', icon: '🔒' },
+                         { title: 'Laporan Pengusulan Cerai ASN', detail: 'Data privasi keluarga pegawai yang dilindungi undang-undang hak sipil.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP', icon: '🔒' },
+                         { title: 'Usul Penjatuhan Sanksi Disiplin ASN', detail: 'Informasi sanksi disiplin pegawai internal.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP', icon: '🔒' }
+                     ]
+                 },
+                 {
+                     id: 'dikecualikan-02',
+                     category: 'dikecualikan',
+                     num: '02',
+                     title: 'Korespondensi Internal & Disposisi',
+                     items: [
+                         { title: 'Disposisi Surat Pimpinan & Nota Dinas Internal', detail: 'Naskah dinas intern yang masih berupa draf kebijakan tertutup.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf a UU KIP', icon: '🔒' }
+                     ]
+                 },
+                 {
+                     id: 'dikecualikan-03',
+                     category: 'dikecualikan',
+                     num: '03',
+                     title: 'Pengadaan Barang & Jasa (PBJ)',
+                     items: [
+                         { title: 'Surat Penawaran Harga Pemenang Lelang', detail: 'Dokumen rahasia persaingan usaha sehat pengadaan barang/jasa.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' },
+                         { title: 'Dokumen Penawaran Pengadaan', detail: 'Berkas administrasi penawaran yang memuat data pribadi.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP', icon: '🔒' }
+                     ]
+                 },
+                 {
+                     id: 'dikecualikan-04',
+                     category: 'dikecualikan',
+                     num: '04',
+                     title: 'Keuangan Terbatas',
+                     items: [
+                         { title: 'Dokumen Kelengkapan Surat Perintah Membayar (SPM) Tahun Berjalan', detail: 'Berkas keuangan transaksional sebelum audit resmi BPK.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf j UU KIP', icon: '🔒' },
+                         { title: 'Neraca Keuangan Internal', detail: 'Rincian draf neraca kas daerah.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf j UU KIP', icon: '🔒' }
+                     ]
+                 },
+                 {
+                     id: 'dikecualikan-05',
+                     category: 'dikecualikan',
+                     num: '05',
+                     title: 'Perencanaan Teknis & Pelaksanaan',
+                     items: [
+                         { title: 'Daftar Pelaksanaan Perencanaan (IRWA)', detail: 'Rencana Detail Teknis (DED) jaringan irigasi yang masih berproses.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' },
+                         { title: 'Daftar Pelaksanaan Perencanaan (SPDAB)', detail: 'Rencana teknis perlindungan sungai dan pantai.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' },
+                         { title: 'Daftar Pelaksanaan Perencanaan (PLBG)', detail: 'Gambar rencana teknis bangunan gedung strategis.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' },
+                         { title: 'Daftar Pelaksanaan Perencanaan (AMPLP)', detail: 'Rencana teknis jaringan penyediaan air minum.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' }
+                     ]
+                 },
+                 {
+                     id: 'dikecualikan-06',
+                     category: 'dikecualikan',
+                     num: '06',
+                     title: 'Data Hidrologi Mentah',
+                     items: [
+                         { title: 'Data Curah Hujan (UPT PSDA Wilayah I & II)', detail: 'Kumpulan database hidrometri wilayah sungai sebelum melalui verifikasi.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Peraturan Teknis BMKG/Dinas', icon: '🔒' },
+                         { title: 'Data Klimatologi (UPT PSDA Wilayah I & II)', detail: 'Data iklim mentah stasiun meteorologi.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Peraturan Teknis BMKG/Dinas', icon: '🔒' },
+                         { title: 'Data Debit Sungai (UPT PSDA Wilayah I & II)', detail: 'Data rekaman AWLR mentah pintu air sungai.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Peraturan Teknis BMKG/Dinas', icon: '🔒' }
+                     ]
+                 }
+             ],
+             groupMatches(group) {
+                 if (this.searchQuery === '') {
+                     return this.activeTab === 'semua' || group.category === this.activeTab;
+                 }
+                 const query = this.searchQuery.toLowerCase();
+                 const matchesTitle = group.title.toLowerCase().includes(query);
+                 const matchesItems = group.items.some(i => i.title.toLowerCase().includes(query) || i.detail.toLowerCase().includes(query));
+                 return matchesTitle || matchesItems;
+             },
+             isExpanded(group) {
+                 if (this.searchQuery !== '') {
+                     return true; 
+                 }
+                 return this.activeAccordion === group.id;
+             }
          }">
 
-        {{-- SEARCH BAR - ULTRA MODERN & NOT RIGID --}}
-        <div class="relative max-w-4xl mx-auto mb-12">
-            {{-- Glowing Background Aura --}}
-            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 rounded-3xl blur-2xl opacity-75 -z-10 transition-opacity duration-300"
-                :class="isFocused ? 'opacity-100 scale-102' : 'opacity-75'"></div>
+        {{-- MAIN WHITE BOX CONTAINER (SEPERTI FOTO LAYOUT ACCORDION DI DALAM KOLOM) --}}
+        <div class="bg-white rounded-3xl shadow-xl overflow-hidden p-6 md:p-10 lg:p-12 border border-slate-100 space-y-8">
             
-            <div class="relative bg-white/75 backdrop-blur-2xl rounded-3xl p-5 md:p-6 shadow-[0_20px_50px_rgba(15,23,42,0.08)] border transition-all duration-300"
-                :class="isFocused ? 'border-blue-400/60 shadow-[0_20px_50px_rgba(59,130,246,0.12)]' : 'border-slate-200/50'">
+            {{-- SEARCH BAR - ULTRA MODERN PILL DESIGN (SCALED UP & ALIGNED LEFT) --}}
+            <div class="relative max-w-3xl ml-0 mr-auto">
+                {{-- Glow background --}}
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-indigo-500/10 to-purple-500/10 rounded-full blur-xl opacity-75 -z-10"></div>
                 
-                <div class="relative flex items-center">
-                    {{-- Search Icon with Micro-Animation --}}
-                    <span class="absolute left-6 transition-all duration-300"
-                        :class="isFocused ? 'text-blue-600 scale-110' : 'text-slate-400'">
-                        <svg class="w-6 h-6 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="relative flex items-center bg-slate-50 border border-slate-200 rounded-full p-2.5 pl-8 transition-all duration-300 shadow-[0_12px_35px_rgba(0,0,0,0.03)] focus-within:border-blue-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-100/40">
+                    {{-- Search Icon --}}
+                    <span class="text-slate-400 mr-4 transition-colors focus-within:text-blue-600">
+                        <svg class="w-5.5 h-5.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
                     </span>
@@ -66,209 +214,346 @@
                     {{-- Search Input --}}
                     <input type="text" x-model="searchQuery" 
                         @focus="isFocused = true" @blur="isFocused = false"
-                        placeholder="Ketik untuk mencari dokumen dinas... (Contoh: Irigasi, Keuangan, LHKPN)" 
-                        class="w-full pl-16 pr-16 py-4 rounded-2xl border-none outline-none font-bold text-slate-800 placeholder:font-medium placeholder:text-slate-400 bg-slate-50/50 focus:bg-white focus:shadow-[inset_0_2px_4px_rgba(0,0,0,0.02)] transition-all duration-300 text-sm md:text-base">
-
-                    {{-- Hotkey / Clear Button --}}
-                    <div class="absolute right-5 flex items-center">
+                        placeholder="Cari dokumen atau klasifikasi..." 
+                        class="w-full bg-transparent outline-none font-bold text-slate-800 placeholder:font-semibold placeholder:text-slate-400 text-sm md:text-base py-2.5">
+                    
+                    {{-- Action buttons --}}
+                    <div class="flex items-center space-x-2 pr-2">
                         <button x-show="searchQuery" @click="searchQuery = ''" x-transition.opacity
-                            class="p-2 bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-xl transition cursor-pointer">
+                            class="p-2 hover:bg-rose-50 text-slate-400 hover:text-rose-600 rounded-full transition cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
                             </svg>
                         </button>
-                        <span x-show="!searchQuery" class="hidden sm:inline-block px-2.5 py-1 bg-slate-100 text-[10px] text-slate-400 font-extrabold uppercase rounded-lg border border-slate-200/60 tracking-wider">Cari</span>
+                        <button class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-black text-xs md:text-sm uppercase tracking-wider px-8 py-3 rounded-full transition shadow-md shadow-blue-500/10 cursor-pointer">
+                            Cari
+                        </button>
                     </div>
                 </div>
-
-                {{-- Modern Tags --}}
-                <div class="mt-4 flex flex-wrap items-center gap-2.5 px-1 pt-1">
-                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mr-1">Rekomendasi:</span>
-                    <button @click="searchQuery = 'Keuangan'" class="px-3.5 py-1.5 bg-slate-100 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-xl text-xs font-bold transition border border-slate-200/40 hover:border-blue-100 cursor-pointer">Keuangan 📊</button>
-                    <button @click="searchQuery = 'Irigasi'" class="px-3.5 py-1.5 bg-slate-100 hover:bg-emerald-50 text-slate-600 hover:text-emerald-600 rounded-xl text-xs font-bold transition border border-slate-200/40 hover:border-emerald-100 cursor-pointer">Irigasi 🌊</button>
-                    <button @click="searchQuery = 'PPIDP'" class="px-3.5 py-1.5 bg-slate-100 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-xl text-xs font-bold transition border border-slate-200/40 hover:border-indigo-100 cursor-pointer">Pelayanan ⚙️</button>
-                    <button @click="searchQuery = 'Kepegawaian'" class="px-3.5 py-1.5 bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-xl text-xs font-bold transition border border-slate-200/40 hover:border-rose-100 cursor-pointer">Dikecualikan 🔒</button>
+                
+                {{-- Quick Tags --}}
+                <div class="mt-5 flex flex-wrap items-center justify-start gap-2.5 px-1">
+                    <span class="text-[10px] md:text-xs font-black text-slate-400 uppercase tracking-widest mr-1.5">Rekomendasi:</span>
+                    <button @click="searchQuery = 'Keuangan'" class="px-5 py-2 bg-slate-100/80 hover:bg-blue-50 text-slate-600 hover:text-blue-600 rounded-full text-xs md:text-sm font-extrabold transition border border-slate-200/40 hover:border-blue-100 cursor-pointer shadow-3xs">Keuangan</button>
+                    <button @click="searchQuery = 'Irigasi'" class="px-5 py-2 bg-slate-100/80 hover:bg-emerald-50 text-slate-600 hover:text-emerald-600 rounded-full text-xs md:text-sm font-extrabold transition border border-slate-200/40 hover:border-emerald-100 cursor-pointer shadow-3xs">Irigasi</button>
+                    <button @click="searchQuery = 'PPID'" class="px-5 py-2 bg-slate-100/80 hover:bg-indigo-50 text-slate-600 hover:text-indigo-600 rounded-full text-xs md:text-sm font-extrabold transition border border-slate-200/40 hover:border-indigo-100 cursor-pointer shadow-3xs">PPID</button>
                 </div>
             </div>
-        </div>
 
-        {{-- GRID LAYOUT: TABS SIDEBAR (LEFT) + LISTING (RIGHT) --}}
-        <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
-            
-            {{-- TAB BUTTONS PANEL - MORE MODERN & FLEXIBLE --}}
-            <div class="lg:col-span-1 bg-white/90 backdrop-blur-md rounded-3xl shadow-[0_15px_35px_rgba(15,23,42,0.03)] border border-slate-100 p-6 space-y-3 relative lg:sticky lg:top-24" x-show="!searchQuery">
-                <div class="pb-2.5 mb-2 px-1">
-                    <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Klasifikasi Menu</h3>
-                </div>
-
-                {{-- Tab 1: Berkala --}}
-                <button @click="activeTab = 'berkala'" 
-                    :class="activeTab === 'berkala' ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg shadow-blue-500/20 translate-x-1.5' : 'text-slate-600 hover:bg-slate-50/80 hover:text-slate-900'"
-                    class="w-full text-left px-4.5 py-4 rounded-2xl font-black text-[11px] uppercase tracking-wider transition-all duration-300 flex items-center justify-between cursor-pointer group">
-                    <span class="flex items-center space-x-3">
-                        <span class="text-sm">📅</span>
-                        <span>Secara Berkala</span>
-                    </span>
-                    <span :class="activeTab === 'berkala' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'" class="px-2.5 py-0.5 rounded-lg text-[9px] font-black">
-                        <span x-text="items.filter(i => i.category === 'berkala').length"></span>
-                    </span>
-                </button>
-
-                {{-- Tab 2: Serta Merta --}}
-                <button @click="activeTab = 'sertamerta'"
-                    :class="activeTab === 'sertamerta' ? 'bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg shadow-emerald-500/20 translate-x-1.5' : 'text-slate-600 hover:bg-slate-50/80 hover:text-slate-900'"
-                    class="w-full text-left px-4.5 py-4 rounded-2xl font-black text-[11px] uppercase tracking-wider transition-all duration-300 flex items-center justify-between cursor-pointer group">
-                    <span class="flex items-center space-x-3">
-                        <span class="text-sm">🌊</span>
-                        <span>Serta Merta</span>
-                    </span>
-                    <span :class="activeTab === 'sertamerta' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'" class="px-2.5 py-0.5 rounded-lg text-[9px] font-black">
-                        <span x-text="items.filter(i => i.category === 'sertamerta').length"></span>
-                    </span>
-                </button>
-
-                {{-- Tab 3: Setiap Saat --}}
-                <button @click="activeTab = 'setiapsaat'"
-                    :class="activeTab === 'setiapsaat' ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/20 translate-x-1.5' : 'text-slate-600 hover:bg-slate-50/80 hover:text-slate-900'"
-                    class="w-full text-left px-4.5 py-4 rounded-2xl font-black text-[11px] uppercase tracking-wider transition-all duration-300 flex items-center justify-between cursor-pointer group">
-                    <span class="flex items-center space-x-3">
-                        <span class="text-sm">⚡</span>
-                        <span>Setiap Saat</span>
-                    </span>
-                    <span :class="activeTab === 'setiapsaat' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'" class="px-2.5 py-0.5 rounded-lg text-[9px] font-black">
-                        <span x-text="items.filter(i => i.category === 'setiapsaat').length"></span>
-                    </span>
-                </button>
-
-                {{-- Tab 4: Dikecualikan --}}
-                <button @click="activeTab = 'dikecualikan'"
-                    :class="activeTab === 'dikecualikan' ? 'bg-gradient-to-r from-rose-600 to-red-600 text-white shadow-lg shadow-rose-500/20 translate-x-1.5' : 'text-slate-600 hover:bg-slate-50/80 hover:text-slate-950'"
-                    class="w-full text-left px-4.5 py-4 rounded-2xl font-black text-[11px] uppercase tracking-wider transition-all duration-300 flex items-center justify-between cursor-pointer group">
-                    <span class="flex items-center space-x-3">
-                        <span class="text-sm">🔒</span>
-                        <span>Dikecualikan</span>
-                    </span>
-                    <span :class="activeTab === 'dikecualikan' ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'" class="px-2.5 py-0.5 rounded-lg text-[9px] font-black">
-                        <span x-text="items.filter(i => i.category === 'dikecualikan').length"></span>
-                    </span>
-                </button>
-            </div>
-
-            {{-- LISTING PANEL --}}
-            <div :class="searchQuery ? 'lg:col-span-4' : 'lg:col-span-3'" class="space-y-6">
-
-                {{-- Header Status --}}
-                <div class="flex items-center justify-between bg-white/70 backdrop-blur-md border border-slate-100 p-5 rounded-3xl shadow-[0_10px_30px_rgba(15,23,42,0.01)]">
-                    <div>
-                        <h2 class="text-xs font-black text-slate-800 uppercase tracking-widest" x-show="!searchQuery">
-                            Kategori Klasifikasi: 
-                            <span x-show="activeTab === 'berkala'" class="text-blue-600 bg-blue-50 px-3 py-1 rounded-lg ml-2 font-extrabold">📅 Secara Berkala</span>
-                            <span x-show="activeTab === 'sertamerta'" class="text-emerald-600 bg-emerald-50 px-3 py-1 rounded-lg ml-2 font-extrabold">🌊 Secara Serta Merta</span>
-                            <span x-show="activeTab === 'setiapsaat'" class="text-indigo-600 bg-indigo-50 px-3 py-1 rounded-lg ml-2 font-extrabold">⚡ Setiap Saat</span>
-                            <span x-show="activeTab === 'dikecualikan'" class="text-rose-600 bg-rose-50 px-3 py-1 rounded-lg ml-2 font-extrabold">🔒 Dikecualikan</span>
-                        </h2>
-                        <h2 class="text-xs font-black text-slate-800 uppercase tracking-widest" x-show="searchQuery">
-                            Menampilkan hasil pencarian untuk: &ldquo;<span class="text-blue-600 font-extrabold" x-text="searchQuery"></span>&rdquo;
-                        </h2>
-                    </div>
-                </div>
-
-                {{-- List Grid - Modern Cards without stiff frames --}}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <template x-for="item in items" :key="item.id">
-                        <div x-show="(searchQuery === '' && item.category === activeTab) || (searchQuery !== '' && item.title.toLowerCase().includes(searchQuery.toLowerCase()))"
-                            x-transition:enter="transition ease-out duration-300"
-                            x-transition:enter-start="opacity-0 translate-y-4"
-                            x-transition:enter-end="opacity-100 translate-y-0"
-                            class="bg-white rounded-3xl p-6 border border-slate-200/40 hover:border-slate-300/65 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group relative overflow-hidden">
-                            
-                            {{-- Decorative Category Glow --}}
-                            <div class="absolute -right-6 -bottom-6 w-20 h-20 rounded-full opacity-3 group-hover:opacity-10 group-hover:scale-130 transition-all duration-500"
-                                :class="{
-                                    'bg-blue-600': item.category === 'berkala',
-                                    'bg-emerald-600': item.category === 'sertamerta',
-                                    'bg-indigo-600': item.category === 'setiapsaat',
-                                    'bg-rose-600': item.category === 'dikecualikan'
-                                }">
-                            </div>
-
-                            <div class="space-y-4 relative z-10">
-                                {{-- Card Header Icon & Category Badge --}}
-                                <div class="flex items-center justify-between">
-                                    <div class="h-11 w-11 rounded-2xl flex items-center justify-center text-lg font-bold shadow-2xs border transition-colors duration-300"
-                                        :class="{
-                                            'bg-blue-50/60 border-blue-100/60 group-hover:bg-blue-100/80': item.category === 'berkala',
-                                            'bg-emerald-50/60 border-emerald-100/60 group-hover:bg-emerald-100/80': item.category === 'sertamerta',
-                                            'bg-indigo-50/60 border-indigo-100/60 group-hover:bg-indigo-100/80': item.category === 'setiapsaat',
-                                            'bg-rose-50/60 border-rose-100/60 group-hover:bg-rose-100/80': item.category === 'dikecualikan'
-                                        }">
-                                        <span x-text="item.icon" class="scale-100 group-hover:scale-110 transition-transform"></span>
-                                    </div>
-                                    
-                                    <span class="text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-lg"
-                                        :class="{
-                                            'bg-blue-50 text-blue-700': item.category === 'berkala',
-                                            'bg-emerald-50 text-emerald-700': item.category === 'sertamerta',
-                                            'bg-indigo-50 text-indigo-700': item.category === 'setiapsaat',
-                                            'bg-rose-50 text-rose-700': item.category === 'dikecualikan'
-                                        }"
-                                        x-text="item.category">
-                                    </span>
-                                </div>
-
-                                {{-- Title & Detail --}}
-                                <div class="space-y-1.5">
-                                    <h3 class="text-base font-black text-slate-800 tracking-tight leading-snug group-hover:text-blue-600 transition-colors"
-                                        x-text="item.title"></h3>
-                                    <p class="text-xs text-slate-400 font-bold leading-relaxed" x-text="item.detail"></p>
-                                </div>
-
-                                {{-- Meta Info (Untuk Dikecualikan) --}}
-                                <template x-if="item.category === 'dikecualikan'">
-                                    <div class="bg-rose-50/30 rounded-2xl p-4 border border-rose-100/50 space-y-2">
-                                        <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-wider text-rose-900">
-                                            <span>Sifat Dokumen:</span>
-                                            <span class="px-2 py-0.5 bg-rose-100 text-rose-800 rounded-md" x-text="item.status"></span>
-                                        </div>
-                                        <div class="text-[10px] text-rose-600 leading-relaxed font-semibold">
-                                            Dasar Hukum: <span class="font-normal italic block mt-0.5 text-rose-800" x-text="item.dasar_hukum"></span>
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-
-                            {{-- Footer Aksi / Tombol --}}
-                            <div class="mt-6 pt-4 border-t border-slate-100/60 flex items-center justify-between relative z-10">
-                                <template x-if="item.category !== 'dikecualikan'">
-                                    <a :href="item.link" 
-                                        :target="item.type === 'external' ? '_blank' : '_self'"
-                                        class="w-full flex items-center justify-between text-xs font-black uppercase tracking-widest px-4.5 py-3 rounded-2xl transition cursor-pointer shadow-2xs hover:shadow-md"
-                                        :class="{
-                                            'bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/10': item.category === 'berkala',
-                                            'bg-emerald-600 text-white hover:bg-emerald-700 shadow-emerald-500/10': item.category === 'sertamerta',
-                                            'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-500/10': item.category === 'setiapsaat'
-                                        }">
-                                        <span x-text="item.type === 'external' ? 'Buka Dokumen 🔗' : 'Lihat Detail 👁️'"></span>
-                                        <span>➔</span>
-                                    </a>
-                                </template>
-                                <template x-if="item.category === 'dikecualikan'">
-                                    <div class="w-full bg-slate-50 text-slate-400 border border-slate-200/50 text-center py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest flex items-center justify-center space-x-1">
-                                        <span>🔒 AKSES TERBATAS / DIKECUALIKAN</span>
-                                    </div>
-                                </template>
-                            </div>
-
+            {{-- GRID LAYOUT: TABS & ACCORDION COLUMNS --}}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-4">
+                
+                {{-- LEFT SIDEBAR TABS (3 COLUMNS) - MODERN ACCORDION CLASSIFICATIONS --}}
+                <div class="lg:col-span-3 space-y-2.5" x-show="!searchQuery">
+                    <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-4 pl-1">Klasifikasi Utama</span>
+                    
+                    {{-- Tab 0: Semua --}}
+                    <button @click="activeTab = 'semua'; activeAccordion = null;"
+                        class="w-full flex items-center space-x-3.5 px-4.5 py-3.5 rounded-2xl text-left transition duration-200 cursor-pointer border-l-4 border-transparent"
+                        :class="activeTab === 'semua' ? 'bg-slate-100 border-slate-700 text-slate-800 font-black' : 'text-slate-600 hover:bg-slate-50/60 hover:text-slate-900 font-bold'">
+                        <div class="w-8.5 h-8.5 rounded-xl flex items-center justify-center transition shrink-0"
+                            :class="activeTab === 'semua' ? 'bg-slate-700 text-white shadow-md shadow-slate-500/10' : 'bg-slate-100 text-slate-500'">
+                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
+                            </svg>
                         </div>
-                    </template>
+                        <span class="text-xs uppercase tracking-wider">Semua</span>
+                    </button>
+
+                    {{-- Tab 1: Secara Berkala --}}
+                    <button @click="activeTab = 'berkala'; activeAccordion = null;"
+                        class="w-full flex items-center space-x-3.5 px-4.5 py-3.5 rounded-2xl text-left transition duration-200 cursor-pointer border-l-4 border-transparent"
+                        :class="activeTab === 'berkala' ? 'bg-blue-50/70 border-blue-600 text-blue-700 font-black' : 'text-slate-600 hover:bg-slate-50/60 hover:text-slate-900 font-bold'">
+                        <div class="w-8.5 h-8.5 rounded-xl flex items-center justify-center transition shrink-0"
+                            :class="activeTab === 'berkala' ? 'bg-blue-600 text-white shadow-md shadow-blue-500/10' : 'bg-slate-100 text-slate-500'">
+                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs uppercase tracking-wider">Secara Berkala</span>
+                    </button>
+
+                    {{-- Tab 2: Serta Merta --}}
+                    <button @click="activeTab = 'sertamerta'; activeAccordion = null;"
+                        class="w-full flex items-center space-x-3.5 px-4.5 py-3.5 rounded-2xl text-left transition duration-200 cursor-pointer border-l-4 border-transparent"
+                        :class="activeTab === 'sertamerta' ? 'bg-emerald-50/70 border-emerald-600 text-emerald-700 font-black' : 'text-slate-600 hover:bg-slate-50/60 hover:text-slate-900 font-bold'">
+                        <div class="w-8.5 h-8.5 rounded-xl flex items-center justify-center transition shrink-0"
+                            :class="activeTab === 'sertamerta' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-500/10' : 'bg-slate-100 text-slate-500'">
+                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs uppercase tracking-wider">Serta Merta</span>
+                    </button>
+
+                    {{-- Tab 3: Setiap Saat --}}
+                    <button @click="activeTab = 'setiapsaat'; activeAccordion = null;"
+                        class="w-full flex items-center space-x-3.5 px-4.5 py-3.5 rounded-2xl text-left transition duration-200 cursor-pointer border-l-4 border-transparent"
+                        :class="activeTab === 'setiapsaat' ? 'bg-indigo-50/70 border-indigo-600 text-indigo-700 font-black' : 'text-slate-600 hover:bg-slate-50/60 hover:text-slate-900 font-bold'">
+                        <div class="w-8.5 h-8.5 rounded-xl flex items-center justify-center transition shrink-0"
+                            :class="activeTab === 'setiapsaat' ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/10' : 'bg-slate-100 text-slate-500'">
+                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs uppercase tracking-wider">Setiap Saat</span>
+                    </button>
+
+                    {{-- Tab 4: Dikecualikan --}}
+                    <button @click="activeTab = 'dikecualikan'; activeAccordion = null;"
+                        class="w-full flex items-center space-x-3.5 px-4.5 py-3.5 rounded-2xl text-left transition duration-200 cursor-pointer border-l-4 border-transparent"
+                        :class="activeTab === 'dikecualikan' ? 'bg-rose-50/70 border-rose-600 text-rose-700 font-black' : 'text-slate-600 hover:bg-slate-50/60 hover:text-slate-900 font-bold'">
+                        <div class="w-8.5 h-8.5 rounded-xl flex items-center justify-center transition shrink-0"
+                            :class="activeTab === 'dikecualikan' ? 'bg-rose-600 text-white shadow-md shadow-rose-500/10' : 'bg-slate-100 text-slate-500'">
+                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                        </div>
+                        <span class="text-xs uppercase tracking-wider">Dikecualikan</span>
+                    </button>
                 </div>
 
-                {{-- Empty State --}}
-                <div x-show="searchQuery !== '' && items.filter(i => i.title.toLowerCase().includes(searchQuery.toLowerCase())).length === 0"
-                    class="bg-white/80 backdrop-blur-md rounded-3xl p-16 border border-slate-100 text-center space-y-4 max-w-lg mx-auto shadow-sm">
-                    <div class="text-4xl">🔍</div>
-                    <h3 class="text-lg font-black text-slate-800 uppercase tracking-wider">Pencarian Tidak Ditemukan</h3>
-                    <p class="text-slate-400 text-xs font-bold max-w-sm mx-auto leading-relaxed">Kami tidak dapat menemukan hasil pencarian untuk kata kunci tersebut. Coba kata kunci lain atau pilih klasifikasi secara manual.</p>
+                {{-- RIGHT CONTENT AREA (9 COLUMNS OR 12 COLUMNS ON SEARCH) --}}
+                <div :class="searchQuery ? 'lg:col-span-12' : 'lg:col-span-9'" class="space-y-4">
+                    
+                    {{-- Section Title --}}
+                    <div class="px-1 py-1 flex justify-between items-center border-b border-slate-100 pb-3">
+                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                            <span x-show="!searchQuery">
+                                Klasifikasi Aktif: 
+                                <span x-show="activeTab === 'semua'" class="text-slate-700">Semua Klasifikasi</span>
+                                <span x-show="activeTab === 'berkala'" class="text-blue-600">Secara Berkala</span>
+                                <span x-show="activeTab === 'sertamerta'" class="text-emerald-600">Serta Merta</span>
+                                <span x-show="activeTab === 'setiapsaat'" class="text-indigo-600">Setiap Saat</span>
+                                <span x-show="activeTab === 'dikecualikan'" class="text-rose-600">Dikecualikan</span>
+                            </span>
+                            <span x-show="searchQuery">Hasil Pencarian Untuk &ldquo;<span x-text="searchQuery"></span>&rdquo;</span>
+                        </span>
+                    </div>
+
+                    {{-- DOKUMEN UTAMA DIP (Tahun 2024 & Tahun 2025) - Rendered as beautiful cards at the top of the tab content --}}
+                    <div x-show="!searchQuery" class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-2">
+                        
+                        {{-- Card Tahun 2024 --}}
+                        <div class="group relative bg-slate-50/70 hover:bg-white border border-slate-200/50 hover:border-slate-300 rounded-2xl p-6 text-center transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                            {{-- Hover top bar decoration based on active tab --}}
+                            <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                 :class="{
+                                     'bg-slate-600': activeTab === 'semua',
+                                     'bg-blue-600': activeTab === 'berkala',
+                                     'bg-emerald-600': activeTab === 'sertamerta',
+                                     'bg-indigo-600': activeTab === 'setiapsaat',
+                                     'bg-rose-600': activeTab === 'dikecualikan'
+                                 }"></div>
+
+                            <div class="flex flex-col items-center">
+                                {{-- Icon --}}
+                                <div class="w-12 h-12 bg-white text-slate-500 border border-slate-100 rounded-xl flex items-center justify-center mb-4 group-hover:text-white transition-colors duration-300 shadow-3xs"
+                                     :class="{
+                                         'group-hover:bg-blue-600 group-hover:border-blue-700': activeTab === 'berkala',
+                                         'group-hover:bg-emerald-600 group-hover:border-emerald-700': activeTab === 'sertamerta',
+                                         'group-hover:bg-indigo-600 group-hover:border-indigo-700': activeTab === 'setiapsaat',
+                                         'group-hover:bg-rose-600 group-hover:border-rose-700': activeTab === 'dikecualikan'
+                                     }">
+                                    <svg class="w-5.5 h-5.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+
+                                <h4 class="text-sm font-black text-slate-800 mb-1">DIP Tahun 2024</h4>
+                                <p class="text-[11px] text-slate-400 font-bold mb-5 leading-relaxed">
+                                    Tentang Daftar Informasi
+                                    <span x-show="activeTab === 'berkala'">Publik Berkala</span>
+                                    <span x-show="activeTab === 'sertamerta'">Publik Serta Merta</span>
+                                    <span x-show="activeTab === 'setiapsaat'">Publik Setiap Saat</span>
+                                    <span x-show="activeTab === 'dikecualikan'">Dikecualikan</span>
+                                </p>
+
+                                <a href="https://drive.google.com/file/d/1J476Y7Zu8GY8iY1Ba0kif4sYGHicdyF0/view?usp=sharing" target="_blank"
+                                   class="w-full inline-flex items-center justify-center px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-white rounded-xl shadow-3xs transition-all duration-200 gap-1.5"
+                                   :class="{
+                                       'bg-blue-600 hover:bg-blue-700 shadow-blue-500/10': activeTab === 'berkala',
+                                       'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/10': activeTab === 'sertamerta',
+                                       'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/10': activeTab === 'setiapsaat',
+                                       'bg-rose-600 hover:bg-rose-700 shadow-rose-500/10': activeTab === 'dikecualikan'
+                                   }">
+                                    <span>Unduh Dokumen</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        {{-- Card Tahun 2025 --}}
+                        <div class="group relative bg-slate-50/70 hover:bg-white border border-slate-200/50 hover:border-slate-300 rounded-2xl p-6 text-center transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
+                            {{-- Hover top bar decoration based on active tab --}}
+                            <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                 :class="{
+                                     'bg-blue-600': activeTab === 'berkala',
+                                     'bg-emerald-600': activeTab === 'sertamerta',
+                                     'bg-indigo-600': activeTab === 'setiapsaat',
+                                     'bg-rose-600': activeTab === 'dikecualikan'
+                                 }"></div>
+
+                            <div class="flex flex-col items-center">
+                                {{-- Icon --}}
+                                <div class="w-12 h-12 bg-white text-slate-500 border border-slate-100 rounded-xl flex items-center justify-center mb-4 group-hover:text-white transition-colors duration-300 shadow-3xs"
+                                     :class="{
+                                         'group-hover:bg-blue-600 group-hover:border-blue-700': activeTab === 'berkala',
+                                         'group-hover:bg-emerald-600 group-hover:border-emerald-700': activeTab === 'sertamerta',
+                                         'group-hover:bg-indigo-600 group-hover:border-indigo-700': activeTab === 'setiapsaat',
+                                         'group-hover:bg-rose-600 group-hover:border-rose-700': activeTab === 'dikecualikan'
+                                     }">
+                                    <svg class="w-5.5 h-5.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+
+                                <h4 class="text-sm font-black text-slate-800 mb-1">DIP Tahun 2025</h4>
+                                <p class="text-[11px] text-slate-400 font-bold mb-5 leading-relaxed">
+                                    Tentang Daftar Informasi
+                                    <span x-show="activeTab === 'berkala'">Publik Berkala</span>
+                                    <span x-show="activeTab === 'sertamerta'">Publik Serta Merta</span>
+                                    <span x-show="activeTab === 'setiapsaat'">Publik Setiap Saat</span>
+                                    <span x-show="activeTab === 'dikecualikan'">Dikecualikan</span>
+                                </p>
+
+                                <a href="https://cikasda.sultengprov.go.id/wp-content/uploads/2025/09/DIP-2025.pdf" target="_blank"
+                                   class="w-full inline-flex items-center justify-center px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-white rounded-xl shadow-3xs transition-all duration-200 gap-1.5"
+                                   :class="{
+                                       'bg-blue-600 hover:bg-blue-700 shadow-blue-500/10': activeTab === 'berkala',
+                                       'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/10': activeTab === 'sertamerta',
+                                       'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/10': activeTab === 'setiapsaat',
+                                       'bg-rose-600 hover:bg-rose-700 shadow-rose-500/10': activeTab === 'dikecualikan'
+                                   }">
+                                    <span>Unduh Dokumen</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {{-- ACCORDION CONTAINER (MENGIKUTI DESAIN DARI FOTO KLIEN) --}}
+                    <div class="space-y-4">
+                        <template x-for="group in groups" :key="group.id">
+                            <div x-show="groupMatches(group)" 
+                                 class="bg-white border border-slate-200/50 rounded-2xl overflow-hidden transition-all duration-300 shadow-2xs hover:shadow-xs">
+                                
+                                {{-- ACCORDION HEADER (PERSIS DESAIN FOTO: KOTAK NOMOR KIRI + JUDUL TEBAL + CHEVRON KANAN) --}}
+                                <button @click="activeAccordion = isExpanded(group) ? null : group.id"
+                                    class="w-full flex items-center justify-between p-4.5 text-left bg-white hover:bg-slate-50/50 transition cursor-pointer select-none">
+                                    
+                                    <div class="flex items-center space-x-4">
+                                        {{-- Kotak Nomor Kiri --}}
+                                        <div class="w-10 h-10 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center text-[11px] font-black text-slate-500 shadow-3xs"
+                                            :class="{
+                                                'bg-blue-50/50 text-blue-600 border-blue-100/30': group.category === 'berkala' && isExpanded(group),
+                                                'bg-emerald-50/50 text-emerald-600 border-emerald-100/30': group.category === 'sertamerta' && isExpanded(group),
+                                                'bg-indigo-50/50 text-indigo-600 border-indigo-100/30': group.category === 'setiapsaat' && isExpanded(group),
+                                                'bg-rose-50/50 text-rose-600 border-rose-100/30': group.category === 'dikecualikan' && isExpanded(group)
+                                            }">
+                                            <span x-text="group.num"></span>
+                                        </div>
+                                        
+                                        {{-- Judul Tebal --}}
+                                        <span class="text-sm md:text-base font-black text-slate-800 tracking-tight leading-snug group-hover:text-blue-600 transition-colors"
+                                            :class="isExpanded(group) ? 'text-blue-600' : ''"
+                                            x-text="group.title">
+                                        </span>
+                                    </div>
+
+                                    {{-- Chevron Down/Up --}}
+                                    <div class="text-slate-400 p-1">
+                                        <svg class="w-5 h-5 transition-transform duration-300"
+                                            :class="isExpanded(group) ? 'rotate-180 text-blue-500' : ''"
+                                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+
+                                {{-- ACCORDION CONTENT (SLIDE OUT SUB-DOKUMEN DI DALAM KOLOM) --}}
+                                <div x-show="isExpanded(group)" 
+                                    x-transition:enter="transition ease-out duration-200"
+                                    x-transition:enter-start="opacity-0 max-h-0"
+                                    x-transition:enter-end="opacity-100 max-h-screen"
+                                    class="border-t border-slate-100 bg-slate-50/30">
+                                    
+                                    <div class="divide-y divide-slate-100">
+                                        <template x-for="item in group.items" :key="item.title">
+                                            <div class="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/40 transition duration-150">
+                                                
+                                                {{-- Detail Informasi --}}
+                                                <div class="flex items-start space-x-3.5">
+                                                    <div class="shrink-0 p-2 bg-slate-50 border border-slate-200/60 rounded-xl shadow-3xs text-slate-500">
+                                                        <template x-if="item.type !== 'dikecualikan'">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                                            </svg>
+                                                        </template>
+                                                        <template x-if="item.type === 'dikecualikan'">
+                                                            <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                                                            </svg>
+                                                        </template>
+                                                    </div>
+                                                    <div class="space-y-1">
+                                                        <h5 class="text-xs font-black text-slate-800" x-text="item.title"></h5>
+                                                        <p class="text-[11px] text-slate-400 font-bold leading-relaxed" x-text="item.detail"></p>
+                                                        
+                                                        {{-- Detail Khusus Dikecualikan --}}
+                                                        <template x-if="item.type === 'dikecualikan'">
+                                                            <div class="mt-2 text-[10px] bg-rose-50/60 border border-rose-100/50 rounded-lg p-2.5 max-w-md space-y-0.5 text-rose-800 font-bold">
+                                                                <div>Sifat: <span class="font-black" x-text="item.status"></span></div>
+                                                                <div>Dasar Hukum: <span class="font-semibold italic text-rose-700" x-text="item.dasar_hukum"></span></div>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </div>
+
+                                                {{-- Tombol Aksi / Unduh --}}
+                                                <div class="shrink-0 text-right">
+                                                    <template x-if="item.type !== 'dikecualikan'">
+                                                        <a :href="item.link" :target="item.type === 'external' ? '_blank' : '_self'"
+                                                            class="inline-flex items-center space-x-1.5 px-4.5 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition cursor-pointer border shadow-3xs text-white"
+                                                            :class="{
+                                                                'bg-blue-600 hover:bg-blue-700 border-blue-700 hover:border-blue-800 shadow-blue-500/10': group.category === 'berkala',
+                                                                'bg-emerald-600 hover:bg-emerald-700 border-emerald-700 hover:border-emerald-800 shadow-emerald-500/10': group.category === 'sertamerta',
+                                                                'bg-indigo-600 hover:bg-indigo-700 border-indigo-700 hover:border-indigo-800 shadow-indigo-500/10': group.category === 'setiapsaat'
+                                                            }">
+                                                            <span x-text="item.type === 'external' ? 'Tautan 🔗' : 'Lihat 👁️'"></span>
+                                                            <span>➔</span>
+                                                        </a>
+                                                    </template>
+                                                    <template x-if="item.type === 'dikecualikan'">
+                                                        <span class="inline-flex items-center space-x-1.5 px-3 py-2 bg-slate-100 border border-slate-200/60 rounded-xl text-[9px] font-black uppercase text-slate-400 tracking-wider">
+                                                            <span>🔒 Terkunci / Rahasia</span>
+                                                        </span>
+                                                    </template>
+                                                </div>
+
+                                            </div>
+                                        </template>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </template>
+
+                        {{-- Empty State --}}
+                        <div x-show="searchQuery !== '' && groups.filter(g => groupMatches(g)).length === 0"
+                            class="bg-white rounded-3xl p-16 border border-slate-100 text-center space-y-4 max-w-lg mx-auto">
+                            <span class="text-4xl block">🔍</span>
+                            <h4 class="text-xs font-black text-slate-800 uppercase tracking-widest">Pencarian Tidak Ditemukan</h4>
+                            <p class="text-slate-400 text-[11px] font-bold max-w-sm mx-auto leading-relaxed">Kami tidak dapat menemukan hasil untuk kata kunci tersebut. Coba kata kunci lainnya.</p>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
