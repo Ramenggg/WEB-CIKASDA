@@ -23,6 +23,8 @@ class ProfilController extends Controller
         'lhkpn'        => 'LHKPN & LHKASN',
         'keuangan'     => 'Keuangan',
         'sekilas-dinas'=> 'Data Sekilas Dinas',
+        'daftar-informasi'=> 'Daftar Informasi',
+        'publikasi'    => 'Publikasi Informasi',
     ];
 
     /**
@@ -104,7 +106,10 @@ class ProfilController extends Controller
             }
 
             $item->save();
-            return redirect()->route('admin.profil.edit', $halaman)->with('success', $pesanSukses);
+            $redirectRoute = $halaman === 'daftar-informasi'
+                ? route('admin.informasi.daftar.edit')
+                : ($halaman === 'publikasi' ? route('admin.informasi.publikasi.edit') : route('admin.profil.edit', $halaman));
+            return redirect($redirectRoute)->with('success', $pesanSukses);
         }
 
         // ── SIMPAN KONTEN UTAMA ────────────────────────────────────────────
@@ -180,9 +185,11 @@ class ProfilController extends Controller
 
         $item->save();
 
-        return redirect()
-            ->route('admin.profil.edit', $halaman)
-            ->with('success', "Konten \"{$label}\" berhasil diperbarui!");
+        $redirectRoute = $halaman === 'daftar-informasi'
+            ? route('admin.informasi.daftar.edit')
+            : ($halaman === 'publikasi' ? route('admin.informasi.publikasi.edit') : route('admin.profil.edit', $halaman));
+
+        return redirect($redirectRoute)->with('success', "Konten \"{$label}\" berhasil diperbarui!");
     }
 
     /**
@@ -192,5 +199,31 @@ class ProfilController extends Controller
     private function getDisk(): string
     {
         return config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
+    }
+
+    public function editDaftar()
+    {
+        $item = ProfilItem::firstOrNew(['slug' => 'daftar-informasi']);
+        $judul = $this->halamanValid['daftar-informasi'];
+        $informationGroups = \App\Models\InformationGroup::with('items')->orderBy('category')->orderBy('num')->get();
+        return view('admin.informasi.daftar_informasi', compact('item', 'judul', 'informationGroups'));
+    }
+
+    public function updateDaftar(Request $request)
+    {
+        return $this->update($request, 'daftar-informasi');
+    }
+
+    public function editPublikasi()
+    {
+        $halaman = 'publikasi';
+        $item  = ProfilItem::firstOrNew(['slug' => $halaman]);
+        $judul = $this->halamanValid[$halaman];
+        return view('admin.informasi.publikasi', compact('item', 'judul'));
+    }
+
+    public function updatePublikasi(Request $request)
+    {
+        return $this->update($request, 'publikasi');
     }
 }

@@ -1,0 +1,63 @@
+services:
+  # A. Aplikasi Laravel
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cikasda_app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      db:
+        condition: service_healthy
+      storage:
+        condition: service_started
+    networks:
+      - cikasda_network
+
+  # B. Database PostgreSQL Lokal
+  db:
+    image: postgres:16-alpine
+    container_name: cikasda_db
+    restart: always
+    environment:
+      POSTGRES_DB: cikasda_local
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secretpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d cikasda_local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cikasda_network
+
+  # C. Object Storage MinIO Lokal (S3-Compatible)
+  storage:
+    image: minio/minio
+    container_name: cikasda_storage
+    ports:
+      - "9000:9000" # API S3 Port
+      - "9001:9001" # Web Console Port
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminpassword
+    command: server /data --console-address ":9001"
+    volumes:
+      - miniodata:/data
+    networks:
+      - cikasda_network
+
+volumes:
+  pgdata:
+  miniodata:
+
+networks:
+  cikasda_network:
+    driver: bridge

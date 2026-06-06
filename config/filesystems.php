@@ -70,7 +70,7 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
             'use_path_style_endpoint' => true,
             // URL publik untuk render file di browser
-            'url' => env('SUPABASE_URL').'/storage/v1/object/public/'.env('AWS_BUCKET'),
+            'url' => env('AWS_URL') ?: env('SUPABASE_URL').'/storage/v1/object/public/'.env('AWS_BUCKET'),
             'visibility' => 'public',
             'throw'  => false,  // jangan crash jika file tidak ditemukan saat delete
             'report' => false,

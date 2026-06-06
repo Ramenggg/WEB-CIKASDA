@@ -20,26 +20,26 @@
         <div x-show="open" x-transition.opacity.duration.200ms
             class="absolute left-0 top-full mt-1 w-64 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
             <a href="{{ route('profil.struktur') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Struktur
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.struktur') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Struktur
                 Organisasi</a>
             <a href="{{ route('profil.visi-misi') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Visi
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.visi-misi') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Visi
                 dan Misi</a>
             <a href="{{ route('profil.tugas-fungsi') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Tugas
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.tugas-fungsi') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Tugas
                 dan Fungsi</a>
             <a href="{{ route('profil.sejarah') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Sejarah
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.sejarah') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Sejarah
                 Singkat</a>
             <a href="{{ route('profil.pejabat') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Pejabat</a>
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.pejabat') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Pejabat</a>
             <a href="{{ route('profil.maklumat') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Maklumat
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.maklumat') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Maklumat
                 Informasi Publik</a>
             <a href="{{ route('profil.lhkpn') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">LHKPN & LHKASN</a>
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.lhkpn') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">LHKPN & LHKASN</a>
             <a href="{{ route('profil.keuangan') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Keuangan</a>
+                class="block px-5 py-2.5 {{ request()->routeIs('profil.keuangan') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Keuangan</a>
         </div>
     </div>
 
@@ -77,7 +77,7 @@
     {{-- MENU INFORMASI PUBLIK --}}
     <div x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false" class="relative">
         <button
-            class="flex items-center px-2 py-2 transition outline-none text-sm font-medium tracking-normal {{ request()->is('informasi*') ? 'text-yellow-400' : 'text-white hover:text-yellow-400' }}">
+            class="flex items-center px-2 py-2 transition outline-none text-sm font-medium tracking-normal {{ (request()->is('informasi*') || request()->is('daftar-informasi*') || request()->is('berita*')) ? 'text-yellow-400' : 'text-white hover:text-yellow-400' }}">
             Informasi Publik
             <svg class="ml-1.5 w-4 h-4 transition-transform duration-200" :class="open ? 'rotate-180' : ''"
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,24 +89,24 @@
             class="absolute left-0 top-full mt-1 w-80 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
 
             <a href="{{ route('daftar-informasi') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Daftar
+                class="block px-5 py-2.5 {{ request()->routeIs('daftar-informasi') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Daftar
                 Informasi</a>
 
             <a href="/informasi/publikasi"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Publikasi
+                class="block px-5 py-2.5 {{ request()->is('informasi/publikasi') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Publikasi
                 Informasi Publik</a>
             <a href="{{ route('berita.index') }}"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Berita</a>
+                class="block px-5 py-2.5 {{ request()->is('berita*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Berita</a>
             <a href="/informasi/dokumen"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Dokumen</a>
+                class="block px-5 py-2.5 {{ request()->is('informasi/dokumen') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Dokumen</a>
             <a href="/informasi/mou"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Perjanjian
+                class="block px-5 py-2.5 {{ request()->is('informasi/mou') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Perjanjian
                 Kerja Sama (MoU)</a>
             <a href="/informasi/form-permohonan"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Form
+                class="block px-5 py-2.5 {{ request()->is('informasi/form-permohonan') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Form
                 Permohonan Informasi</a>
             <a href="/informasi/sk-gub"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium leading-relaxed">SK
+                class="block px-5 py-2.5 {{ request()->is('informasi/sk-gub') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium leading-relaxed">SK
                 GUB Bangunan Gedung Untuk Kepentingan Strategis Prov Sulteng 2025</a>
         </div>
     </div>
@@ -125,23 +125,23 @@
         <div x-show="open" x-transition.opacity.duration.200ms
             class="absolute left-0 top-full mt-1 w-80 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50">
             <a href="/ppid/surat-keputusan"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Surat
+                class="block px-5 py-2.5 {{ request()->is('ppid/surat-keputusan*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Surat
                 Keputusan</a>
             <a href="/ppid/visi-misi"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Visi
+                class="block px-5 py-2.5 {{ request()->is('ppid/visi-misi*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Visi
                 dan Misi PPID</a>
             <a href="/ppid/pelayanan"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Pelayanan</a>
+                class="block px-5 py-2.5 {{ request()->is('ppid/pelayanan*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Pelayanan</a>
             <a href="/ppid/pengargaan"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Penghargaan</a>
+                class="block px-5 py-2.5 {{ request()->is('ppid/pengargaan*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Penghargaan</a>
             <a href="/ppid/permohonan-informasi"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Permohonan
+                class="block px-5 py-2.5 {{ request()->is('ppid/permohonan-informasi*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Permohonan
                 Informasi</a>
             <a href="/ppid/dokumen-elektronik"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium leading-relaxed">Dokumen-dokumen
+                class="block px-5 py-2.5 {{ request()->is('ppid/dokumen-elektronik*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium leading-relaxed">Dokumen-dokumen
                 elektronik berkaitan program dan kegiatan Tahun 2022 – 2024</a>
             <a href="/ppid/sop-spm"
-                class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">SOP
+                class="block px-5 py-2.5 {{ request()->is('ppid/sop-spm*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">SOP
                 & SPM PPID</a>
         </div>
     </div>

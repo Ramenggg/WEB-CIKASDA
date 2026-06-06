@@ -178,8 +178,8 @@
                             Publikasi Informasi Publik
                         </a>
 
-                        <a href="/admin/informasi/berita"
-                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/informasi/berita*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
+                        <a href="{{ route('admin.berita.index') }}"
+                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/berita*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
                             Berita
                         </a>
 

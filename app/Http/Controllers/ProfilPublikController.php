@@ -71,11 +71,31 @@ class ProfilPublikController extends Controller
 
     public function daftarInformasi()
     {
-        return view('pages.informasi.daftar-informasi');
+        $item = ProfilItem::findBySlug('daftar-informasi');
+        $informationGroups = \App\Models\InformationGroup::with('items')->get()->map(function($group) {
+            return [
+                'id' => $group->id,
+                'category' => $group->category,
+                'num' => $group->num,
+                'title' => $group->title,
+                'items' => $group->items->map(function($sub) {
+                    return [
+                        'title' => $sub->title,
+                        'detail' => $sub->detail,
+                        'link' => $sub->link,
+                        'type' => $sub->type,
+                        'status' => $sub->status,
+                        'dasar_hukum' => $sub->dasar_hukum
+                    ];
+                })
+            ];
+        });
+        return view('pages.informasi.daftar-informasi', compact('item', 'informationGroups'));
     }
 
     public function publikasi()
     {
-        return view('pages.informasi.publikasi-informasi');
+        $item = ProfilItem::findBySlug('publikasi');
+        return view('pages.informasi.publikasi-informasi', compact('item'));
     }
 }

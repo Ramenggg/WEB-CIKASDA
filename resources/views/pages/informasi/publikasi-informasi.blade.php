@@ -2,7 +2,7 @@
 
 @section('content')
     {{-- HERO HEADER --}}
-    <x-profil-hero title="Publikasi Informasi" :showContentInHero="false" 
+    <x-profil-hero title="Publikasi Informasi" :item="$item" :showContentInHero="false" 
         description="Pusat data publikasi dokumen resmi, laporan keuangan, kepegawaian, perencanaan, serta kinerja layanan PPID Dinas Cipta Karya dan Sumber Daya Air Provinsi Sulawesi Tengah." />
 
     {{-- KONTEN UTAMA OVERLAPPING HERO --}}

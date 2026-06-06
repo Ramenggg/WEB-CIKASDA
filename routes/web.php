@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProfilController;
 use App\Http\Controllers\Admin\BeritaController;
+use App\Http\Controllers\Admin\AdminInformationDocumentController;
 use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\BeritaPublikController;
 use App\Http\Controllers\ProfilPublikController;
@@ -95,6 +96,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // --- Kelola Konten Profil Dinamis ---
     Route::get( '/profil/{halaman}', [ProfilController::class, 'edit']  )->name('profil.edit');
     Route::post('/profil/{halaman}', [ProfilController::class, 'update'])->name('profil.update');
+
+    // --- Kelola Konten Informasi ---
+    Route::get( '/informasi/daftar',    [ProfilController::class, 'editDaftar']   )->name('informasi.daftar.edit');
+    Route::post('/informasi/daftar',    [ProfilController::class, 'updateDaftar'] )->name('informasi.daftar.update');
+
+    // --- Kelola Dokumen Klasifikasi Daftar Informasi ---
+    Route::post('/informasi/daftar/kelompok',        [AdminInformationDocumentController::class, 'storeGroup']  )->name('informasi.daftar.group.store');
+    Route::put( '/informasi/daftar/kelompok/{id}',   [AdminInformationDocumentController::class, 'updateGroup'] )->name('informasi.daftar.group.update');
+    Route::delete('/informasi/daftar/kelompok/{id}', [AdminInformationDocumentController::class, 'destroyGroup'])->name('informasi.daftar.group.destroy');
+    Route::post('/informasi/daftar/dokumen',         [AdminInformationDocumentController::class, 'storeItem']   )->name('informasi.daftar.item.store');
+    Route::put( '/informasi/daftar/dokumen/{id}',    [AdminInformationDocumentController::class, 'updateItem']  )->name('informasi.daftar.item.update');
+    Route::delete('/informasi/daftar/dokumen/{id}',  [AdminInformationDocumentController::class, 'destroyItem'] )->name('informasi.daftar.item.destroy');
+
+    Route::get( '/informasi/publikasi', [ProfilController::class, 'editPublikasi'])->name('informasi.publikasi.edit');
+    Route::post('/informasi/publikasi', [ProfilController::class, 'updatePublikasi'])->name('informasi.publikasi.update');
+
 
     // --- Kelola Berita ---
     Route::prefix('berita')->name('berita.')->group(function () {

@@ -14,6 +14,12 @@ class BeritaPublikController extends Controller
         $query = Berita::with('sampul')
             ->where('status', 'Publish');
 
+        // Filter berdasarkan kategori
+        if ($request->filled('category') && $request->input('category') !== 'Semua') {
+            $query->where('kategori', $request->input('category'));
+        }
+
+        // Filter pencarian kata kunci
         if ($request->filled('search')) {
             $search = trim($request->input('search'));
 
@@ -27,9 +33,25 @@ class BeritaPublikController extends Controller
             }
         }
 
-        $beritas = $query->latest()->get();
+        // Paginate hasil sebanyak 9 berita per halaman
+        $beritas = $query->latest()->paginate(9)->withQueryString();
 
-        return view('user.berita.index', compact('beritas', 'item'));
+        // Ambil 2 artikel teratas sebagai Pin Post
+        $pinned = Berita::with('sampul')
+            ->where('status', 'Publish')
+            ->latest()
+            ->take(2)
+            ->get();
+
+        // Ambil 2 artikel berikutnya sebagai Artikel Terpopuler
+        $popular = Berita::with('sampul')
+            ->where('status', 'Publish')
+            ->latest()
+            ->skip(2)
+            ->take(2)
+            ->get();
+
+        return view('user.berita.index', compact('beritas', 'item', 'pinned', 'popular'));
     }
 
     public function show(string $slug)

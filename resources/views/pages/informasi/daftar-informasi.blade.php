@@ -2,198 +2,12 @@
 
 @section('content')
     {{-- HERO HEADER --}}
-    <x-profil-hero title="Daftar Informasi" :showContentInHero="false" 
+    <x-profil-hero title="Daftar Informasi" :item="$item" :showContentInHero="false" 
         description="Indeks klasifikasi Informasi Publik Dinas Cipta Karya dan Sumber Daya Air Provinsi Sulawesi Tengah berdasarkan ketentuan UU No. 14 Tahun 2008." />
 
     {{-- KONTEN UTAMA OVERLAPPING HERO (Di dalam kotak kolom halaman kontainer) --}}
     <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-40 pb-24"
-         x-data="{ 
-             activeTab: (new URLSearchParams(window.location.search)).get('tab') || 'semua',
-             searchQuery: '',
-             isFocused: false,
-             activeAccordion: null,
-             groups: [
-                 // 1. BERKALA
-                 {
-                     id: 'berkala-01',
-                     category: 'berkala',
-                     num: '01',
-                     title: 'Keuangan & Realisasi Anggaran',
-                     items: [
-                         { title: 'Laporan Keuangan DPA-SKPD & Neraca', detail: 'Informasi keuangan dan pertanggungjawaban dinas berkala.', link: '/profil/keuangan', type: 'internal', icon: '📊' },
-                         { title: 'Laporan Harta Kekayaan ASN (LHKPN / LHKASN)', detail: 'Transparansi pelaporan kekayaan pejabat publik di lingkungan dinas.', link: '/profil/lhkpn', type: 'internal', icon: '💼' }
-                     ]
-                 },
-                 {
-                     id: 'berkala-02',
-                     category: 'berkala',
-                     num: '02',
-                     title: 'Perencanaan Strategis & Kinerja',
-                     items: [
-                         { title: 'Rencana Strategis (Renstra) & Rencana Kerja', detail: 'Dokumen perencanaan jangka panjang dan program kerja operasional tahunan.', link: '/profil/visi-misi', type: 'internal', icon: '📋' }
-                     ]
-                 },
-                 {
-                     id: 'berkala-03',
-                     category: 'berkala',
-                     num: '03',
-                     title: 'Struktur Organisasi & Profil Instansi',
-                     items: [
-                         { title: 'Struktur Organisasi & Profil Pejabat', detail: 'Daftar pejabat struktural beserta tugas pokok dan fungsi jabatan.', link: '/profil/struktur-organisasi', type: 'internal', icon: '👥' }
-                     ]
-                 },
-                 // 2. SERTA MERTA
-                 {
-                     id: 'sertamerta-01',
-                     category: 'sertamerta',
-                     num: '01',
-                     title: 'Bidang Irigasi (IRWA)',
-                     items: [
-                         { title: 'Informasi Daya Rusak Air Terhadap Fasilitas Irigasi (IRWA) - 2022', detail: 'Laporan kedaruratan kerusakan fasilitas irigasi dampak daya rusak air.', link: '#', type: 'external', icon: '🌊' },
-                         { title: 'Informasi Daya Rusak Air Terhadap Fasilitas Irigasi (IRWA) - 2023', detail: 'Data penanggulangan darurat kerusakan sistem irigasi di wilayah sungai.', link: '#', type: 'external', icon: '🌊' }
-                     ]
-                 },
-                 {
-                     id: 'sertamerta-02',
-                     category: 'sertamerta',
-                     num: '02',
-                     title: 'Bidang Sungai dan Pantai (SPDAB)',
-                     items: [
-                         { title: 'Informasi Daya Rusak Air Terhadap Fasilitas Sungai dan Pantai (SPDAB) - 2022', detail: 'Monitoring kerusakan pantai, tanggul jebol, dan fasilitas pengaman sungai.', link: '#', type: 'external', icon: '🏖️' },
-                         { title: 'Informasi Daya Rusak Air Terhadap Fasilitas Sungai dan Pantai (SPDAB) - 2023', detail: 'Laporan kejadian bencana banjir dan abrasi pantai yang merusak infrastruktur.', link: '#', type: 'external', icon: '🏖️' }
-                     ]
-                 },
-                 {
-                     id: 'sertamerta-03',
-                     category: 'sertamerta',
-                     num: '03',
-                     title: 'Bidang Penataan Lingkungan & Bangunan Gedung (PLBG)',
-                     items: [
-                         { title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (PLBG) - 2022', detail: 'Kerusakan gedung pemerintahan dan fasilitas umum pasca bencana alam.', link: '#', type: 'external', icon: '🏢' },
-                         { title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (PLBG) - 2023', detail: 'Laporan teknis rehabilitasi gedung dan lingkungan akibat dampak bencana.', link: '#', type: 'external', icon: '🏢' }
-                     ]
-                 },
-                 {
-                     id: 'sertamerta-04',
-                     category: 'sertamerta',
-                     num: '04',
-                     title: 'Bidang Air Minum & Penyehatan Lingkungan (AMPLP)',
-                     items: [
-                         { title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (AMPLP) - 2022', detail: 'Dampak kerusakan sarana air minum dan penyehatan lingkungan pemukiman.', link: '#', type: 'external', icon: '🚰' },
-                         { title: 'Informasi Kerusakan Infrastruktur Akibat Bencana (AMPLP) - 2023', detail: 'Data tanggap darurat dan rekonstruksi sarana penyediaan air bersih.', link: '#', type: 'external', icon: '🚰' }
-                     ]
-                 },
-                 // 3. SETIAP SAAT
-                 {
-                     id: 'setiapsaat-01',
-                     category: 'setiapsaat',
-                     num: '01',
-                     title: 'Standar Pelayanan Layanan Informasi (PPIDP)',
-                     items: [
-                         { title: 'Standar Pelayanan Layanan Informasi Publik (PPIDP) - 2022', detail: 'SOP resmi pelayanan permohonan informasi publik PPID Pembantu.', link: '#', type: 'external', icon: '⚙️' },
-                         { title: 'Standar Pelayanan Layanan Informasi Publik (PPIDP) - 2023', detail: 'Pembaruan maklumat pelayanan dan standar operasional informasi.', link: '#', type: 'external', icon: '⚙️' }
-                     ]
-                 },
-                 {
-                     id: 'setiapsaat-02',
-                     category: 'setiapsaat',
-                     num: '02',
-                     title: 'Regulasi & Keputusan Kepala Dinas',
-                     items: [
-                         { title: 'Surat Keputusan (SK) Kepala Dinas', detail: 'Kumpulan regulasi keputusan dinas dalam hal keorganisasian dan teknis.', link: '#', type: 'internal', icon: '📜' }
-                     ]
-                 },
-                 {
-                     id: 'setiapsaat-03',
-                     category: 'setiapsaat',
-                     num: '03',
-                     title: 'SOP & Maklumat Pelayanan Publik',
-                     items: [
-                         { title: 'SOP dan SPM PPID Dinas Cikasda', detail: 'Standard Operating Procedure dan Standar Pelayanan Minimal informasi publik.', link: '/ppid/sop-spm', type: 'internal', icon: '📋' }
-                     ]
-                 },
-                 // 4. DIKECUALIKAN
-                 {
-                     id: 'dikecualikan-01',
-                     category: 'dikecualikan',
-                     num: '01',
-                     title: 'Kepegawaian & Disiplin ASN',
-                     items: [
-                         { title: 'Dokumen Kepegawaian (Arsip Fisik Individu ASN)', detail: 'Kategori rahasia jabatan karena menyangkut data riwayat pribadi pegawai.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP', icon: '🔒' },
-                         { title: 'Daftar Usulan Mutasi Jabatan ASN', detail: 'Proses perencanaan penempatan jabatan staf yang belum bersifat final.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf h UU KIP', icon: '🔒' },
-                         { title: 'Laporan Pengusulan Cerai ASN', detail: 'Data privasi keluarga pegawai yang dilindungi undang-undang hak sipil.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP', icon: '🔒' },
-                         { title: 'Usul Penjatuhan Sanksi Disiplin ASN', detail: 'Informasi sanksi disiplin pegawai internal.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP', icon: '🔒' }
-                     ]
-                 },
-                 {
-                     id: 'dikecualikan-02',
-                     category: 'dikecualikan',
-                     num: '02',
-                     title: 'Korespondensi Internal & Disposisi',
-                     items: [
-                         { title: 'Disposisi Surat Pimpinan & Nota Dinas Internal', detail: 'Naskah dinas intern yang masih berupa draf kebijakan tertutup.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf a UU KIP', icon: '🔒' }
-                     ]
-                 },
-                 {
-                     id: 'dikecualikan-03',
-                     category: 'dikecualikan',
-                     num: '03',
-                     title: 'Pengadaan Barang & Jasa (PBJ)',
-                     items: [
-                         { title: 'Surat Penawaran Harga Pemenang Lelang', detail: 'Dokumen rahasia persaingan usaha sehat pengadaan barang/jasa.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' },
-                         { title: 'Dokumen Penawaran Pengadaan', detail: 'Berkas administrasi penawaran yang memuat data pribadi.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf g UU KIP', icon: '🔒' }
-                     ]
-                 },
-                 {
-                     id: 'dikecualikan-04',
-                     category: 'dikecualikan',
-                     num: '04',
-                     title: 'Keuangan Terbatas',
-                     items: [
-                         { title: 'Dokumen Kelengkapan Surat Perintah Membayar (SPM) Tahun Berjalan', detail: 'Berkas keuangan transaksional sebelum audit resmi BPK.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf j UU KIP', icon: '🔒' },
-                         { title: 'Neraca Keuangan Internal', detail: 'Rincian draf neraca kas daerah.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf j UU KIP', icon: '🔒' }
-                     ]
-                 },
-                 {
-                     id: 'dikecualikan-05',
-                     category: 'dikecualikan',
-                     num: '05',
-                     title: 'Perencanaan Teknis & Pelaksanaan',
-                     items: [
-                         { title: 'Daftar Pelaksanaan Perencanaan (IRWA)', detail: 'Rencana Detail Teknis (DED) jaringan irigasi yang masih berproses.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' },
-                         { title: 'Daftar Pelaksanaan Perencanaan (SPDAB)', detail: 'Rencana teknis perlindungan sungai dan pantai.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' },
-                         { title: 'Daftar Pelaksanaan Perencanaan (PLBG)', detail: 'Gambar rencana teknis bangunan gedung strategis.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' },
-                         { title: 'Daftar Pelaksanaan Perencanaan (AMPLP)', detail: 'Rencana teknis jaringan penyediaan air minum.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Pasal 17 Huruf b UU KIP', icon: '🔒' }
-                     ]
-                 },
-                 {
-                     id: 'dikecualikan-06',
-                     category: 'dikecualikan',
-                     num: '06',
-                     title: 'Data Hidrologi Mentah',
-                     items: [
-                         { title: 'Data Curah Hujan (UPT PSDA Wilayah I & II)', detail: 'Kumpulan database hidrometri wilayah sungai sebelum melalui verifikasi.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Peraturan Teknis BMKG/Dinas', icon: '🔒' },
-                         { title: 'Data Klimatologi (UPT PSDA Wilayah I & II)', detail: 'Data iklim mentah stasiun meteorologi.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Peraturan Teknis BMKG/Dinas', icon: '🔒' },
-                         { title: 'Data Debit Sungai (UPT PSDA Wilayah I & II)', detail: 'Data rekaman AWLR mentah pintu air sungai.', type: 'dikecualikan', status: 'Ketat/Terbatas', dasar_hukum: 'Peraturan Teknis BMKG/Dinas', icon: '🔒' }
-                     ]
-                 }
-             ],
-             groupMatches(group) {
-                 if (this.searchQuery === '') {
-                     return this.activeTab === 'semua' || group.category === this.activeTab;
-                 }
-                 const query = this.searchQuery.toLowerCase();
-                 const matchesTitle = group.title.toLowerCase().includes(query);
-                 const matchesItems = group.items.some(i => i.title.toLowerCase().includes(query) || i.detail.toLowerCase().includes(query));
-                 return matchesTitle || matchesItems;
-             },
-             isExpanded(group) {
-                 if (this.searchQuery !== '') {
-                     return true; 
-                 }
-                 return this.activeAccordion === group.id;
-             }
-         }">
+         x-data="daftarInformasiComponent()">
 
         {{-- MAIN WHITE BOX CONTAINER (SEPERTI FOTO LAYOUT ACCORDION DI DALAM KOLOM) --}}
         <div class="bg-white rounded-3xl shadow-xl overflow-hidden p-6 md:p-10 lg:p-12 border border-slate-100 space-y-8">
@@ -267,10 +81,10 @@
                         <div class="w-8.5 h-8.5 rounded-xl flex items-center justify-center transition shrink-0"
                             :class="activeTab === 'berkala' ? 'bg-blue-600 text-white shadow-md shadow-blue-500/10' : 'bg-slate-100 text-slate-500'">
                             <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
                         </div>
-                        <span class="text-xs uppercase tracking-wider">Secara Berkala</span>
+                        <span class="text-xs uppercase tracking-wider">Daftar Informasi Publik Berkala</span>
                     </button>
 
                     {{-- Tab 2: Serta Merta --}}
@@ -283,7 +97,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                             </svg>
                         </div>
-                        <span class="text-xs uppercase tracking-wider">Serta Merta</span>
+                        <span class="text-xs uppercase tracking-wider">Daftar Informasi Publik Serta Merta</span>
                     </button>
 
                     {{-- Tab 3: Setiap Saat --}}
@@ -296,7 +110,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
                         </div>
-                        <span class="text-xs uppercase tracking-wider">Setiap Saat</span>
+                        <span class="text-xs uppercase tracking-wider">Daftar Informasi Publik Setiap Saat</span>
                     </button>
 
                     {{-- Tab 4: Dikecualikan --}}
@@ -309,8 +123,105 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
                             </svg>
                         </div>
-                        <span class="text-xs uppercase tracking-wider">Dikecualikan</span>
+                        <span class="text-xs uppercase tracking-wider">Daftar Informasi Dikecualikan</span>
                     </button>
+
+                    {{-- DOKUMEN UTAMA DIP (Tahun 2024 & Tahun 2025) --}}
+                    <div class="mt-6 pt-6 border-t border-slate-200/60 space-y-4" x-show="activeTab !== 'semua'">
+                        <span class="block text-[10px] font-black text-slate-400 uppercase tracking-widest pl-1">Unduh Dokumen DIP</span>
+                        
+                        {{-- Card Tahun 2024 --}}
+                        <div class="group relative bg-white border border-slate-200/60 rounded-2xl p-4 text-center transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                             :class="{
+                                 'hover:border-blue-500/30': activeTab === 'berkala',
+                                 'hover:border-emerald-500/30': activeTab === 'sertamerta',
+                                 'hover:border-indigo-500/30': activeTab === 'setiapsaat',
+                                 'hover:border-rose-500/30': activeTab === 'dikecualikan'
+                             }">
+                            <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                 :class="{
+                                     'bg-blue-600': activeTab === 'berkala',
+                                     'bg-emerald-600': activeTab === 'sertamerta',
+                                     'bg-indigo-600': activeTab === 'setiapsaat',
+                                     'bg-rose-600': activeTab === 'dikecualikan'
+                                 }"></div>
+
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-slate-50 text-slate-500 border border-slate-100 rounded-xl flex items-center justify-center mb-3 group-hover:text-white transition-colors duration-300 shadow-3xs"
+                                     :class="{
+                                         'group-hover:bg-blue-600 group-hover:border-blue-700': activeTab === 'berkala',
+                                         'group-hover:bg-emerald-600 group-hover:border-emerald-700': activeTab === 'sertamerta',
+                                         'group-hover:bg-indigo-600 group-hover:border-indigo-700': activeTab === 'setiapsaat',
+                                         'group-hover:bg-rose-600 group-hover:border-rose-700': activeTab === 'dikecualikan'
+                                     }">
+                                    <svg class="w-5.5 h-5.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+                                <h4 class="text-xs font-black text-slate-800 mb-0.5">DIP Tahun 2024</h4>
+                                <p class="text-[10px] text-slate-400 font-bold mb-3">Daftar Informasi Publik</p>
+                                <a href="https://drive.google.com/file/d/1J476Y7Zu8GY8iY1Ba0kif4sYGHicdyF0/view?usp=sharing" target="_blank"
+                                   class="w-full inline-flex items-center justify-center px-4 py-2 text-[9px] font-black uppercase tracking-widest text-white rounded-xl shadow-3xs transition-all duration-200 gap-1.5"
+                                   :class="{
+                                       'bg-blue-600 hover:bg-blue-700 shadow-blue-500/10': activeTab === 'berkala',
+                                       'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/10': activeTab === 'sertamerta',
+                                       'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/10': activeTab === 'setiapsaat',
+                                       'bg-rose-600 hover:bg-rose-700 shadow-rose-500/10': activeTab === 'dikecualikan'
+                                   }">
+                                    <span>Unduh</span>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+
+                        {{-- Card Tahun 2025 --}}
+                        <div class="group relative bg-white border border-slate-200/60 rounded-2xl p-4 text-center transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                             :class="{
+                                 'hover:border-blue-500/30': activeTab === 'berkala',
+                                 'hover:border-emerald-500/30': activeTab === 'sertamerta',
+                                 'hover:border-indigo-500/30': activeTab === 'setiapsaat',
+                                 'hover:border-rose-500/30': activeTab === 'dikecualikan'
+                             }">
+                            <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                 :class="{
+                                     'bg-blue-600': activeTab === 'berkala',
+                                     'bg-emerald-600': activeTab === 'sertamerta',
+                                     'bg-indigo-600': activeTab === 'setiapsaat',
+                                     'bg-rose-600': activeTab === 'dikecualikan'
+                                 }"></div>
+
+                            <div class="flex flex-col items-center">
+                                <div class="w-10 h-10 bg-slate-50 text-slate-500 border border-slate-100 rounded-xl flex items-center justify-center mb-3 group-hover:text-white transition-colors duration-300 shadow-3xs"
+                                     :class="{
+                                         'group-hover:bg-blue-600 group-hover:border-blue-700': activeTab === 'berkala',
+                                         'group-hover:bg-emerald-600 group-hover:border-emerald-700': activeTab === 'sertamerta',
+                                         'group-hover:bg-indigo-600 group-hover:border-indigo-700': activeTab === 'setiapsaat',
+                                         'group-hover:bg-rose-600 group-hover:border-rose-700': activeTab === 'dikecualikan'
+                                     }">
+                                    <svg class="w-5.5 h-5.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                    </svg>
+                                </div>
+                                <h4 class="text-xs font-black text-slate-800 mb-0.5">DIP Tahun 2025</h4>
+                                <p class="text-[10px] text-slate-400 font-bold mb-3">Daftar Informasi Publik</p>
+                                <a href="https://cikasda.sultengprov.go.id/wp-content/uploads/2025/09/DIP-2025.pdf" target="_blank"
+                                   class="w-full inline-flex items-center justify-center px-4 py-2 text-[9px] font-black uppercase tracking-widest text-white rounded-xl shadow-3xs transition-all duration-200 gap-1.5"
+                                   :class="{
+                                       'bg-blue-600 hover:bg-blue-700 shadow-blue-500/10': activeTab === 'berkala',
+                                       'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/10': activeTab === 'sertamerta',
+                                       'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/10': activeTab === 'setiapsaat',
+                                       'bg-rose-600 hover:bg-rose-700 shadow-rose-500/10': activeTab === 'dikecualikan'
+                                   }">
+                                    <span>Unduh</span>
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 {{-- RIGHT CONTENT AREA (9 COLUMNS OR 12 COLUMNS ON SEARCH) --}}
@@ -331,111 +242,6 @@
                         </span>
                     </div>
 
-                    {{-- DOKUMEN UTAMA DIP (Tahun 2024 & Tahun 2025) - Rendered as beautiful cards at the top of the tab content --}}
-                    <div x-show="!searchQuery" class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-2">
-                        
-                        {{-- Card Tahun 2024 --}}
-                        <div class="group relative bg-slate-50/70 hover:bg-white border border-slate-200/50 hover:border-slate-300 rounded-2xl p-6 text-center transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-                            {{-- Hover top bar decoration based on active tab --}}
-                            <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                 :class="{
-                                     'bg-slate-600': activeTab === 'semua',
-                                     'bg-blue-600': activeTab === 'berkala',
-                                     'bg-emerald-600': activeTab === 'sertamerta',
-                                     'bg-indigo-600': activeTab === 'setiapsaat',
-                                     'bg-rose-600': activeTab === 'dikecualikan'
-                                 }"></div>
-
-                            <div class="flex flex-col items-center">
-                                {{-- Icon --}}
-                                <div class="w-12 h-12 bg-white text-slate-500 border border-slate-100 rounded-xl flex items-center justify-center mb-4 group-hover:text-white transition-colors duration-300 shadow-3xs"
-                                     :class="{
-                                         'group-hover:bg-blue-600 group-hover:border-blue-700': activeTab === 'berkala',
-                                         'group-hover:bg-emerald-600 group-hover:border-emerald-700': activeTab === 'sertamerta',
-                                         'group-hover:bg-indigo-600 group-hover:border-indigo-700': activeTab === 'setiapsaat',
-                                         'group-hover:bg-rose-600 group-hover:border-rose-700': activeTab === 'dikecualikan'
-                                     }">
-                                    <svg class="w-5.5 h-5.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                </div>
-
-                                <h4 class="text-sm font-black text-slate-800 mb-1">DIP Tahun 2024</h4>
-                                <p class="text-[11px] text-slate-400 font-bold mb-5 leading-relaxed">
-                                    Tentang Daftar Informasi
-                                    <span x-show="activeTab === 'berkala'">Publik Berkala</span>
-                                    <span x-show="activeTab === 'sertamerta'">Publik Serta Merta</span>
-                                    <span x-show="activeTab === 'setiapsaat'">Publik Setiap Saat</span>
-                                    <span x-show="activeTab === 'dikecualikan'">Dikecualikan</span>
-                                </p>
-
-                                <a href="https://drive.google.com/file/d/1J476Y7Zu8GY8iY1Ba0kif4sYGHicdyF0/view?usp=sharing" target="_blank"
-                                   class="w-full inline-flex items-center justify-center px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-white rounded-xl shadow-3xs transition-all duration-200 gap-1.5"
-                                   :class="{
-                                       'bg-blue-600 hover:bg-blue-700 shadow-blue-500/10': activeTab === 'berkala',
-                                       'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/10': activeTab === 'sertamerta',
-                                       'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/10': activeTab === 'setiapsaat',
-                                       'bg-rose-600 hover:bg-rose-700 shadow-rose-500/10': activeTab === 'dikecualikan'
-                                   }">
-                                    <span>Unduh Dokumen</span>
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-
-                        {{-- Card Tahun 2025 --}}
-                        <div class="group relative bg-slate-50/70 hover:bg-white border border-slate-200/50 hover:border-slate-300 rounded-2xl p-6 text-center transition-all duration-300 hover:shadow-md hover:-translate-y-0.5">
-                            {{-- Hover top bar decoration based on active tab --}}
-                            <div class="absolute inset-x-0 top-0 h-1 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                                 :class="{
-                                     'bg-blue-600': activeTab === 'berkala',
-                                     'bg-emerald-600': activeTab === 'sertamerta',
-                                     'bg-indigo-600': activeTab === 'setiapsaat',
-                                     'bg-rose-600': activeTab === 'dikecualikan'
-                                 }"></div>
-
-                            <div class="flex flex-col items-center">
-                                {{-- Icon --}}
-                                <div class="w-12 h-12 bg-white text-slate-500 border border-slate-100 rounded-xl flex items-center justify-center mb-4 group-hover:text-white transition-colors duration-300 shadow-3xs"
-                                     :class="{
-                                         'group-hover:bg-blue-600 group-hover:border-blue-700': activeTab === 'berkala',
-                                         'group-hover:bg-emerald-600 group-hover:border-emerald-700': activeTab === 'sertamerta',
-                                         'group-hover:bg-indigo-600 group-hover:border-indigo-700': activeTab === 'setiapsaat',
-                                         'group-hover:bg-rose-600 group-hover:border-rose-700': activeTab === 'dikecualikan'
-                                     }">
-                                    <svg class="w-5.5 h-5.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                </div>
-
-                                <h4 class="text-sm font-black text-slate-800 mb-1">DIP Tahun 2025</h4>
-                                <p class="text-[11px] text-slate-400 font-bold mb-5 leading-relaxed">
-                                    Tentang Daftar Informasi
-                                    <span x-show="activeTab === 'berkala'">Publik Berkala</span>
-                                    <span x-show="activeTab === 'sertamerta'">Publik Serta Merta</span>
-                                    <span x-show="activeTab === 'setiapsaat'">Publik Setiap Saat</span>
-                                    <span x-show="activeTab === 'dikecualikan'">Dikecualikan</span>
-                                </p>
-
-                                <a href="https://cikasda.sultengprov.go.id/wp-content/uploads/2025/09/DIP-2025.pdf" target="_blank"
-                                   class="w-full inline-flex items-center justify-center px-4 py-2.5 text-[10px] font-black uppercase tracking-widest text-white rounded-xl shadow-3xs transition-all duration-200 gap-1.5"
-                                   :class="{
-                                       'bg-blue-600 hover:bg-blue-700 shadow-blue-500/10': activeTab === 'berkala',
-                                       'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/10': activeTab === 'sertamerta',
-                                       'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/10': activeTab === 'setiapsaat',
-                                       'bg-rose-600 hover:bg-rose-700 shadow-rose-500/10': activeTab === 'dikecualikan'
-                                   }">
-                                    <span>Unduh Dokumen</span>
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                    </svg>
-                                </a>
-                            </div>
-                        </div>
-
-                    </div>
 
                     {{-- ACCORDION CONTAINER (MENGIKUTI DESAIN DARI FOTO KLIEN) --}}
                     <div class="space-y-4">
@@ -558,7 +364,32 @@
 
             </div>
 
-        </div>
-
     </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('daftarInformasiComponent', () => ({
+                activeTab: (new URLSearchParams(window.location.search)).get('tab') || 'semua',
+                searchQuery: '',
+                isFocused: false,
+                activeAccordion: null,
+                groups: @json($informationGroups),
+                groupMatches(group) {
+                    if (this.searchQuery === '') {
+                        return this.activeTab === 'semua' || group.category === this.activeTab;
+                    }
+                    const query = this.searchQuery.toLowerCase();
+                    const matchesTitle = group.title.toLowerCase().includes(query);
+                    const matchesItems = group.items.some(i => i.title.toLowerCase().includes(query) || i.detail.toLowerCase().includes(query));
+                    return matchesTitle || matchesItems;
+                },
+                isExpanded(group) {
+                    if (this.searchQuery !== '') {
+                        return true; 
+                    }
+                    return this.activeAccordion === group.id;
+                }
+            }));
+        });
+    </script>
 @endsection
