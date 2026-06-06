@@ -7,19 +7,95 @@
     <title>Panel Admin - CIKASDA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Global Quill Setup with Full Features & Paste-Clean Interceptor -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <script>
+        (function() {
+            var OriginalQuill = window.Quill;
+            if (OriginalQuill) {
+                var CustomQuillProxy = new Proxy(OriginalQuill, {
+                    construct: function(target, args) {
+                        var selector = args[0];
+                        var options = args[1] || {};
+                        options.modules = options.modules || {};
+                        
+                        // Full Premium Toolbar Features
+                        options.modules.toolbar = [
+                            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                            ['bold', 'italic', 'underline', 'strike'],
+                            ['blockquote', 'code-block'],
+                            [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
+                            [{ 'script': 'sub'}, { 'script': 'super' }],
+                            [{ 'indent': '-1'}, { 'indent': '+1' }],
+                            [{ 'align': [] }],
+                            [{ 'color': [] }, { 'background': [] }],
+                            ['link', 'image', 'video'],
+                            ['clean']
+                        ];
+
+                        var instance = Reflect.construct(target, [selector, options]);
+
+                        // Clean pasted background and text color to prevent style breaking issues
+                        instance.clipboard.addMatcher(Node.ELEMENT_NODE, function(node, delta) {
+                            var ops = delta.ops || delta;
+                            if (Array.isArray(ops)) {
+                                ops.forEach(function(op) {
+                                    if (op.attributes) {
+                                        delete op.attributes.background;
+                                        delete op.attributes.color;
+                                    }
+                                });
+                            }
+                            return delta;
+                        });
+
+                        return instance;
+                    }
+                });
+
+                // Lock window.Quill using defineProperty so subsequent script tags don't overwrite it
+                Object.defineProperty(window, 'Quill', {
+                    get: function() { return CustomQuillProxy; },
+                    set: function(val) {
+                        // Prevent overwriting with standard Quill
+                    },
+                    configurable: true
+                });
+            }
+        })();
+    </script>
+
+    <style>
+        /* Custom scrollbar for sidebar */
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.15);
+            border-radius: 999px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb:hover {
+            background: rgba(148, 163, 184, 0.35);
+        }
+    </style>
 </head>
 
 <body class="bg-slate-100 font-sans antialiased selection:bg-blue-500 selection:text-white">
     <div class="flex min-h-screen">
 
-        <aside class="w-64 bg-slate-900 text-white shrink-0 fixed h-full z-50 shadow-2xl border-r border-slate-800">
-            <div class="p-6 border-b border-slate-800">
+        <aside class="w-64 bg-slate-900 text-white shrink-0 fixed h-screen z-50 shadow-2xl border-r border-slate-800 flex flex-col">
+            <div class="p-6 border-b border-slate-800 shrink-0">
                 <h2 class="text-xl font-black tracking-tighter text-cyan-400 uppercase">Admin Panel</h2>
                 <p class="text-[10px] text-slate-500 uppercase tracking-widest mt-1 font-extrabold italic">Dinas Cikasda
                 </p>
             </div>
 
-            <nav class="mt-6 px-3 space-y-1.5">
+            <nav class="mt-6 px-3 space-y-1.5 overflow-y-auto flex-1 sidebar-scroll pb-10">
 
                 <a href="/admin"
                     class="flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 {{ request()->is('admin') ? 'bg-blue-600 text-white font-bold shadow-lg shadow-blue-600/20' : 'text-slate-400 hover:bg-slate-800/60 hover:text-white' }}">
@@ -148,7 +224,7 @@
                     </div>
                 </details>
                 <details class="group [&_summary::-webkit-details-marker]:hidden"
-                    {{ request()->is('admin/informasi*') ? 'open' : '' }}>
+                    {{ (request()->is('admin/informasi*') && !request()->is('admin/informasi/form-permohonan*') && !request()->is('admin/informasi/form-aduan*') && !request()->is('admin/informasi/pesan*')) ? 'open' : '' }}>
 
                     <summary
                         class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white cursor-pointer transition-all list-none group-open:bg-slate-800/40 group-open:text-white">
@@ -183,28 +259,62 @@
                             Berita
                         </a>
 
-                        <a href="/admin/informasi/dokumen"
+                        <a href="{{ route('admin.informasi.edit', 'dokumen') }}"
                             class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/informasi/dokumen*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
                             Dokumen
                         </a>
 
-                        <a href="/admin/informasi/mou"
+                        <a href="{{ route('admin.informasi.edit', 'mou') }}"
                             class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/informasi/mou*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
                             Perjanjian Kerja Sama (MoU)
                         </a>
 
-                        <a href="/admin/informasi/permohonan"
-                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/informasi/permohonan*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
-                            Form Permohonan Informasi
-                        </a>
-
-                        <a href="/admin/informasi/sk-gub"
+                        <a href="{{ route('admin.informasi.edit', 'sk-gub') }}"
                             class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/informasi/sk-gub*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }} whitespace-normal break-words leading-tight">
                             SK GUB Bangunan Gedung Untuk Kepentingan Strategis Prov Sulteng 2025
                         </a>
 
                     </div>
                 </details>
+
+                <details class="group [&_summary::-webkit-details-marker]:hidden"
+                    {{ (request()->is('admin/informasi/form-permohonan*') || request()->is('admin/informasi/form-aduan*') || request()->is('admin/informasi/pesan*')) ? 'open' : '' }}>
+
+                    <summary
+                        class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:bg-slate-800/60 hover:text-white cursor-pointer transition-all list-none group-open:bg-slate-800/40 group-open:text-white">
+                        <div class="flex items-center space-x-3">
+                            <svg class="w-5 h-5 text-slate-400 group-open:text-cyan-400 transition-colors"
+                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span>Kelola Permohonan Publik</span>
+                        </div>
+                        <svg class="w-4 h-4 text-slate-500 transition-transform duration-300 group-open:rotate-180"
+                            fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                        </svg>
+                    </summary>
+
+                    <div class="mt-1 pl-4 pr-1 space-y-1 border-l-2 border-slate-800 ml-6">
+
+                        <a href="{{ route('admin.informasi.edit', 'form-permohonan') }}"
+                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/informasi/form-permohonan*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
+                            Kelola Permohonan Publik
+                        </a>
+
+                        <a href="{{ route('admin.informasi.edit', 'form-aduan') }}"
+                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->is('admin/informasi/form-aduan*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
+                            Kelola Banner Aduan
+                        </a>
+
+                        <a href="{{ route('admin.pesan.index') }}"
+                            class="block py-2 px-3 text-xs font-semibold rounded-lg transition-all {{ request()->routeIs('admin.pesan.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-600/10' : 'text-slate-400 hover:text-white hover:bg-slate-800/40' }}">
+                            Daftar Aduan Masuk
+                        </a>
+
+                    </div>
+                </details>
+
                 <details class="group [&_summary::-webkit-details-marker]:hidden"
                     {{ request()->is('admin/ppid*') ? 'open' : '' }}>
 

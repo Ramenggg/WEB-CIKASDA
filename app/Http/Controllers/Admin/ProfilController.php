@@ -25,6 +25,11 @@ class ProfilController extends Controller
         'sekilas-dinas'=> 'Data Sekilas Dinas',
         'daftar-informasi'=> 'Daftar Informasi',
         'publikasi'    => 'Publikasi Informasi',
+        'dokumen'      => 'Dokumen',
+        'mou'          => 'Perjanjian Kerja Sama (MoU)',
+        'form-permohonan' => 'Kelola Permohonan Publik',
+        'sk-gub'       => 'SK GUB Bangunan Gedung 2025',
+        'form-aduan'   => 'Form Aduan Masyarakat',
     ];
 
     /**
@@ -38,7 +43,8 @@ class ProfilController extends Controller
         $item  = ProfilItem::firstOrNew(['slug' => $halaman]);
         $judul = $this->halamanValid[$halaman];
 
-        return view('admin.profil.' . str_replace('-', '_', $halaman), compact('item', 'judul'));
+        $viewPrefix = in_array($halaman, ['dokumen', 'mou', 'form-permohonan', 'sk-gub', 'form-aduan']) ? 'admin.informasi.' : 'admin.profil.';
+        return view($viewPrefix . str_replace('-', '_', $halaman), compact('item', 'judul'));
     }
 
     /**
@@ -106,9 +112,10 @@ class ProfilController extends Controller
             }
 
             $item->save();
+            $isInformasi = in_array($halaman, ['dokumen', 'mou', 'form-permohonan', 'sk-gub', 'form-aduan']);
             $redirectRoute = $halaman === 'daftar-informasi'
                 ? route('admin.informasi.daftar.edit')
-                : ($halaman === 'publikasi' ? route('admin.informasi.publikasi.edit') : route('admin.profil.edit', $halaman));
+                : ($halaman === 'publikasi' ? route('admin.informasi.publikasi.edit') : ($isInformasi ? route('admin.informasi.edit', $halaman) : route('admin.profil.edit', $halaman)));
             return redirect($redirectRoute)->with('success', $pesanSukses);
         }
 
@@ -185,9 +192,10 @@ class ProfilController extends Controller
 
         $item->save();
 
+        $isInformasi = in_array($halaman, ['dokumen', 'mou', 'form-permohonan', 'sk-gub', 'form-aduan']);
         $redirectRoute = $halaman === 'daftar-informasi'
             ? route('admin.informasi.daftar.edit')
-            : ($halaman === 'publikasi' ? route('admin.informasi.publikasi.edit') : route('admin.profil.edit', $halaman));
+            : ($halaman === 'publikasi' ? route('admin.informasi.publikasi.edit') : ($isInformasi ? route('admin.informasi.edit', $halaman) : route('admin.profil.edit', $halaman)));
 
         return redirect($redirectRoute)->with('success', "Konten \"{$label}\" berhasil diperbarui!");
     }

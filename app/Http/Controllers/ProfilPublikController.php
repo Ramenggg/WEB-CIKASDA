@@ -7,6 +7,8 @@ use App\Models\ProfilItem;
 use App\Models\AlbumKegiatan;
 use App\Models\VideoDokumentasi;
 use App\Models\BookletDigital;
+use App\Models\Pesan;
+use Illuminate\Http\Request;
 
 class ProfilPublikController extends Controller
 {
@@ -97,5 +99,93 @@ class ProfilPublikController extends Controller
     {
         $item = ProfilItem::findBySlug('publikasi');
         return view('pages.informasi.publikasi-informasi', compact('item'));
+    }
+
+    public function dokumen()
+    {
+        $item = ProfilItem::findBySlug('dokumen');
+        return view('pages.informasi.dokumen', compact('item'));
+    }
+
+    public function mou()
+    {
+        $item = ProfilItem::findBySlug('mou');
+        return view('pages.informasi.mou', compact('item'));
+    }
+
+    public function formPermohonan()
+    {
+        $item = ProfilItem::findBySlug('form-permohonan');
+        return view('pages.informasi.form-permohonan', compact('item'));
+    }
+
+    public function skGub()
+    {
+        $item = ProfilItem::findBySlug('sk-gub');
+        return view('pages.informasi.sk-gub', compact('item'));
+    }
+
+    public function formAduan()
+    {
+        $item = ProfilItem::findBySlug('form-aduan');
+        return view('pages.informasi.form-aduan-masyarakat', compact('item'));
+    }
+
+    public function storeAduan(Request $request)
+    {
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'alamat' => 'required|string|max:1000',
+            'no_hp' => 'required|string|max:20',
+            'pesan' => 'required|string',
+            'ktp' => 'required|file|mimes:jpeg,png,jpg,pdf|max:2048',
+            'bukti_dukung' => 'nullable|file|mimes:jpeg,png,jpg,pdf,zip,rar,doc,docx,xls,xlsx|max:10240',
+        ]);
+
+        // Ensure target folder exists
+        if (!file_exists(public_path('uploads/aduan'))) {
+            mkdir(public_path('uploads/aduan'), 0755, true);
+        }
+
+        // Handle KTP file upload
+        $ktpPath = null;
+        if ($request->hasFile('ktp')) {
+            $file = $request->file('ktp');
+            $filename = 'ktp_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/aduan'), $filename);
+            $ktpPath = '/uploads/aduan/' . $filename;
+        }
+
+        // Handle Bukti Dukung file upload
+        $buktiPath = null;
+        if ($request->hasFile('bukti_dukung')) {
+            $file = $request->file('bukti_dukung');
+            $filename = 'bukti_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('uploads/aduan'), $filename);
+            $buktiPath = '/uploads/aduan/' . $filename;
+        }
+
+        // Format message to combine all details without DB migration
+        $formattedMessage = "ALAMAT:\n" . $validated['alamat'] . "\n\n";
+        $formattedMessage .= "NOMOR HP / WHATSAPP:\n" . $validated['no_hp'] . "\n\n";
+        $formattedMessage .= "DESKRIPSI ADUAN:\n" . $validated['pesan'] . "\n\n";
+        
+        if ($ktpPath) {
+            $formattedMessage .= "BERKAS KTP/SIM:\n" . asset($ktpPath) . "\n\n";
+        }
+        if ($buktiPath) {
+            $formattedMessage .= "BUKTI DUKUNG:\n" . asset($buktiPath) . "\n";
+        }
+
+        Pesan::create([
+            'nama' => $validated['nama'],
+            'email' => $validated['email'],
+            'subjek' => 'Aduan Masyarakat: ' . substr($validated['pesan'], 0, 50) . '...',
+            'pesan' => $formattedMessage,
+            'is_read' => false,
+        ]);
+
+        return redirect()->back()->with('success', 'Aduan dan laporan Anda berhasil dikirim ke Dinas CIKASDA.');
     }
 }

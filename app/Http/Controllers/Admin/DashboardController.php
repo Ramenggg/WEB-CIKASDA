@@ -42,4 +42,27 @@ class DashboardController extends Controller
         $allLogs = ActivityLog::with('user')->latest()->paginate(20);
         return view('admin.logs.index', compact('allLogs'));
     }
+
+    // Fungsi untuk menampilkan daftar pengaduan masyarakat
+    public function pesanIndex()
+    {
+        $pesans = Pesan::latest()->paginate(15);
+        return view('admin.informasi.pesan.index', compact('pesans'));
+    }
+
+    // Fungsi untuk menandai pengaduan sebagai telah dibaca
+    public function pesanRead($id)
+    {
+        $pesan = Pesan::findOrFail($id);
+        $pesan->update(['is_read' => true]);
+        return redirect()->back()->with('success', 'Aduan berhasil ditandai sebagai dibaca.');
+    }
+
+    // Fungsi untuk menghapus pengaduan
+    public function pesanDestroy($id)
+    {
+        $pesan = Pesan::findOrFail($id);
+        $pesan->delete();
+        return redirect()->back()->with('success', 'Aduan berhasil dihapus.');
+    }
 }

@@ -35,3 +35,17 @@
     @apply min-h-[100px] text-sm leading-relaxed text-slate-900 p-4; 
     font-family: ui-sans-serif, system-ui, sans-serif !important; 
 }
+
+/* Quill alignment overrides for public rendering */
+.ql-align-center {
+    text-align: center !important;
+}
+.ql-align-right {
+    text-align: right !important;
+}
+.ql-align-justify {
+    text-align: justify !important;
+}
+.ql-align-left {
+    text-align: left !important;
+}

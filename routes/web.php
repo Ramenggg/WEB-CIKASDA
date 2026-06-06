@@ -46,6 +46,13 @@ Route::prefix('profil')->name('profil.')->group(function () {
 
 Route::get('/daftar-informasi', [ProfilPublikController::class, 'daftarInformasi'])->name('daftar-informasi');
 Route::get('/informasi/publikasi', [ProfilPublikController::class, 'publikasi'])->name('informasi.publikasi');
+Route::get('/informasi/dokumen', [ProfilPublikController::class, 'dokumen'])->name('informasi.dokumen');
+Route::get('/informasi/mou', [ProfilPublikController::class, 'mou'])->name('informasi.mou');
+Route::get('/informasi/form-permohonan', [ProfilPublikController::class, 'formPermohonan'])->name('informasi.form-permohonan');
+Route::get('/informasi/sk-gub', [ProfilPublikController::class, 'skGub'])->name('informasi.sk-gub');
+
+Route::get('/form-aduan-masyarakat', [ProfilPublikController::class, 'formAduan'])->name('form-aduan-masyarakat');
+Route::post('/form-aduan-masyarakat', [ProfilPublikController::class, 'storeAduan'])->name('form-aduan-masyarakat.store');
 
 // Halaman Unduh Klasifikasi Informasi Publik (Redirect to unified page for compatibility)
 Route::get('/daftar-informasi-publik-setiap-saat', function() {
@@ -92,6 +99,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     // --- Dashboard & Logs ---
     Route::get('/',     [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/logs', [DashboardController::class, 'logs'] )->name('logs');
+    
+    // --- Kelola Pesan/Aduan Masyarakat ---
+    Route::get('/informasi/pesan',          [DashboardController::class, 'pesanIndex']  )->name('pesan.index');
+    Route::post('/informasi/pesan/{id}/read', [DashboardController::class, 'pesanRead']   )->name('pesan.read');
+    Route::delete('/informasi/pesan/{id}/hapus',[DashboardController::class, 'pesanDestroy'])->name('pesan.destroy');
 
     // --- Kelola Konten Profil Dinamis ---
     Route::get( '/profil/{halaman}', [ProfilController::class, 'edit']  )->name('profil.edit');
@@ -111,6 +123,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     Route::get( '/informasi/publikasi', [ProfilController::class, 'editPublikasi'])->name('informasi.publikasi.edit');
     Route::post('/informasi/publikasi', [ProfilController::class, 'updatePublikasi'])->name('informasi.publikasi.update');
+
+    // --- Kelola Konten Informasi Dinamis (Dokumen, MoU, Permohonan, SK, Aduan) ---
+    Route::get( '/informasi/{halaman}', [ProfilController::class, 'edit']   )
+        ->where('halaman', 'dokumen|mou|form-permohonan|sk-gub|form-aduan')
+        ->name('informasi.edit');
+    Route::post('/informasi/{halaman}', [ProfilController::class, 'update'] )
+        ->where('halaman', 'dokumen|mou|form-permohonan|sk-gub|form-aduan')
+        ->name('informasi.update');
 
 
     // --- Kelola Berita ---

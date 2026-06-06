@@ -257,6 +257,58 @@
             min-height: 500px !important;
             font-size: 16px;
         }
+
+        /* FORMAT FONT DI TOOLBAR DROPDOWN */
+        .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="arial"]::before,
+        .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="arial"]::before {
+            content: 'Arial';
+            font-family: 'Arial', sans-serif;
+        }
+
+        .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="times-new-roman"]::before,
+        .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="times-new-roman"]::before {
+            content: 'Times New Roman';
+            font-family: 'Times New Roman', serif;
+        }
+
+        .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="courier-new"]::before,
+        .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="courier-new"]::before {
+            content: 'Courier New';
+            font-family: 'Courier New', monospace;
+        }
+
+        .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="georgia"]::before,
+        .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="georgia"]::before {
+            content: 'Georgia';
+            font-family: 'Georgia', serif;
+        }
+
+        .ql-snow .ql-picker.ql-font .ql-picker-label[data-value="comic-sans"]::before,
+        .ql-snow .ql-picker.ql-font .ql-picker-item[data-value="comic-sans"]::before {
+            content: 'Comic Sans';
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        /* RENDER STYLE FONT */
+        .ql-font-arial {
+            font-family: 'Arial', sans-serif !important;
+        }
+
+        .ql-font-times-new-roman {
+            font-family: 'Times New Roman', serif !important;
+        }
+
+        .ql-font-courier-new {
+            font-family: 'Courier New', monospace !important;
+        }
+
+        .ql-font-georgia {
+            font-family: 'Georgia', serif !important;
+        }
+
+        .ql-font-comic-sans {
+            font-family: 'Comic Sans MS', cursive !important;
+        }
     </style>
 
     <div class="max-w-7xl mx-auto pb-16 animate-fade-in">

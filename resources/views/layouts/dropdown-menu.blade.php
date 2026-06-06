@@ -92,21 +92,21 @@
                 class="block px-5 py-2.5 {{ request()->routeIs('daftar-informasi') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Daftar
                 Informasi</a>
 
-            <a href="/informasi/publikasi"
-                class="block px-5 py-2.5 {{ request()->is('informasi/publikasi') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Publikasi
+            <a href="{{ route('informasi.publikasi') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('informasi.publikasi') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Publikasi
                 Informasi Publik</a>
             <a href="{{ route('berita.index') }}"
-                class="block px-5 py-2.5 {{ request()->is('berita*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Berita</a>
-            <a href="/informasi/dokumen"
-                class="block px-5 py-2.5 {{ request()->is('informasi/dokumen') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Dokumen</a>
-            <a href="/informasi/mou"
-                class="block px-5 py-2.5 {{ request()->is('informasi/mou') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Perjanjian
+                class="block px-5 py-2.5 {{ request()->routeIs('berita.*') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Berita</a>
+            <a href="{{ route('informasi.dokumen') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('informasi.dokumen') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Dokumen</a>
+            <a href="{{ route('informasi.mou') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('informasi.mou') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Perjanjian
                 Kerja Sama (MoU)</a>
-            <a href="/informasi/form-permohonan"
-                class="block px-5 py-2.5 {{ request()->is('informasi/form-permohonan') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Form
+            <a href="{{ route('informasi.form-permohonan') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('informasi.form-permohonan') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium">Form
                 Permohonan Informasi</a>
-            <a href="/informasi/sk-gub"
-                class="block px-5 py-2.5 {{ request()->is('informasi/sk-gub') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium leading-relaxed">SK
+            <a href="{{ route('informasi.sk-gub') }}"
+                class="block px-5 py-2.5 {{ request()->routeIs('informasi.sk-gub') ? 'bg-slate-50 text-blue-600 font-bold' : 'text-slate-700 hover:bg-slate-50 hover:text-blue-600' }} transition text-sm font-medium leading-relaxed">SK
                 GUB Bangunan Gedung Untuk Kepentingan Strategis Prov Sulteng 2025</a>
         </div>
     </div>
@@ -171,7 +171,7 @@
             <a href="https://jdih.sultengprov.go.id/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">JDIH
                 PROVINSI SULTENG</a>
-            <a href="https://cikasda.sultengprov.go.id/form-aduan-masyarakat/" target="_blank"
+            <a href="{{ route('form-aduan-masyarakat') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Form
                 Aduan Masyarakat</a>
             <a href="http://dbinfrastruktur.sultengprov.go.id/" target="_blank"
