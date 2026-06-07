@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProfilItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Services\FileService;
 
 class ProfilController extends Controller
 {
@@ -65,11 +65,9 @@ class ProfilController extends Controller
      * Simpan perubahan halaman profil.
      * POST /admin/profil/{halaman}
      */
-    public function update(Request $request, string $halaman)
+    public function update(Request $request, FileService $fileService, string $halaman)
     {
         abort_unless(array_key_exists($halaman, $this->halamanValid), 404);
-
-        $disk = $this->getDisk();
 
         // ── VALIDASI DINAMIS ───────────────────────────────────────────────
         $rules = [
@@ -95,42 +93,31 @@ class ProfilController extends Controller
         $item->judul = $this->halamanValid[$halaman];
         $label = $this->halamanValid[$halaman];
 
-        // ── HAPUS KOMPONEN (double-confirm dari view) ──────────────────────
+        // ── HAPUS KOMPONEN ─────────────────────────────────────────────────
         if ($request->filled('target_hapus')) {
             $target      = $request->input('target_hapus');
             $pesanSukses = 'Komponen berhasil dihapus.';
 
-            if ($target === 'text') {
-                $item->content_data = null;
-                $pesanSukses = "Konten teks \"{$label}\" berhasil dihapus!";
-            } elseif ($target === 'image' && $item->primary_image_path) {
-                Storage::disk($disk)->delete($item->primary_image_path);
-                $item->primary_image_path = null;
-                $pesanSukses = "Gambar utama \"{$label}\" berhasil dihapus dari server!";
-            } elseif ($target === 'image_2' && $item->secondary_image_path) {
-                Storage::disk($disk)->delete($item->secondary_image_path);
-                $item->secondary_image_path = null;
-                $pesanSukses = "Gambar kedua \"{$label}\" berhasil dihapus dari server!";
-            } elseif ($target === 'pdf' && $item->primary_document_path) {
-                Storage::disk($disk)->delete($item->primary_document_path);
-                $item->primary_document_path = null;
-                $pesanSukses = "Dokumen PDF \"{$label}\" berhasil dihapus permanen!";
-            } elseif ($target === 'pdf_2' && $item->secondary_document_path) {
-                Storage::disk($disk)->delete($item->secondary_document_path);
-                $item->secondary_document_path = null;
-                $pesanSukses = "Dokumen PDF kedua \"{$label}\" berhasil dihapus permanen!";
-            } elseif ($target === 'pdf_3' && $item->extra_document_path) {
-                Storage::disk($disk)->delete($item->extra_document_path);
-                $item->extra_document_path = null;
-                $pesanSukses = "Dokumen PDF ketiga \"{$label}\" berhasil dihapus permanen!";
+            $mappings = [
+                'text'    => 'content_data',
+                'image'   => 'primary_image_path',
+                'image_2' => 'secondary_image_path',
+                'pdf'     => 'primary_document_path',
+                'pdf_2'   => 'secondary_document_path',
+                'pdf_3'   => 'extra_document_path',
+            ];
+
+            if (isset($mappings[$target])) {
+                $field = $mappings[$target];
+                if ($field !== 'content_data' && $item->$field) {
+                    $fileService->delete($item->$field);
+                }
+                $item->$field = null;
+                $pesanSukses = "Komponen \"{$target}\" untuk \"{$label}\" berhasil dihapus!";
             }
 
             $item->save();
-            $isInformasi = in_array($halaman, ['dokumen', 'mou', 'form-permohonan', 'sk-gub', 'form-aduan']);
-            $redirectRoute = $halaman === 'daftar-informasi'
-                ? route('admin.informasi.daftar.edit')
-                : ($halaman === 'publikasi' ? route('admin.informasi.publikasi.edit') : ($isInformasi ? route('admin.informasi.edit', $halaman) : route('admin.profil.edit', $halaman)));
-            return redirect($redirectRoute)->with('success', $pesanSukses);
+            return redirect($this->getRedirectRoute($halaman))->with('success', $pesanSukses);
         }
 
         // ── SIMPAN KONTEN UTAMA ────────────────────────────────────────────
@@ -138,100 +125,69 @@ class ProfilController extends Controller
             $biografiKadis = $request->input('biografi_kadis');
             $biografiSekretaris = $request->input('biografi_sekretaris');
             
-            $item->content_data = json_encode([
+            $item->content_data = [
                 'nama_kadis'          => $request->input('nama_kadis'),
                 'biografi_kadis'      => ($biografiKadis && trim(strip_tags($biografiKadis)) !== '') ? $biografiKadis : null,
                 'nama_sekretaris'     => $request->input('nama_sekretaris'),
                 'biografi_sekretaris' => ($biografiSekretaris && trim(strip_tags($biografiSekretaris)) !== '') ? $biografiSekretaris : null,
-            ]);
+            ];
         } elseif ($halaman === 'sekilas-dinas') {
-            $item->content_data = json_encode([
+            $item->content_data = [
                 'jumlah_bidang'    => $request->input('jumlah_bidang'),
                 'jumlah_subbagian' => $request->input('jumlah_subbagian'),
                 'jumlah_upt'       => $request->input('jumlah_upt'),
                 'total_pegawai'    => $request->input('total_pegawai'),
                 'tahun_dibentuk'   => $request->input('tahun_dibentuk'),
-            ]);
+            ];
         } else {
-            // General case for pages using Quill (Visi Misi, Struktur, Sejarah, dsb)
             $item->content_data = $request->input('konten');
         }
 
-        // ── HERO DESCRIPTION (semua halaman) ──────────────────────────────
+        // ── HERO DESCRIPTION ──────────────────────────────────────────────
         $heroVal = $request->input('hero_description');
         $item->hero_description = ($heroVal && trim(strip_tags($heroVal)) !== '') ? $heroVal : null;
 
-        // ── UPLOAD GAMBAR UTAMA ────────────────────────────────────────────
-        if ($request->hasFile('gambar')) {
-            if ($item->primary_image_path) {
-                Storage::disk($disk)->delete($item->primary_image_path);
-            }
-            $file = $request->file('gambar');
-            $folder = $file->extension() === 'pdf' ? 'profil/dokumen' : 'profil';
-            $item->primary_image_path = $file->store($folder, $disk);
-        }
+        // ── UPLOAD FILES ──────────────────────────────────────────────────
+        $fileMappings = [
+            'gambar'     => 'primary_image_path',
+            'gambar_2'   => 'secondary_image_path',
+            'pdf_file'   => 'primary_document_path',
+            'pdf_file_2' => 'secondary_document_path',
+            'pdf_file_3' => 'extra_document_path',
+        ];
 
-        // ── UPLOAD GAMBAR KEDUA ────────────────────────────────────────────
-        if ($request->hasFile('gambar_2')) {
-            if ($item->secondary_image_path) {
-                Storage::disk($disk)->delete($item->secondary_image_path);
+        foreach ($fileMappings as $requestKey => $dbField) {
+            if ($request->hasFile($requestKey)) {
+                if ($item->$dbField) {
+                    $fileService->delete($item->$dbField);
+                }
+                $file = $request->file($requestKey);
+                $folder = (str_contains($requestKey, 'pdf') || $file->extension() === 'pdf') ? 'profil/dokumen' : 'profil';
+                $item->$dbField = $fileService->upload($file, $folder);
             }
-            $file = $request->file('gambar_2');
-            $folder = $file->extension() === 'pdf' ? 'profil/dokumen' : 'profil';
-            $item->secondary_image_path = $file->store($folder, $disk);
-        }
-
-        // ── UPLOAD PDF UTAMA ───────────────────────────────────────────────
-        if ($request->hasFile('pdf_file')) {
-            if ($item->primary_document_path) {
-                Storage::disk($disk)->delete($item->primary_document_path);
-            }
-            $item->primary_document_path = $request->file('pdf_file')->store('profil/dokumen', $disk);
-        }
-
-        // ── UPLOAD PDF KEDUA ───────────────────────────────────────────────
-        if ($request->hasFile('pdf_file_2')) {
-            if ($item->secondary_document_path) {
-                Storage::disk($disk)->delete($item->secondary_document_path);
-            }
-            $item->secondary_document_path = $request->file('pdf_file_2')->store('profil/dokumen', $disk);
-        }
-
-        // ── UPLOAD PDF KETIGA (Accordion 5 Keuangan) ──────────────────────
-        if ($request->hasFile('pdf_file_3')) {
-            if ($item->extra_document_path) {
-                Storage::disk($disk)->delete($item->extra_document_path);
-            }
-            $item->extra_document_path = $request->file('pdf_file_3')->store('profil/dokumen', $disk);
         }
 
         $item->save();
 
+        return redirect($this->getRedirectRoute($halaman))->with('success', "Konten \"{$label}\" berhasil diperbarui!");
+    }
+
+    private function getRedirectRoute(string $halaman): string
+    {
         $isInformasi = in_array($halaman, ['dokumen', 'mou', 'form-permohonan', 'sk-gub', 'form-aduan']);
         $isPpid = str_starts_with($halaman, 'ppid-');
 
         if ($halaman === 'daftar-informasi') {
-            $redirectRoute = route('admin.informasi.daftar.edit');
+            return route('admin.informasi.daftar.edit');
         } elseif ($halaman === 'publikasi') {
-            $redirectRoute = route('admin.informasi.publikasi.edit');
+            return route('admin.informasi.publikasi.edit');
         } elseif ($isPpid) {
-            $redirectRoute = route('admin.ppid.edit', str_replace('ppid-', '', $halaman));
+            return route('admin.ppid.edit', str_replace('ppid-', '', $halaman));
         } elseif ($isInformasi) {
-            $redirectRoute = route('admin.informasi.edit', $halaman);
+            return route('admin.informasi.edit', $halaman);
         } else {
-            $redirectRoute = route('admin.profil.edit', $halaman);
+            return route('admin.profil.edit', $halaman);
         }
-
-        return redirect($redirectRoute)->with('success', "Konten \"{$label}\" berhasil diperbarui!");
-    }
-
-    /**
-     * Tentukan disk penyimpanan aktif berdasarkan konfigurasi FILESYSTEM_DISK.
-     * Mengembalikan 'supabase' jika dikonfigurasi, fallback ke 'public' (local).
-     */
-    private function getDisk(): string
-    {
-        return config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
     }
 
     public function editDaftar()
@@ -242,9 +198,9 @@ class ProfilController extends Controller
         return view('admin.informasi.daftar_informasi', compact('item', 'judul', 'informationGroups'));
     }
 
-    public function updateDaftar(Request $request)
+    public function updateDaftar(Request $request, FileService $fileService)
     {
-        return $this->update($request, 'daftar-informasi');
+        return $this->update($request, $fileService, 'daftar-informasi');
     }
 
     public function editPublikasi()
@@ -255,8 +211,8 @@ class ProfilController extends Controller
         return view('admin.informasi.publikasi', compact('item', 'judul'));
     }
 
-    public function updatePublikasi(Request $request)
+    public function updatePublikasi(Request $request, FileService $fileService)
     {
-        return $this->update($request, 'publikasi');
+        return $this->update($request, $fileService, 'publikasi');
     }
 }

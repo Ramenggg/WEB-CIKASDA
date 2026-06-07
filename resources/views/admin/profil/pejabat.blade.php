@@ -4,7 +4,7 @@
 
 @section('content')
     @php
-        $dataPejabat = json_decode($item->content_data ?? '{}', true);
+        $dataPejabat = $item->content_data ?? [];
         $namaKadis = $dataPejabat['nama_kadis'] ?? '';
         $biografiKadis = $dataPejabat['biografi_kadis'] ?? '';
         $namaSekretaris = $dataPejabat['nama_sekretaris'] ?? '';

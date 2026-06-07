@@ -23,6 +23,8 @@ class VideoDokumentasi extends Model
 
         $disk = config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
 
-        return Storage::disk($disk)->url($this->file_video);
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
+        $storage = Storage::disk($disk);
+        return $storage->url($this->file_video);
     }
 }

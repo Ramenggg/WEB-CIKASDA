@@ -15,7 +15,7 @@
     </style>
 
     @php
-        $dataPejabat = json_decode($item->content_data ?? '{}', true);
+        $dataPejabat = $item->content_data ?? [];
         $namaKadis = $dataPejabat['nama_kadis'] ?? 'Nama Kepala Dinas';
         $biografiKadis = $dataPejabat['biografi_kadis'] ?? '';
         

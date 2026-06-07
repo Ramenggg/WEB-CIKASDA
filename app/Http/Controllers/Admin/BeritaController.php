@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Berita;
 use App\Models\BeritaGambar;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Storage;
+
+use App\Http\Requests\StoreBeritaRequest;
+use App\Http\Requests\UpdateBeritaRequest;
+use App\Services\FileService;
 
 class BeritaController extends Controller
 {
@@ -34,40 +36,28 @@ class BeritaController extends Controller
      * Simpan berita baru.
      * POST /admin/berita/simpan
      */
-    public function store(Request $request)
+    public function store(StoreBeritaRequest $request, FileService $fileService)
     {
-        // 1. Validasi Inputan
-        $request->validate([
-            'judul'    => 'required|string|max:255',
-            'konten'   => 'required|string',
-            'kategori' => 'required|string',
-            'status'   => 'required|string',
-            'images'   => 'required|array', // Wajib upload minimal 1 gambar
-            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:3072' // Max 3MB per file
-        ]);
+        $validated = $request->validated();
 
-        // 2. Simpan Data Teks Berita ke Tabel 'beritas'
+        // 1. Simpan Data Teks Berita ke Tabel 'beritas'
         $berita = Berita::create([
-            'judul'    => $request->judul,
-            'slug'     => Str::slug($request->judul) . '-' . time(), // slug otomatis unik (contoh: berita-a-17182922)
-            'konten'   => $request->konten,
-            'kategori' => $request->kategori,
-            'status'   => $request->status,
+            'judul'    => $validated['judul'],
+            'slug'     => Str::slug($validated['judul']) . '-' . time(),
+            'konten'   => $validated['konten'],
+            'kategori' => $validated['kategori'],
+            'status'   => $validated['status'],
         ]);
 
-        // 3. Proses Upload Banyak Gambar Berdasarkan Urutan Drag-and-Drop Admin
-        $disk = $this->getDisk();
-
+        // 2. Proses Upload Banyak Gambar
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $file) {
-                // Simpan file ke folder storage/app/public/berita
-                $path = $file->store('berita', $disk);
+                $path = $fileService->upload($file, 'berita');
 
-                // Simpan ke tabel 'berita_gambars' lengkap dengan nomor urutannya ($index)
                 BeritaGambar::create([
                     'berita_id' => $berita->id,
                     'file_path' => $path,
-                    'urutan'    => $index // Index 0 otomatis jadi sampul utama!
+                    'urutan'    => $index
                 ]);
             }
         }
@@ -79,7 +69,7 @@ class BeritaController extends Controller
      * Tampilkan form edit berita.
      * GET /admin/berita/{id}/edit
      */
-    public function edit($id)
+    public function edit(string $id)
     {
         $berita = Berita::with('gambars')->findOrFail($id);
         return view('admin.berita.edit', compact('berita'));
@@ -89,38 +79,26 @@ class BeritaController extends Controller
      * Perbarui berita yang sudah ada.
      * PUT /admin/berita/{id}/update
      */
-    public function update(Request $request, $id)
+    public function update(UpdateBeritaRequest $request, FileService $fileService, string $id)
     {
         $berita = Berita::findOrFail($id);
-
-        $request->validate([
-            'judul'    => 'required|string|max:255',
-            'konten'   => 'required|string',
-            'kategori' => 'required|string',
-            'status'   => 'required|string',
-            'images'   => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:3072',
-            'delete_images'   => 'nullable|array',
-            'delete_images.*' => 'integer'
-        ]);
+        $validated = $request->validated();
 
         // Update data teks
         $berita->update([
-            'judul'    => $request->judul,
-            'slug'     => $berita->judul !== $request->judul ? Str::slug($request->judul) . '-' . time() : $berita->slug,
-            'konten'   => $request->konten,
-            'kategori' => $request->kategori,
-            'status'   => $request->status,
+            'judul'    => $validated['judul'],
+            'slug'     => $berita->judul !== $validated['judul'] ? Str::slug($validated['judul']) . '-' . time() : $berita->slug,
+            'konten'   => $validated['konten'],
+            'kategori' => $validated['kategori'],
+            'status'   => $validated['status'],
         ]);
-
-        $disk = $this->getDisk();
 
         // 1. Hapus gambar yang dicentang admin
         if ($request->filled('delete_images')) {
             foreach ($request->delete_images as $imgId) {
                 $gambar = BeritaGambar::where('berita_id', $berita->id)->find($imgId);
                 if ($gambar) {
-                    Storage::disk($disk)->delete($gambar->file_path);
+                    $fileService->delete($gambar->file_path);
                     $gambar->delete();
                 }
             }
@@ -131,7 +109,7 @@ class BeritaController extends Controller
             $maxUrutan = BeritaGambar::where('berita_id', $berita->id)->max('urutan') ?? -1;
             foreach ($request->file('images') as $file) {
                 $maxUrutan++;
-                $path = $file->store('berita', $disk);
+                $path = $fileService->upload($file, 'berita');
                 BeritaGambar::create([
                     'berita_id' => $berita->id,
                     'file_path' => $path,
@@ -140,7 +118,7 @@ class BeritaController extends Controller
             }
         }
 
-        // 3. Urutkan ulang sisa gambar agar index 0 selalu terisi sebagai sampul utama
+        // 3. Urutkan ulang sisa gambar
         $remaining = BeritaGambar::where('berita_id', $berita->id)->orderBy('urutan')->get();
         foreach ($remaining as $index => $gambar) {
             $gambar->update(['urutan' => $index]);
@@ -153,28 +131,18 @@ class BeritaController extends Controller
      * Hapus berita beserta seluruh gambarnya.
      * DELETE /admin/berita/{id}/hapus
      */
-    public function destroy($id)
+    public function destroy(FileService $fileService, string $id)
     {
         $berita = Berita::with('gambars')->findOrFail($id);
-        $disk = $this->getDisk();
 
         // Hapus file fisik gambar dan entri database
         foreach ($berita->gambars as $gambar) {
-            Storage::disk($disk)->delete($gambar->file_path);
+            $fileService->delete($gambar->file_path);
             $gambar->delete();
         }
 
         $berita->delete();
 
         return redirect()->route('admin.berita.index')->with('success', 'Berita beserta seluruh dokumentasinya berhasil dihapus!');
-    }
-
-    /**
-     * Tentukan disk penyimpanan aktif berdasarkan konfigurasi FILESYSTEM_DISK.
-     * Mengembalikan 'supabase' jika dikonfigurasi, fallback ke 'public' (local).
-     */
-    private function getDisk(): string
-    {
-        return config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
     }
 }

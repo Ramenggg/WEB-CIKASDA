@@ -17,31 +17,22 @@ class BookletDigital extends Model
 
     public function getUrlBookletAttribute(): ?string
     {
-        if (!$this->file_pdf) {
-            return null;
-        }
-
-        if (filter_var($this->file_pdf, FILTER_VALIDATE_URL)) {
-            return $this->file_pdf;
-        }
-
-        $disk = config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
-
-        return Storage::disk($disk)->url($this->file_pdf);
+        return $this->getFileUrl($this->file_pdf);
     }
 
     public function getUrlSampulAttribute(): ?string
     {
-        if (!$this->path_sampul) {
-            return null;
-        }
+        return $this->getFileUrl($this->path_sampul);
+    }
 
-        if (filter_var($this->path_sampul, FILTER_VALIDATE_URL)) {
-            return $this->path_sampul;
-        }
+    private function getFileUrl(?string $path): ?string
+    {
+        if (!$path) return null;
+        if (filter_var($path, FILTER_VALIDATE_URL)) return $path;
 
         $disk = config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
-
-        return Storage::disk($disk)->url($this->path_sampul);
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
+        $storage = Storage::disk($disk);
+        return $storage->url($path);
     }
 }

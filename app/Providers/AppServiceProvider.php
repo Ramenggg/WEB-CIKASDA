@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Log;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,24 +20,33 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        \Illuminate\Support\Facades\Blade::component('berita', \App\View\Components\Berita::class);
+
         // Bagian: View Composer untuk Sekilas Dinas Sidebar
-        // Kita gunakan wildcard 'components.*' agar mencakup komponen sidebar
-        // dan layout utama jika diperlukan.
         view()->composer(['components.sekilas-dinas-sidebar', 'layouts.app'], function ($view) {
             try {
                 $sekilasItem = \App\Models\ProfilItem::where('slug', 'sekilas-dinas')->first();
                 $sekilasDinas = [];
                 
-                if ($sekilasItem && !empty($sekilasItem->content_data)) {
-                    $decoded = json_decode($sekilasItem->content_data, true);
-                    if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                        $sekilasDinas = $decoded;
-                    }
+                if ($sekilasItem && !empty($sekilasItem->content_data) && is_array($sekilasItem->content_data)) {
+                    $sekilasDinas = $sekilasItem->content_data;
                 }
                 
                 $view->with('sekilasDinas', $sekilasDinas);
             } catch (\Exception $e) {
                 $view->with('sekilasDinas', []);
+            }
+        });
+
+        // Bagian: View Composer untuk Widget Cuaca Palu
+        // Target langsung ke file komponen agar variabel selalu tersedia di dalam widget
+        view()->composer('components.weather-widget', function ($view) {
+            try {
+                $weatherService = app(\App\Services\WeatherService::class);
+                $view->with('weatherData', $weatherService->getPaluWeather());
+            } catch (\Exception $e) {
+                Log::error('Weather ViewComposer Error: ' . $e->getMessage());
+                $view->with('weatherData', null);
             }
         });
     }

@@ -9,7 +9,7 @@ use App\Models\BookletDigital;
 use App\Models\FotoKegiatan;
 use App\Models\VideoDokumentasi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Services\FileService;
 
 class GaleriController extends Controller
 {
@@ -74,7 +74,7 @@ class GaleriController extends Controller
         return view('admin.galeri.foto-tambah', compact('albums', 'kategoriList'));
     }
 
-    public function adminFotoSimpan(Request $request)
+    public function adminFotoSimpan(Request $request, FileService $fileService)
     {
         $request->validate([
             'judul_album'      => 'required|string|max:255',
@@ -98,11 +98,9 @@ class GaleriController extends Controller
             'deskripsi_album' => $request->deskripsi_album,
         ]);
 
-        $disk = $this->getDisk();
-
         foreach ($request->file('foto_kegiatan') as $index => $fileFoto) {
             if ($fileFoto->isValid()) {
-                $path       = $fileFoto->store('galeri', $disk);
+                $path       = $fileService->upload($fileFoto, 'galeri');
                 $keterangan = $request->keterangan_foto[$index] ?? pathinfo($fileFoto->getClientOriginalName(), PATHINFO_FILENAME);
 
                 FotoKegiatan::create([
@@ -116,16 +114,12 @@ class GaleriController extends Controller
         return redirect()->route('admin.galeri.foto.index')->with('success', 'Album foto berhasil diterbitkan!');
     }
 
-    public function adminFotoDestroy(string $id)
+    public function adminFotoDestroy(FileService $fileService, string $id)
     {
         $album = AlbumKegiatan::findOrFail($id);
 
-        $disk = $this->getDisk();
-
         foreach ($album->fotos as $foto) {
-            if (Storage::disk($disk)->exists($foto->path_foto)) {
-                Storage::disk($disk)->delete($foto->path_foto);
-            }
+            $fileService->delete($foto->path_foto);
         }
 
         $album->delete();
@@ -160,7 +154,7 @@ class GaleriController extends Controller
         return view('admin.galeri.video-tambah', compact('videos'));
     }
 
-    public function adminVideoSimpan(Request $request)
+    public function adminVideoSimpan(Request $request, FileService $fileService)
     {
         $request->validate([
             'judul_video'    => 'required|string|max:255',
@@ -172,10 +166,8 @@ class GaleriController extends Controller
         $videoId   = null;
         $videoPath = null;
 
-        $disk = $this->getDisk();
-
         if ($request->hasFile('file_video') && $request->file('file_video')->isValid()) {
-            $videoPath = $request->file('file_video')->store('videos', $disk);
+            $videoPath = $fileService->upload($request->file('file_video'), 'videos');
         } elseif ($request->filled('url_youtube')) {
             $url = $request->url_youtube;
             if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $url, $match)) {
@@ -196,17 +188,15 @@ class GaleriController extends Controller
         return redirect()->route('admin.galeri.video.index')->with('success', 'Video dokumentasi berhasil diterbitkan!');
     }
 
-    public function adminVideoDestroy(string $id)
+    public function adminVideoDestroy(FileService $fileService, string $id)
     {
         $video = VideoDokumentasi::findOrFail($id);
 
-        $disk = $this->getDisk();
-
-        if ($video->file_video && Storage::disk($disk)->exists($video->file_video)) {
-            Storage::disk($disk)->delete($video->file_video);
+        if ($video->file_video) {
+            $fileService->delete($video->file_video);
         }
 
-        $video.delete();
+        $video->delete();
         return redirect()->route('admin.galeri.video.index')->with('success', 'Video dokumentasi berhasil dihapus!');
     }
 
@@ -223,7 +213,7 @@ class GaleriController extends Controller
         return view('admin.galeri.booklet-tambah', compact('bookletsSungai', 'bookletsIrigasi'));
     }
 
-    public function adminBookletSimpan(Request $request)
+    public function adminBookletSimpan(Request $request, FileService $fileService)
     {
         $request->validate([
             'judul_booklet'    => 'required|string|max:255',
@@ -238,14 +228,12 @@ class GaleriController extends Controller
         $pdfPath = null;
         $sampulPath = null;
 
-        $disk = $this->getDisk();
-
         if ($request->hasFile('file_pdf') && $request->file('file_pdf')->isValid()) {
-            $pdfPath = $request->file('file_pdf')->store('booklets', $disk);
+            $pdfPath = $fileService->upload($request->file('file_pdf'), 'booklets');
         }
 
         if ($request->hasFile('file_sampul') && $request->file('file_sampul')->isValid()) {
-            $sampulPath = $request->file('file_sampul')->store('booklets/sampul', $disk);
+            $sampulPath = $fileService->upload($request->file('file_sampul'), 'booklets/sampul');
         }
 
         BookletDigital::create([
@@ -261,31 +249,20 @@ class GaleriController extends Controller
         return redirect()->route('admin.galeri.booklet.index')->with('success', 'Booklet digital berhasil diterbitkan!');
     }
 
-    public function adminBookletDestroy(string $id)
+    public function adminBookletDestroy(FileService $fileService, string $id)
     {
         $booklet = BookletDigital::findOrFail($id);
 
-        $disk = $this->getDisk();
-
-        if ($booklet->file_pdf && Storage::disk($disk)->exists($booklet->file_pdf)) {
-            Storage::disk($disk)->delete($booklet->file_pdf);
+        if ($booklet->file_pdf) {
+            $fileService->delete($booklet->file_pdf);
         }
 
-        if ($booklet->path_sampul && Storage::disk($disk)->exists($booklet->path_sampul)) {
-            Storage::disk($disk)->delete($booklet->path_sampul);
+        if ($booklet->path_sampul) {
+            $fileService->delete($booklet->path_sampul);
         }
 
         $booklet->delete();
         return redirect()->route('admin.galeri.booklet.index')->with('success', 'Booklet digital berhasil dihapus!');
-    }
-
-    /**
-     * Tentukan disk penyimpanan aktif berdasarkan konfigurasi FILESYSTEM_DISK.
-     * Mengembalikan 'supabase' jika dikonfigurasi, fallback ke 'public' (local).
-     */
-    private function getDisk(): string
-    {
-        return config('filesystems.default') === 'supabase' ? 'supabase' : 'public';
     }
 
     private function kategoriAlbumList()

@@ -13,6 +13,10 @@ class ProfilItem extends Model
 
     protected $fillable = ['slug', 'judul', 'content_data', 'primary_image_path', 'secondary_image_path', 'primary_document_path', 'secondary_document_path', 'extra_document_path', 'hero_description'];
 
+    protected $casts = [
+        'content_data' => 'array',
+    ];
+
     /**
      * Ambil data berdasarkan slug, jika tidak ada buat record kosong (tidak disimpan).
      * Berguna agar view tidak error saat data belum diisi.

@@ -1,14 +1,3 @@
-@php
-    $beritas = \App\Models\Berita::with('sampul')
-        ->where('status', 'Publish')
-        ->latest()
-        ->take(5)
-        ->get();
-
-    $utama = $beritas->first();
-    $sampingan = $beritas->skip(1);
-@endphp
-
 <section class="py-12 bg-slate-50 relative z-10">
     <div class="max-w-7xl mx-auto px-6 sm:px-4 lg:px-8">
 

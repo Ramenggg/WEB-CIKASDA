@@ -34,10 +34,7 @@
             @endif
 
             @php
-                $data = [];
-                if(isset($item->content_data) && !empty($item->content_data)) {
-                    $data = json_decode($item->content_data, true) ?? [];
-                }
+                $data = $item->content_data ?? [];
             @endphp
 
             <form action="{{ route('admin.profil.update', 'sekilas-dinas') }}" method="POST" class="divide-y divide-slate-100 p-8 space-y-6 bg-white">

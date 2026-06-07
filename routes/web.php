@@ -159,8 +159,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     })->where('halaman', 'sk|visi-misi|pelayanan|penghargaan|permohonan|dokumen-program|sop-spm')
       ->name('ppid.edit');
 
-    Route::post('/ppid/{halaman}', function($halaman, Request $request) {
-        return app(ProfilController::class)->update($request, "ppid-" . $halaman);
+    Route::post('/ppid/{halaman}', function($halaman, Request $request, \App\Services\FileService $fileService) {
+        return app(ProfilController::class)->update($request, $fileService, "ppid-" . $halaman);
     })->where('halaman', 'sk|visi-misi|pelayanan|penghargaan|permohonan|dokumen-program|sop-spm')
       ->name('ppid.update');
 

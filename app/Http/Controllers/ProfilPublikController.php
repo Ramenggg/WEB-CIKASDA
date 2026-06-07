@@ -6,6 +6,8 @@ use App\Models\Berita;
 use App\Models\ProfilItem;
 use App\Models\Pesan;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreAduanRequest;
+use App\Services\FileService;
 
 class ProfilPublikController extends Controller
 {
@@ -36,7 +38,7 @@ class ProfilPublikController extends Controller
         'ppid-sop-spm'         => 'PPID.sop-spm',
     ];
 
-    public function showPage($slug)
+    public function showPage(string $slug)
     {
         abort_unless(array_key_exists($slug, $this->pageMappings), 404);
         
@@ -83,39 +85,17 @@ class ProfilPublikController extends Controller
         return view('pages.informasi.daftar-informasi', compact('item', 'informationGroups'));
     }
 
-    public function storeAduan(Request $request)
+    public function storeAduan(StoreAduanRequest $request, FileService $fileService)
     {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'alamat' => 'required|string|max:1000',
-            'no_hp' => 'required|string|max:20',
-            'pesan' => 'required|string',
-            'ktp' => 'required|file|mimes:jpeg,png,jpg,pdf|max:2048',
-            'bukti_dukung' => 'nullable|file|mimes:jpeg,png,jpg,pdf,zip,rar,doc,docx,xls,xlsx|max:10240',
-        ]);
+        $validated = $request->validated();
 
-        // Ensure target folder exists
-        if (!file_exists(public_path('uploads/aduan'))) {
-            mkdir(public_path('uploads/aduan'), 0755, true);
-        }
+        // Handle KTP file upload using FileService
+        $ktpPath = $fileService->upload($request->file('ktp'), 'aduan', 'ktp');
 
-        // Handle KTP file upload
-        $ktpPath = null;
-        if ($request->hasFile('ktp')) {
-            $file = $request->file('ktp');
-            $filename = 'ktp_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/aduan'), $filename);
-            $ktpPath = '/uploads/aduan/' . $filename;
-        }
-
-        // Handle Bukti Dukung file upload
+        // Handle Bukti Dukung file upload using FileService
         $buktiPath = null;
         if ($request->hasFile('bukti_dukung')) {
-            $file = $request->file('bukti_dukung');
-            $filename = 'bukti_' . time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/aduan'), $filename);
-            $buktiPath = '/uploads/aduan/' . $filename;
+            $buktiPath = $fileService->upload($request->file('bukti_dukung'), 'aduan', 'bukti');
         }
 
         // Format message to combine all details without DB migration
@@ -124,10 +104,10 @@ class ProfilPublikController extends Controller
         $formattedMessage .= "DESKRIPSI ADUAN:\n" . $validated['pesan'] . "\n\n";
         
         if ($ktpPath) {
-            $formattedMessage .= "BERKAS KTP/SIM:\n" . asset($ktpPath) . "\n\n";
+            $formattedMessage .= "BERKAS KTP/SIM:\n" . $fileService->url($ktpPath) . "\n\n";
         }
         if ($buktiPath) {
-            $formattedMessage .= "BUKTI DUKUNG:\n" . asset($buktiPath) . "\n";
+            $formattedMessage .= "BUKTI DUKUNG:\n" . $fileService->url($buktiPath) . "\n";
         }
 
         Pesan::create([

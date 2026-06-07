@@ -28,7 +28,7 @@ class AdminInformationDocumentController extends Controller
     /**
      * Perbarui kelompok klasifikasi.
      */
-    public function updateGroup(Request $request, $id)
+    public function updateGroup(Request $request, string $id)
     {
         $group = InformationGroup::findOrFail($id);
 
@@ -46,7 +46,7 @@ class AdminInformationDocumentController extends Controller
     /**
      * Hapus kelompok klasifikasi beserta isinya.
      */
-    public function destroyGroup($id)
+    public function destroyGroup(string $id)
     {
         $group = InformationGroup::findOrFail($id);
         $group->delete();
@@ -77,7 +77,7 @@ class AdminInformationDocumentController extends Controller
     /**
      * Perbarui dokumen klasifikasi.
      */
-    public function updateItem(Request $request, $id)
+    public function updateItem(Request $request, string $id)
     {
         $item = InformationItem::findOrFail($id);
 
@@ -98,7 +98,7 @@ class AdminInformationDocumentController extends Controller
     /**
      * Hapus dokumen klasifikasi.
      */
-    public function destroyItem($id)
+    public function destroyItem(string $id)
     {
         $item = InformationItem::findOrFail($id);
         $item->delete();

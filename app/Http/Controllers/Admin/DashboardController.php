@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Berita;   // Model untuk Artikel
-use App\Models\Galeri;   // Model untuk Foto/Video
-use App\Models\Pesan;    // Model untuk Pesan/Kontak
-use App\Models\ActivityLog; // Model untuk Aktivitas (jika ada library log)
-use App\Models\Visitor;  // Model untuk Pengunjung
+use App\Models\Berita;
+use App\Models\AlbumKegiatan;
+use App\Models\VideoDokumentasi;
+use App\Models\Pesan;
+use App\Models\ActivityLog;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -16,7 +17,7 @@ class DashboardController extends Controller
     {
         // 1. Ambil Total Data
         $countBerita = Berita::count();
-        $countGaleri = Galeri::count();
+        $countGaleri = AlbumKegiatan::count() + VideoDokumentasi::count();
         
         // 2. Pesan yang belum dibaca (is_read = false)
         $countPesan  = Pesan::where('is_read', false)->count();
