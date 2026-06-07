@@ -51,7 +51,7 @@ class DashboardController extends Controller
     }
 
     // Fungsi untuk menandai pengaduan sebagai telah dibaca
-    public function pesanRead($id)
+    public function pesanRead(int $id)
     {
         $pesan = Pesan::findOrFail($id);
         $pesan->update(['is_read' => true]);
@@ -59,7 +59,7 @@ class DashboardController extends Controller
     }
 
     // Fungsi untuk menghapus pengaduan
-    public function pesanDestroy($id)
+    public function pesanDestroy(int $id)
     {
         $pesan = Pesan::findOrFail($id);
         $pesan->delete();

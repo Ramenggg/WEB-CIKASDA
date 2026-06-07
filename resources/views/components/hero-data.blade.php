@@ -56,7 +56,7 @@
         </a>
 
         {{-- Secondary --}}
-        <a href="/layanan"
+        <a href="/#layanan"
             class="w-full sm:w-auto inline-flex items-center justify-center gap-2
                    px-8 py-3.5 rounded-2xl
                    bg-white/4 text-cyan-200

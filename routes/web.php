@@ -6,9 +6,16 @@ use App\Http\Controllers\Admin\ProfilController;
 use App\Http\Controllers\Admin\BeritaController;
 use App\Http\Controllers\Admin\AdminInformationDocumentController;
 use App\Http\Controllers\Admin\GaleriController;
+use App\Http\Controllers\Admin\AdminBookletController;
+use App\Http\Controllers\Admin\AdminVideoController;
+use App\Http\Controllers\Admin\AlbumKegiatanController;
+use App\Http\Controllers\Admin\FotoKegiatanController;
+use App\Http\Controllers\Admin\HeroContentController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\BeritaPublikController;
 use App\Http\Controllers\ProfilPublikController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,27 +38,27 @@ Route::get('/', function () {
 Route::prefix('profil')->name('profil.')->group(function () {
 
     // Menu: Profil Dinas
-    Route::get('/sejarah',              [ProfilPublikController::class, 'sejarah']    )->name('sejarah');
-    Route::get('/visi-misi',            [ProfilPublikController::class, 'visiMisi']   )->name('visi-misi');
-    Route::get('/tugas-fungsi',         [ProfilPublikController::class, 'tugasFungsi'])->name('tugas-fungsi');
-    Route::get('/struktur-organisasi',  [ProfilPublikController::class, 'struktur']   )->name('struktur');
-    Route::get('/pejabat',              [ProfilPublikController::class, 'pejabat']    )->name('pejabat');
+    Route::get('/sejarah',              [ProfilPublikController::class, 'showPage'])->defaults('slug', 'sejarah')->name('sejarah');
+    Route::get('/visi-misi',            [ProfilPublikController::class, 'showPage'])->defaults('slug', 'visi-misi')->name('visi-misi');
+    Route::get('/tugas-fungsi',         [ProfilPublikController::class, 'showPage'])->defaults('slug', 'tugas-fungsi')->name('tugas-fungsi');
+    Route::get('/struktur-organisasi',  [ProfilPublikController::class, 'showPage'])->defaults('slug', 'struktur')->name('struktur');
+    Route::get('/pejabat',              [ProfilPublikController::class, 'showPage'])->defaults('slug', 'pejabat')->name('pejabat');
 
     // Menu: Transparansi & Informasi Publik
-    Route::get('/lhkpn',    [ProfilPublikController::class, 'lhkpn']   )->name('lhkpn');
-    Route::get('/keuangan', [ProfilPublikController::class, 'keuangan'])->name('keuangan');
-    Route::get('/maklumat', [ProfilPublikController::class, 'maklumat'])->name('maklumat');
+    Route::get('/lhkpn',    [ProfilPublikController::class, 'showPage'])->defaults('slug', 'lhkpn')->name('lhkpn');
+    Route::get('/keuangan', [ProfilPublikController::class, 'showPage'])->defaults('slug', 'keuangan')->name('keuangan');
+    Route::get('/maklumat', [ProfilPublikController::class, 'showPage'])->defaults('slug', 'maklumat')->name('maklumat');
 
 });
 
 Route::get('/daftar-informasi', [ProfilPublikController::class, 'daftarInformasi'])->name('daftar-informasi');
-Route::get('/informasi/publikasi', [ProfilPublikController::class, 'publikasi'])->name('informasi.publikasi');
-Route::get('/informasi/dokumen', [ProfilPublikController::class, 'dokumen'])->name('informasi.dokumen');
-Route::get('/informasi/mou', [ProfilPublikController::class, 'mou'])->name('informasi.mou');
-Route::get('/informasi/form-permohonan', [ProfilPublikController::class, 'formPermohonan'])->name('informasi.form-permohonan');
-Route::get('/informasi/sk-gub', [ProfilPublikController::class, 'skGub'])->name('informasi.sk-gub');
+Route::get('/informasi/publikasi', [ProfilPublikController::class, 'showPage'])->defaults('slug', 'publikasi')->name('informasi.publikasi');
+Route::get('/informasi/dokumen', [ProfilPublikController::class, 'showPage'])->defaults('slug', 'dokumen')->name('informasi.dokumen');
+Route::get('/informasi/mou', [ProfilPublikController::class, 'showPage'])->defaults('slug', 'mou')->name('informasi.mou');
+Route::get('/informasi/form-permohonan', [ProfilPublikController::class, 'showPage'])->defaults('slug', 'form-permohonan')->name('informasi.form-permohonan');
+Route::get('/informasi/sk-gub', [ProfilPublikController::class, 'showPage'])->defaults('slug', 'sk-gub')->name('informasi.sk-gub');
 
-Route::get('/form-aduan-masyarakat', [ProfilPublikController::class, 'formAduan'])->name('form-aduan-masyarakat');
+Route::get('/form-aduan-masyarakat', [ProfilPublikController::class, 'showPage'])->defaults('slug', 'form-aduan')->name('form-aduan-masyarakat');
 Route::post('/form-aduan-masyarakat', [ProfilPublikController::class, 'storeAduan'])->name('form-aduan-masyarakat.store');
 
 // Halaman Unduh Klasifikasi Informasi Publik (Redirect to unified page for compatibility)
@@ -91,7 +98,21 @@ Route::prefix('galeri')->name('galeri.')->group(function () {
 });
 
 // ==========================================================================
-// 5. PANEL ADMIN (AUTH REQUIRED)
+// 5. HALAMAN PUBLIK - PPID
+// ==========================================================================
+
+Route::prefix('ppid')->name('ppid.')->group(function () {
+    Route::get('/surat-keputusan',      [ProfilPublikController::class, 'showPage'])->defaults('slug', 'ppid-sk')->name('sk');
+    Route::get('/visi-misi',            [ProfilPublikController::class, 'showPage'])->defaults('slug', 'ppid-visi-misi')->name('visi-misi');
+    Route::get('/pelayanan',            [ProfilPublikController::class, 'showPage'])->defaults('slug', 'ppid-pelayanan')->name('pelayanan');
+    Route::get('/pengargaan',           [ProfilPublikController::class, 'showPage'])->defaults('slug', 'ppid-penghargaan')->name('penghargaan');
+    Route::get('/permohonan-informasi', [ProfilPublikController::class, 'showPage'])->defaults('slug', 'ppid-permohonan')->name('permohonan');
+    Route::get('/dokumen-elektronik',   [ProfilPublikController::class, 'showPage'])->defaults('slug', 'ppid-dokumen-program')->name('dokumen');
+    Route::get('/sop-spm',              [ProfilPublikController::class, 'showPage'])->defaults('slug', 'ppid-sop-spm')->name('sop-spm');
+});
+
+// ==========================================================================
+// 6. PANEL ADMIN (AUTH REQUIRED)
 // ==========================================================================
 
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
@@ -131,6 +152,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::post('/informasi/{halaman}', [ProfilController::class, 'update'] )
         ->where('halaman', 'dokumen|mou|form-permohonan|sk-gub|form-aduan')
         ->name('informasi.update');
+
+    // --- Kelola Konten PPID Dinamis ---
+    Route::get( '/ppid/{halaman}', function($halaman) {
+        return app(ProfilController::class)->edit("ppid-" . $halaman);
+    })->where('halaman', 'sk|visi-misi|pelayanan|penghargaan|permohonan|dokumen-program|sop-spm')
+      ->name('ppid.edit');
+
+    Route::post('/ppid/{halaman}', function($halaman, Request $request) {
+        return app(ProfilController::class)->update($request, "ppid-" . $halaman);
+    })->where('halaman', 'sk|visi-misi|pelayanan|penghargaan|permohonan|dokumen-program|sop-spm')
+      ->name('ppid.update');
 
 
     // --- Kelola Berita ---

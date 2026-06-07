@@ -87,7 +87,7 @@ if (!isHome) {
                 Publik</a>
             <a href="/ppid/surat-keputusan"
                 class="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest {{ request()->is('ppid*') ? 'text-yellow-400 bg-blue-950 shadow-inner' : 'text-white hover:bg-blue-800' }} transition-all">PPID</a>
-            <a href="#"
+            <a href="/#layanan"
                 class="block px-4 py-3 rounded-xl text-sm font-bold uppercase tracking-widest {{ request()->is('layanan*') ? 'text-yellow-400 bg-blue-950 shadow-inner' : 'text-white hover:bg-blue-800' }} transition-all">Layanan</a>
         </div>
     </div>

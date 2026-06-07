@@ -4,60 +4,46 @@ namespace App\Http\Controllers;
 
 use App\Models\Berita;
 use App\Models\ProfilItem;
-use App\Models\AlbumKegiatan;
-use App\Models\VideoDokumentasi;
-use App\Models\BookletDigital;
 use App\Models\Pesan;
 use Illuminate\Http\Request;
 
 class ProfilPublikController extends Controller
 {
-    public function struktur()
-    {
-        $item = ProfilItem::findBySlug('struktur');
-        return view('pages.profil.struktur-organisasi', compact('item'));
-    }
+    private array $pageMappings = [
+        // Profil
+        'struktur'        => 'pages.profil.struktur-organisasi',
+        'visi-misi'       => 'pages.profil.visi-misi',
+        'tugas-fungsi'    => 'pages.profil.tugas-fungsi',
+        'sejarah'         => 'pages.profil.sejarah',
+        'pejabat'         => 'pages.profil.pejabat',
+        'maklumat'        => 'pages.profil.maklumat',
+        'lhkpn'           => 'pages.profil.lhkpn',
+        'keuangan'        => 'pages.profil.keuangan',
+        // Informasi Publik
+        'publikasi'       => 'pages.informasi.publikasi-informasi',
+        'dokumen'         => 'pages.informasi.dokumen',
+        'mou'             => 'pages.informasi.mou',
+        'form-permohonan' => 'pages.informasi.form-permohonan',
+        'sk-gub'          => 'pages.informasi.sk-gub',
+        'form-aduan'      => 'pages.informasi.form-aduan-masyarakat',
+        // PPID
+        'ppid-sk'              => 'PPID.surat-keputusan',
+        'ppid-visi-misi'       => 'PPID.visi-misi',
+        'ppid-pelayanan'       => 'PPID.pelayanan',
+        'ppid-penghargaan'     => 'PPID.penghargaan',
+        'ppid-permohonan'      => 'PPID.permohonan-informasi',
+        'ppid-dokumen-program' => 'PPID.dokumen-elektronik',
+        'ppid-sop-spm'         => 'PPID.sop-spm',
+    ];
 
-    public function visiMisi()
+    public function showPage($slug)
     {
-        $item = ProfilItem::findBySlug('visi-misi');
-        return view('pages.profil.visi-misi', compact('item'));
-    }
-
-    public function tugasFungsi()
-    {
-        $item = ProfilItem::findBySlug('tugas-fungsi');
-        return view('pages.profil.tugas-fungsi', compact('item'));
-    }
-
-    public function sejarah()
-    {
-        $item = ProfilItem::findBySlug('sejarah');
-        return view('pages.profil.sejarah', compact('item'));
-    }
-
-    public function pejabat()
-    {
-        $item = ProfilItem::findBySlug('pejabat');
-        return view('pages.profil.pejabat', compact('item'));
-    }
-
-    public function maklumat()
-    {
-        $item = ProfilItem::findBySlug('maklumat');
-        return view('pages.profil.maklumat', compact('item'));
-    }
-
-    public function lhkpn()
-    {
-        $item = ProfilItem::findBySlug('lhkpn');
-        return view('pages.profil.lhkpn', compact('item'));
-    }
-
-    public function keuangan()
-    {
-        $item = ProfilItem::findBySlug('keuangan');
-        return view('pages.profil.keuangan', compact('item'));
+        abort_unless(array_key_exists($slug, $this->pageMappings), 404);
+        
+        $item = ProfilItem::findBySlug($slug);
+        $view = $this->pageMappings[$slug];
+        
+        return view($view, compact('item'));
     }
 
     public function beritaIndeks()
@@ -68,7 +54,9 @@ class ProfilPublikController extends Controller
             ->take(9)
             ->get();
 
-        return view('user.berita.index', compact('beritas'));
+        $item = new ProfilItem(); // Dummy item to prevent x-profil-hero errors
+        
+        return view('user.berita.index', compact('beritas', 'item'));
     }
 
     public function daftarInformasi()
@@ -93,42 +81,6 @@ class ProfilPublikController extends Controller
             ];
         });
         return view('pages.informasi.daftar-informasi', compact('item', 'informationGroups'));
-    }
-
-    public function publikasi()
-    {
-        $item = ProfilItem::findBySlug('publikasi');
-        return view('pages.informasi.publikasi-informasi', compact('item'));
-    }
-
-    public function dokumen()
-    {
-        $item = ProfilItem::findBySlug('dokumen');
-        return view('pages.informasi.dokumen', compact('item'));
-    }
-
-    public function mou()
-    {
-        $item = ProfilItem::findBySlug('mou');
-        return view('pages.informasi.mou', compact('item'));
-    }
-
-    public function formPermohonan()
-    {
-        $item = ProfilItem::findBySlug('form-permohonan');
-        return view('pages.informasi.form-permohonan', compact('item'));
-    }
-
-    public function skGub()
-    {
-        $item = ProfilItem::findBySlug('sk-gub');
-        return view('pages.informasi.sk-gub', compact('item'));
-    }
-
-    public function formAduan()
-    {
-        $item = ProfilItem::findBySlug('form-aduan');
-        return view('pages.informasi.form-aduan-masyarakat', compact('item'));
     }
 
     public function storeAduan(Request $request)

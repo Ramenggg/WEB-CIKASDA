@@ -30,6 +30,13 @@ class ProfilController extends Controller
         'form-permohonan' => 'Kelola Permohonan Publik',
         'sk-gub'       => 'SK GUB Bangunan Gedung 2025',
         'form-aduan'   => 'Form Aduan Masyarakat',
+        'ppid-sk'      => 'SK PPID',
+        'ppid-visi-misi' => 'Visi & Misi PPID',
+        'ppid-pelayanan' => 'Standar Pelayanan PPID',
+        'ppid-penghargaan' => 'Penghargaan PPID',
+        'ppid-permohonan' => 'Prosedur Permohonan PPID',
+        'ppid-dokumen-program' => 'Dokumen Elektronik PPID',
+        'ppid-sop-spm' => 'SOP & SPM PPID',
     ];
 
     /**
@@ -43,7 +50,14 @@ class ProfilController extends Controller
         $item  = ProfilItem::firstOrNew(['slug' => $halaman]);
         $judul = $this->halamanValid[$halaman];
 
-        $viewPrefix = in_array($halaman, ['dokumen', 'mou', 'form-permohonan', 'sk-gub', 'form-aduan']) ? 'admin.informasi.' : 'admin.profil.';
+        if (str_starts_with($halaman, 'ppid-')) {
+            $viewPrefix = 'admin.PPID.';
+        } elseif (in_array($halaman, ['dokumen', 'mou', 'form-permohonan', 'sk-gub', 'form-aduan'])) {
+            $viewPrefix = 'admin.informasi.';
+        } else {
+            $viewPrefix = 'admin.profil.';
+        }
+
         return view($viewPrefix . str_replace('-', '_', $halaman), compact('item', 'judul'));
     }
 
@@ -138,7 +152,8 @@ class ProfilController extends Controller
                 'total_pegawai'    => $request->input('total_pegawai'),
                 'tahun_dibentuk'   => $request->input('tahun_dibentuk'),
             ]);
-        } elseif ($halaman === 'sejarah') {
+        } else {
+            // General case for pages using Quill (Visi Misi, Struktur, Sejarah, dsb)
             $item->content_data = $request->input('konten');
         }
 
@@ -193,9 +208,19 @@ class ProfilController extends Controller
         $item->save();
 
         $isInformasi = in_array($halaman, ['dokumen', 'mou', 'form-permohonan', 'sk-gub', 'form-aduan']);
-        $redirectRoute = $halaman === 'daftar-informasi'
-            ? route('admin.informasi.daftar.edit')
-            : ($halaman === 'publikasi' ? route('admin.informasi.publikasi.edit') : ($isInformasi ? route('admin.informasi.edit', $halaman) : route('admin.profil.edit', $halaman)));
+        $isPpid = str_starts_with($halaman, 'ppid-');
+
+        if ($halaman === 'daftar-informasi') {
+            $redirectRoute = route('admin.informasi.daftar.edit');
+        } elseif ($halaman === 'publikasi') {
+            $redirectRoute = route('admin.informasi.publikasi.edit');
+        } elseif ($isPpid) {
+            $redirectRoute = route('admin.ppid.edit', str_replace('ppid-', '', $halaman));
+        } elseif ($isInformasi) {
+            $redirectRoute = route('admin.informasi.edit', $halaman);
+        } else {
+            $redirectRoute = route('admin.profil.edit', $halaman);
+        }
 
         return redirect($redirectRoute)->with('success', "Konten \"{$label}\" berhasil diperbarui!");
     }

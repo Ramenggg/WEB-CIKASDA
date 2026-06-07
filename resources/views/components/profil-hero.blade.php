@@ -30,9 +30,9 @@
                 
                 <div class="text-blue-100 text-sm md:text-base leading-relaxed max-w-2xl">
                     @if (!empty(trim(strip_tags($item->hero_description ?? ''))))
-                        <div class="prose prose-invert prose-p:text-blue-100 prose-p:m-0 prose-p:leading-relaxed prose-strong:text-white prose-em:text-blue-200 max-w-none text-sm md:text-base [&_p]:inline [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_*]:!bg-transparent [&_*]:!text-inherit">{!! $item->hero_description !!}</div>
+                        <div class="prose prose-invert prose-p:text-blue-100 prose-p:mb-4 last:prose-p:mb-0 prose-p:leading-relaxed prose-strong:text-white prose-em:text-blue-200 max-w-none text-sm md:text-base [&_ul]:list-disc [&_ul]:pl-4 [&_ul]:mb-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_ol]:mb-4 [&_*]:!bg-transparent [&_*]:!text-inherit">{!! $item->hero_description !!}</div>
                     @elseif ($showContentInHero && isset($item) && isset($item->content_data) && !empty(trim(strip_tags($item->content_data))))
-                        <div class="prose prose-invert prose-p:text-blue-100 prose-p:m-0 prose-p:leading-relaxed max-w-none text-sm md:text-base [&_*]:!bg-transparent [&_*]:!text-inherit">
+                        <div class="prose prose-invert prose-p:text-blue-100 prose-p:mb-4 last:prose-p:mb-0 prose-p:leading-relaxed max-w-none text-sm md:text-base [&_*]:!bg-transparent [&_*]:!text-inherit">
                             {!! $item->content_data !!}
                         </div>
                     @else

@@ -61,7 +61,7 @@
                         </div>
                     </div>
                     <div class="rounded-2xl border border-slate-200 shadow-2xs bg-white overflow-hidden">
-                        <div id="editor-hero">{{ old('hero_description', $item->hero_description ?? '') }}</div>
+                        <div id="editor-hero">{!! old('hero_description', $item->hero_description ?? '') !!}</div>
                     </div>
                     <input type="hidden" name="hero_description" id="hidden-hero" value="{{ old('hero_description', $item->hero_description ?? '') }}">
                 </div>

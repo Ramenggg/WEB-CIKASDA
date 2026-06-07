@@ -160,37 +160,37 @@
         <div x-show="open" x-transition.opacity.duration.200ms
             class="absolute right-0 top-full mt-1 w-64 bg-white rounded-xl shadow-xl border border-slate-100 py-2 z-50 max-h-[70vh] overflow-y-auto custom-scrollbar">
 
-            <a href="https://padungku.sultengprov.go.id/" target="_blank"
+            <a href="https://padungku.cikasdasulteng.id/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">e-PADUNGKU</a>
-            <a href="https://irigasiku.pu.go.id/" target="_blank"
+            <a href="https://si.cikasdasulteng.id/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">IRIGASIKU</a>
-            <a href="https://simbg.pu.go.id/" target="_blank"
+            <a href="https://e-bantekbgn.cikasda.sultengprov.go.id/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">e-Bantekbgn</a>
-            <a href="https://www.lapor.go.id/" target="_blank"
+            <a href="http://www.lapor.go.id" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Lapor</a>
-            <a href="https://jdih.sultengprov.go.id/" target="_blank"
+            <a href="https://www.jdih.sultengprov.go.id/?page=home" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">JDIH
                 PROVINSI SULTENG</a>
             <a href="{{ route('form-aduan-masyarakat') }}"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Form
                 Aduan Masyarakat</a>
-            <a href="http://dbinfrastruktur.sultengprov.go.id/" target="_blank"
+            <a href="https://cikasda.sultengprov.go.id/data-base-infrastruktur-schisto/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium leading-snug">Data
                 Base Infrastruktur Schisto</a>
             <a href="https://e-larismanis.sultengprov.go.id/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">e-larismanis</a>
-            <a href="https://lirikwilda.sultengprov.go.id/" target="_blank"
+            <a href="https://cikasda.sultengprov.go.id/lirik-wilda/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Lirik
                 Wilda</a>
-            <a href="https://psdawil2.cikasda.sultengprov.go.id/" target="_blank"
+            <a href="https://cikasda.sultengprov.go.id/sisda/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">SISDA
                 UPT PSDA WIL.II</a>
-            <a href="https://socairmisi.cikasda.sultengprov.go.id/" target="_blank"
+            <a href="https://cikasda.sultengprov.go.id/socairmisi/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">SO
                 CAIR MISI</a>
-            <a href="https://simonev.cikasda.sultengprov.go.id/" target="_blank"
+            <a href="https://cikasda.sultengprov.go.id/simonev/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">Simonev</a>
-            <a href="https://sih3.sultengprov.go.id/" target="_blank"
+            <a href="https://sulteng.hidromet.sih3.bmkg.go.id/" target="_blank"
                 class="block px-5 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition text-sm font-medium">SIH3</a>
         </div>
     </div>
